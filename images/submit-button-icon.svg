@@ -1,0 +1,48 @@
+<svg id="submit_detail" data-name="submit detail" xmlns="http://www.w3.org/2000/svg" viewBox="807.16 552.05 33.74 63.91">
+  <defs>
+    <style>
+      .cls-1, .cls-2 {
+        stroke-linecap: square;
+      }
+
+      .cls-1, .cls-2, .cls-3 {
+        fill: none;
+        stroke: #dec077;
+        stroke-miterlimit: 10;
+      }
+
+      .cls-1, .cls-3 {
+        stroke-width: .65px;
+      }
+
+      .cls-2 {
+        stroke-width: 1.31px;
+      }
+    </style>
+  </defs>
+  <g>
+    <line class="cls-2" x1="808.77" y1="584.17" x2="839.31" y2="614.36"/>
+    <g>
+      <line class="cls-1" x1="833.16" y1="589.42" x2="810.95" y2="586.33"/>
+      <line class="cls-3" x1="827.57" y1="588.64" x2="835.39" y2="610.49"/>
+      <line class="cls-3" x1="827.57" y1="596.46" x2="827.57" y2="588.64"/>
+      <line class="cls-3" x1="830.77" y1="605.92" x2="827.57" y2="596.46"/>
+      <line class="cls-3" x1="817.15" y1="592.45" x2="827.57" y2="596.46"/>
+      <line class="cls-3" x1="821.87" y1="594.26" x2="830.77" y2="605.92"/>
+      <line class="cls-3" x1="821.87" y1="594.26" x2="821.81" y2="597.06"/>
+    </g>
+  </g>
+  <g>
+    <line class="cls-2" x1="808.77" y1="584.17" x2="838.96" y2="553.64"/>
+    <g>
+      <line class="cls-1" x1="833.1" y1="578.65" x2="810.93" y2="582"/>
+      <line class="cls-3" x1="827.52" y1="579.49" x2="835.09" y2="557.56"/>
+      <line class="cls-3" x1="827.43" y1="571.68" x2="827.52" y2="579.49"/>
+      <line class="cls-3" x1="830.52" y1="562.18" x2="827.43" y2="571.68"/>
+      <line class="cls-3" x1="817.05" y1="575.8" x2="827.43" y2="571.68"/>
+      <line class="cls-3" x1="821.75" y1="573.93" x2="830.52" y2="562.18"/>
+      <line class="cls-3" x1="821.75" y1="573.93" x2="821.66" y2="571.14"/>
+    </g>
+  </g>
+  <line class="cls-1" x1="833.1" y1="578.65" x2="833.16" y2="589.42"/>
+</svg>

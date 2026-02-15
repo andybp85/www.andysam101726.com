@@ -1,0 +1,98 @@
+@import "../styles/root.css";
+
+:root {
+    --invite-col-gap: 4vw;
+    --invite-row-gap: 2vw;
+}
+
+form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--invite-row-gap) var(--invite-col-gap);
+    container-name: form;
+
+    fieldset {
+        border: none;
+        margin: 0;
+        padding: 0;
+        width: round(down, calc(50% - var(--invite-col-gap) / 2), 0.1%);
+    }
+
+    fieldset:first-child,
+    fieldset:last-child {
+        width: 100%;
+    }
+
+    input[type="text"],
+    input[type="email"] {
+        background-color: black;
+        border: none;
+        border-bottom: solid thin var(--placeholder-color);
+        color: var(--body-text-color);
+        width: 10rem;
+        font-family: sans-serif;
+    }
+
+    input[type="text"]::placeholder,
+    input[type="email"]::placeholder {
+        color: var(--placeholder-color);
+        text-align: center;
+        font-family: dream_orphansregular, sans-serif;
+        font-size: var(--body-font-size);
+    }
+}
+
+#attending {
+    display: flex;
+    justify-content: center;
+    gap: clamp(2rem, 0.154rem + 9.23vw, 5rem);
+    --arrow-size: calc(var(--body-font-size) * 2);
+
+    legend {
+        margin: 1vh auto 0.5vh;
+    }
+
+    label {
+        position: relative;
+        cursor: pointer;
+    }
+
+    label[for="is-attending"]:has(+input:checked):before {
+        content: url("/images/yes-no-arrow.svg");
+        position: absolute;
+        width: var(--arrow-size);
+        right: calc(var(--arrow-size) * .9);
+        bottom: calc(var(--arrow-size) * .05);
+    }
+
+    label[for="not-attending"]:has(+input:checked):after {
+        content: url("/images/yes-no-arrow.svg");
+        transform: scale(-1, 1);
+        position: absolute;
+        width: var(--arrow-size);
+        left: calc(var(--arrow-size) * .7);
+        bottom: calc(var(--arrow-size) * .05);
+    }
+}
+
+fieldset.attending-info {
+    min-height: 20vh;
+}
+
+.disabled-fields {
+    opacity: 30%;
+}
+
+@media (max-width: 72rem) {
+    form {
+        gap: var(--invite-row-gap) 0;
+    }
+
+    .disabled-fields {
+        display: none;
+    }
+
+    body main form fieldset {
+        width: 100%;
+    }
+}

@@ -1,0 +1,25 @@
+<svg id="arrow" xmlns="http://www.w3.org/2000/svg" viewBox="782.02 507.04 55 13.17">
+  <defs>
+    <style>
+      .cls-1 {
+        stroke-linejoin: round;
+      }
+
+      .cls-1, .cls-2 {
+        fill: none;
+        stroke: #e2c06e;
+        stroke-linecap: round;
+        stroke-width: 1.15px;
+      }
+
+      .cls-2 {
+        stroke-miterlimit: 10;
+      }
+    </style>
+  </defs>
+  <line class="cls-1" x1="791.58" y1="513.63" x2="829.16" y2="513.63"/>
+  <polyline class="cls-1" points="829.16 513.63 820.71 518.81 827.59 518.81 835.62 513.63"/>
+  <line class="cls-2" x1="783.2" y1="519.04" x2="791.58" y2="513.63"/>
+  <polygon class="cls-1" points="829.16 513.63 820.71 508.45 827.59 508.45 835.62 513.63 835.56 513.63 829.16 513.63"/>
+  <line class="cls-1" x1="783.2" y1="508.23" x2="791.58" y2="513.63"/>
+</svg>

@@ -1,0 +1,96 @@
+@import "modern-normalize.css";
+@import "decomanghold-regular.css";
+@import "dream_orphansregular.css";
+
+:root {
+    --body-text-color: #e2c06e;
+    --body-font-size: clamp(1rem, 0.158rem + 4.21vw, 2rem);
+    --placeholder-color: #f6e7c8;
+}
+
+html {
+    height: 100%;
+    background-color: black;
+}
+
+body {
+    font-family: dream_orphansregular, serif;
+    background-image: url("../images/bg-tile.jpg");
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    line-height: 1.5;
+    color: var(--body-text-color);
+    font-size: var(--body-font-size);
+}
+
+main {
+    border: 4px solid var(--body-text-color);
+    border-radius: 1vh;
+    background-color: black;
+    padding: 0 4vw 1vh;
+    width: 70vw;
+    max-width: 57rem;
+    text-align: center;
+    position: relative;
+    --dec-size: clamp(calc(var(--body-font-size) * 2), -15.864rem + 30.8vw, 6rem);
+}
+
+main:before {
+    content: url("/images/corner-sunburst.svg");
+    position: absolute;
+    transform: scale(-1, 1);
+    top: 0;
+    left: 0;
+    width: var(--dec-size);
+}
+
+main:after {
+    content: url("/images/corner-sunburst.svg");
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: var(--dec-size);
+}
+
+h1 {
+    --h1-font-size: clamp(2rem, -0.1rem + 10.05vw, 4.5rem);
+    font-family: decomang_holdregular, serif;
+    font-weight: lighter;
+    font-size: var(--h1-font-size);
+    line-height: calc(var(--h1-font-size) * 1.1);
+    margin: 1vh 0 0;
+}
+
+button[type="submit"] {
+    --button-width: clamp(7rem, 1.94rem + 25.3vw, 14rem);
+    border: none;
+    background-color: transparent;
+    position: relative;
+    width: var(--button-width);
+    height: calc(var(--button-width) / 3.333);
+    background-repeat: no-repeat;
+    background-image: url("/images/whole-submit-button.svg");
+    cursor: pointer;
+    margin-top: var(--body-font-size);
+    margin-bottom: var(--body-font-size);
+}
+
+.visuallyhidden {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+}
+
+
+@-moz-document url-prefix() {
+    form > fieldset > legend {
+        margin: 0 auto;
+    }
+}

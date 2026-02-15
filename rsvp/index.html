@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="author" content="Andy & Sam">
+    <meta name="description" content="Andy & Sam's digital wedding invitation RSVP site">
+    <meta name="theme-color" content="black">
+    <meta name="robots" content="nofollow, noindex">
+    <title>Andy & Sam's Wedding</title>
+    <link rel="stylesheet" href="/rsvp/styles.css">
+    <link rel="icon" type="image/png" href="/images/favicon-96x96.png" sizes="96x96">
+    <link rel="icon" type="image/svg+xml" href="/images/favicon.svg">
+    <link rel="shortcut icon" href="/images/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+    <meta name="apple-mobile-web-app-title" content="Andy & Sam">
+    <link rel="manifest" href="/site.webmanifest">
+</head>
+<body>
+<main>
+    <h1>Andy & Sam's Wedding</h1>
+
+    Thank you for the Save&nbsp;The&nbsp;Date!
+
+    <form name="rsvp">
+        <fieldset id="attending">
+            <legend>I plan to attend:</legend>
+            <label for="is-attending">yes</label>
+            <input type="radio" id="is-attending" name="attending" value="yes" checked class="visuallyhidden">
+            <label for="not-attending">no</label>
+            <input type="radio" id="not-attending" name="attending" value="no" class="visuallyhidden">
+        </fieldset>
+        <fieldset class="attending-info" id="is-attending-info">
+            <label for="email-going" class="visuallyhidden">Email</label>
+            <input id="email-going"
+                   name="email-going"
+                   title="Email"
+                   placeholder="Email"
+                   type="email"
+                   required
+            >
+            is&nbsp;the best address for sending a digital&nbsp;invitation&nbsp;to
+            <label for="first-name-going" class="visuallyhidden">First Name</label>
+            <label for="last-name-going" class="visuallyhidden">Last Name</label>
+            <input id="first-name-going"
+                   name="first-name-going"
+                   title="First Name"
+                   placeholder="First Name"
+                   type="text"
+                   required
+            >
+            <input id="last-name-going"
+                   name="last-name-going"
+                   title="Last Name"
+                   placeholder="Last Name"
+                   type="text"
+                   required
+            >
+        </fieldset>
+        <fieldset id="not-attending-info" class="attending-info disabled-fields">
+            <label for="first-name-not-going" class="visuallyhidden">First Name </label>
+            <label for="last-name-not-going" class="visuallyhidden">Last Name </label>
+            <input id="first-name-not-going"
+                   name="first-name-not-going"
+                   placeholder="First Name"
+                   type="text"
+                   disabled
+            >
+            <input id="last-name-not-going"
+                   name="last-name-not-going"
+                   title="Last Name"
+                   placeholder="Last Name"
+                   type="text"
+                   disabled
+            >
+            <br>
+            will regrettably be unable to attend, but thank you!
+        </fieldset>
+        <fieldset>
+            <button type="submit"></button>
+        </fieldset>
+    </form>
+
+</main>
+<script src="/rsvp/index.js"></script>
+</body>
+</html>
