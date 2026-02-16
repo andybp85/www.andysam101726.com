@@ -38,7 +38,7 @@ function makeInputResize(input) {
         measureWidthElm.style.fontSize = window.getComputedStyle(input).getPropertyValue('font-size')
         measureWidthElm.innerText = input.value;
         const textWidth = measureWidthElm.offsetWidth
-        const formWidth = document.querySelector('form[name=rsvp]').offsetWidth
+        const formWidth = document.querySelector('form[name=savethedate]').offsetWidth
         const parentElmWidth = input.parentElement.offsetWidth
         const maxWidth = parentElmWidth || formWidth
         input.style.width = (textWidth > originalElmWidth
@@ -59,3 +59,45 @@ makeInputResize(document.getElementById("first-name-going"))
 makeInputResize(document.getElementById("last-name-going"))
 makeInputResize(document.getElementById("first-name-not-going"))
 makeInputResize(document.getElementById("last-name-not-going"))
+
+// form handler
+const loginForm = document.forms['savethedate']
+const submitButton = document.forms['savethedate']['submit-button']
+
+const handleError = e => {
+    document.getElementById('error-msg').innerText = e.message
+    console.error(e)
+}
+
+loginForm.addEventListener('submit', e => {
+    e.preventDefault()
+    submitButton.classList.add('submitting')
+    const formData = new FormData(e.target)
+
+    formData.append('token', localStorage.getItem('token'))
+    localStorage.removeItem('token')
+
+    fetch('https://script.google.com/macros/s/AKfycbzlDfJdr-lTdTmOuNGXMYS-53jjXf1QCW_dD_I6ZmLYRSO_Y7UCgzcGertCfHIT5nbx/exec', {
+        method: 'POST',
+        body: formData
+    }).then(r => r.json())
+        .then(r => {
+            switch (r.status) {
+                case 'success':
+                    localStorage.setItem('token', r.token)
+                    window.location = '/thankyou/'
+                    break
+                case 'unauthorized':
+                    localStorage.clear()
+                    localStorage.setItem('error-msg', r.message)
+                    window.location = '/'
+                    break
+                default:
+                    handleError(r)
+            }
+        })
+        .catch(e => {
+            handleError(e)
+        })
+        .finally(() => submitButton.classList.remove('submitting'))
+})
