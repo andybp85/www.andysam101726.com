@@ -23,7 +23,7 @@ their redirect.
 
 | Path | Content |
 |------|---------|
-| `/home/` | Wedding overview, hero image, countdown |
+| `/home/` | Wedding overview, hero image, RSVP call-to-action |
 | `/rsvp/` | Party RSVP — looks up the guest's party, collects attendance for each member plus open slots, submits to the API |
 | `/schedule/` | Weekend schedule (Fri 10/16 – Sun 10/18 2026) |
 | `/travel/` | Hotel blocks, travel info |
@@ -31,7 +31,7 @@ their redirect.
 
 Every page includes a token guard (inline `<script>` in `<head>`) that
 redirects unauthenticated visitors back to `/`. Shared nav is injected by
-`/js/site.js`.
+`/site.js`.
 
 ### API contract (Apps Script Web App)
 
@@ -66,7 +66,7 @@ node tools/gen-guests.mjs
 index.html, index.js, styles.css   Login gate
 home/  rsvp/  schedule/            Content pages
 travel/  faq/                      Content pages (cont.)
-js/site.js                         Shared nav + token guard helpers
+site.js                            Shared nav + token guard helpers
 styles/                            Shared CSS (root tokens, normalize, fonts)
 fonts/  images/                    Assets
 tools/gen-guests.mjs               Guest-list CSV → guests.gs generator
