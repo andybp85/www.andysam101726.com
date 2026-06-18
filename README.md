@@ -1,7 +1,7 @@
-# Andy &amp; Sam's Wedding
+# Andy & Sam's Wedding
 
 Source for [www.andysamwedding.com](https://www.andysamwedding.com) — a static
-wedding site. Began as an RSVP gate; evolving into the digital invitation.
+wedding site. Began as an RSVP gate; now the full digital invitation.
 
 ## Stack
 
@@ -11,40 +11,80 @@ GitHub Pages with a custom domain (`CNAME`); not search-indexed (`robots.txt`,
 
 ## How it works
 
-1. **Login** (`index.html` / `index.js`) — visitor enters the bride or groom's
-   last name. The form POSTs to a Google Apps Script Web App, which returns a
-   token and a redirect URL. Both are stored in `localStorage`; returning
-   visitors skip straight to their redirect.
-2. **Save the date** (`savethedate/`) — RSVP form (attending yes/no, email,
-   name). PUTs to the same Apps Script.
-3. **Thank you** (`thankyou/`) and **Postmodern Jukebox** (`postmodern_jukebox/`)
-   — additional content pages.
+### Auth gate (`/`)
 
-The backend (the Apps Script) lives outside this repo. The HTTP verb is sent as
-a hidden `VERB` form field (`POST` to log in, `PUT` to RSVP).
+`index.html` / `index.js` — visitor enters the bride or groom's last name. The
+form POSTs (hidden `VERB=POST` field) to a Google Apps Script Web App, which
+returns `{ status, token, redirect, message }`. The token and redirect
+(`/home/`) are stored in `localStorage`; returning visitors skip straight to
+their redirect.
+
+### Pages
+
+| Path | Content |
+|------|---------|
+| `/home/` | Wedding overview, hero image, countdown |
+| `/rsvp/` | Party RSVP — looks up the guest's party, collects attendance for each member plus open slots, submits to the API |
+| `/schedule/` | Weekend schedule (Fri 10/16 – Sun 10/18 2026) |
+| `/travel/` | Hotel blocks, travel info |
+| `/faq/` | Frequently asked questions |
+
+Every page includes a token guard (inline `<script>` in `<head>`) that
+redirects unauthenticated visitors back to `/`. Shared nav is injected by
+`/js/site.js`.
+
+### API contract (Apps Script Web App)
+
+All requests send a `VERB` field:
+
+| `VERB` | Auth | Purpose | Response |
+|--------|------|---------|----------|
+| `POST` | none (last name) | Login | `{ status, token, redirect, message }` |
+| `GUESTS` | `token` header | Fetch guest list for party lookup | `{ group: [{ first, last, slot }] }` |
+| `PUT` | `token` header | Submit party RSVP | `{ status }` |
+
+`PUT` body includes a `responses` field — JSON array of
+`[{ first, last, attending, isGuest }]` objects (one per party member/slot).
+
+The RSVP page uses **optimistic writes**: the "Thank you" UI is shown
+immediately on submit; the API call runs in the background. Guest data is
+**prefetched** after login and cached in `sessionStorage` so `/rsvp/` loads
+instantly.
+
+### Guest-list generator
+
+`tools/gen-guests.mjs` — reads `new_design/RSVP_list.csv` and regenerates
+`guests.gs` (the hardcoded guest array pasted into the Apps Script). Run with:
+
+```bash
+node tools/gen-guests.mjs
+```
 
 ## Layout
 
 ```
 index.html, index.js, styles.css   Login gate
-savethedate/                        RSVP form
-thankyou/  postmodern_jukebox/      Content pages
-styles/                             Shared CSS (root tokens, normalize, fonts)
-fonts/  images/                     Assets
-scaling.txt                         clamp() fluid-type cheatsheet
+home/  rsvp/  schedule/            Content pages
+travel/  faq/                      Content pages (cont.)
+js/site.js                         Shared nav + token guard helpers
+styles/                            Shared CSS (root tokens, normalize, fonts)
+fonts/  images/                    Assets
+tools/gen-guests.mjs               Guest-list CSV → guests.gs generator
+scaling.txt                        clamp() fluid-type cheatsheet
 CNAME  robots.txt  site.webmanifest GitHub Pages / PWA config
 ```
 
 ## Development
 
 No tooling required — edit files and open them in a browser. To exercise the
-auth/RSVP flow against the live Apps Script, serve the directory over HTTP, e.g.:
+auth/RSVP flow against the live Apps Script, serve the directory over HTTP:
 
 ```bash
 python3 -m http.server 8000
 ```
 
-then visit <http://localhost:8000>.
+Then visit <http://localhost:8000>. Clear site data in DevTools between test
+runs to reset `localStorage` state.
 
 ## Working in this repo
 
