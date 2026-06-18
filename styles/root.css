@@ -1,28 +1,42 @@
 @import "modern-normalize.css";
 @import "decomanghold-regular.css";
 @import "dream_orphansregular.css";
+@import "lucian-schoenschrift.css";
+@import "nickerbocker.css";
+@import "contralto.css";
+@import "nav.css";
 
 :root {
     --body-text-color: #e2c06e;
     --body-font-size: clamp(1rem, 0.158rem + 4.21vw, 2rem);
     --placeholder-color: #f6e7c8;
+    --brass: #e2c06e;
+    --brass-dark: #8a6d2f;
+    --ink: #2a1a14;
 }
 
 html {
     height: 100%;
-    background-color: black;
+    background-color: #2a1a14;
 }
 
 body {
-    font-family: dream_orphansregular, serif;
-    background-image: url("../images/bg-tile.jpg");
+    font-family: contralto, serif;
+    background-image: url("/images/wood-desktop.webp");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
     min-height: 100%;
     line-height: 1.5;
     color: var(--body-text-color);
     font-size: var(--body-font-size);
+}
+
+@media (max-width: 700px) {
+    body { background-image: url("/images/wood-mobile.webp"); }
 }
 
 main {
@@ -56,7 +70,7 @@ main:after {
 
 h1 {
     --h1-font-size: clamp(2rem, -0.1rem + 10.05vw, 4.5rem);
-    font-family: decomang_holdregular, serif;
+    font-family: lucian_schoenschrift, serif;
     font-weight: lighter;
     font-size: var(--h1-font-size);
     line-height: calc(var(--h1-font-size) * 1.1);
