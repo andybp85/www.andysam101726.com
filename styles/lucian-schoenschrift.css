@@ -1,0 +1,7 @@
+@font-face {
+    font-family: lucian_schoenschrift;
+    src: url("/fonts/lucian-schoenschrift.woff2") format("woff2");
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
