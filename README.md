@@ -40,8 +40,8 @@ All requests send a `VERB` field:
 | `VERB` | Auth | Purpose | Response |
 |--------|------|---------|----------|
 | `POST` | none (last name) | Login | `{ status, token, redirect, message }` |
-| `GUESTS` | `token` header | Fetch guest list for party lookup | `{ group: [{ first, last, slot }] }` |
-| `PUT` | `token` header | Submit party RSVP | `{ status }` |
+| `GUESTS` | `token` field | Fetch full guest list for party lookup | `{ status, guests: { "<group>": [{ first, last, slot }] } }` |
+| `PUT` | `token` field | Submit party RSVP | `{ status }` |
 
 `PUT` body includes a `responses` field — JSON array of
 `[{ first, last, attending, isGuest }]` objects (one per party member/slot).
