@@ -1,3 +1,5 @@
+import { partiesByLastName, labelForParty } from './party.js'
+
 const API = 'https://script.google.com/macros/s/AKfycbwfXZMR_HIAoBzBZaS6bpmgB-pNZRkrjxRn6Bq09__brkhYBJNZUaGrMnPYkYDDoqdiqQ/exec'
 const norm = s => (s || '').trim().toLowerCase()
 
@@ -21,16 +23,6 @@ async function getGuests() {
     return r.guests
 }
 
-function findGroup(guests, first, last) {
-    const f = norm(first), l = norm(last)
-    for (const [id, members] of Object.entries(guests)) {
-        const hit = members.some(m =>
-            !m.slot && norm(m.first) === f && (norm(m.last) === l || m.last === '' || l === ''))
-        if (hit) return {id, members}
-    }
-    return null
-}
-
 function renderParty(group) {
     const wrap = document.getElementById('members')
     wrap.innerHTML = group.members.map((m, i) => {
@@ -52,15 +44,36 @@ document.getElementById('name-form').addEventListener('submit', async e => {
     err.textContent = ''
     try {
         const guests = await getGuests()
-        const group = findGroup(guests, e.target.first.value, e.target.last.value)
-        if (!group) {
+        const lastValue = e.target.last.value
+        const parties = partiesByLastName(guests, lastValue)
+        if (parties.length === 0) {
             err.textContent = "We couldn't find that name. Please check the spelling, or contact us."
             return
         }
-        matchedGroup = group
-        renderParty(group)
-        document.getElementById('step-name').hidden = true
-        document.getElementById('step-party').hidden = false
+        if (parties.length === 1) {
+            matchedGroup = parties[0]
+            renderParty(matchedGroup)
+            document.getElementById('step-name').hidden = true
+            document.getElementById('step-party').hidden = false
+        } else {
+            const list = document.getElementById('party-list')
+            list.innerHTML = ''
+            for (const p of parties) {
+                const btn = document.createElement('button')
+                btn.type = 'button'
+                btn.className = 'party-pick'
+                btn.textContent = labelForParty(p.members)
+                btn.addEventListener('click', () => {
+                    matchedGroup = p
+                    renderParty(matchedGroup)
+                    document.getElementById('step-pick').hidden = true
+                    document.getElementById('step-party').hidden = false
+                })
+                list.appendChild(btn)
+            }
+            document.getElementById('step-name').hidden = true
+            document.getElementById('step-pick').hidden = false
+        }
     } catch (ex) {
         err.textContent = ex.message
     }
