@@ -30,6 +30,11 @@
 
 #knob:active { cursor: grabbing; }
 
+#knob:focus-visible {
+    outline: 3px solid var(--brass);
+    outline-offset: 3px;
+}
+
 /* Rotating layer: knurled brass edge + domed face + brown arrow */
 .knob-spin {
     position: absolute;
@@ -188,6 +193,13 @@
     bottom: auto;
 }
 
+/* Keyboard focus ring for station links (dial + mobile drawer) */
+.station:focus-visible {
+    outline: 2px solid var(--brass-dark);
+    outline-offset: 2px;
+    border-radius: 2px;
+}
+
 /* Active station highlight */
 .station.active {
     color: #231f20;
@@ -273,12 +285,22 @@
             inset 0 0 0 2px #4e371b,
             6px 7px 14px rgba(35, 31, 32, 0.6);
         z-index: 5;
-        /* Slid off-screen left when closed; eased into view when open */
+        /* Slid off-screen left when closed; eased into view when open.
+           visibility:hidden keeps the closed drawer out of the tab order and
+           a11y tree (it's only translated, not display:none), then defers the
+           hide until the slide-out finishes. */
         transform: translate(-112%, -50%);
-        transition: transform 0.38s cubic-bezier(0.4, 0, 0.2, 1);
+        visibility: hidden;
+        transition:
+            transform 0.38s cubic-bezier(0.4, 0, 0.2, 1),
+            visibility 0s linear 0.38s;
     }
 
-    body.menu-open #station-menu { transform: translate(0, -50%); }
+    body.menu-open #station-menu {
+        transform: translate(0, -50%);
+        visibility: visible;
+        transition: transform 0.38s cubic-bezier(0.4, 0, 0.2, 1), visibility 0s;
+    }
 
     /* Vertical center line — thick ink */
     #station-menu::before {

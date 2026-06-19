@@ -19,7 +19,7 @@ function render() {
         `<a class="station" data-index="${i}" href="${href}">${label}</a>`).join('')
     document.getElementById('site-nav').innerHTML = `
         <div id="radio">
-            <button id="knob" type="button" aria-label="Tuning knob" aria-expanded="false"><span class="knob-spin"><span class="knob-arrow"></span></span><span class="knob-label">MENU</span></button>
+            <button id="knob" type="button" aria-label="Navigation — tune the dial, or open the menu" aria-controls="station-menu" aria-expanded="false"><span class="knob-spin"><span class="knob-arrow"></span></span><span class="knob-label">MENU</span></button>
             <div id="dial">
                 <div id="needle" aria-hidden="true"></div>
                 <div id="stations">${stations}</div>

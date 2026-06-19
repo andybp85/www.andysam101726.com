@@ -74,5 +74,12 @@ main.deco-card::after,
 .deco-card button[type="submit"]:focus-visible {
     background: rgba(138, 109, 47, 0.14);
     letter-spacing: 0.12em;
-    outline: none;
+}
+
+/* Keep a real focus ring for keyboard users */
+.deco-card button[type="submit"]:focus-visible,
+.deco-card a:focus-visible,
+.deco-card input:focus-visible {
+    outline: 2px solid #8a6d2f;
+    outline-offset: 2px;
 }
