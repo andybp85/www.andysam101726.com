@@ -11,6 +11,12 @@
     @view-transition { navigation: auto; }
 }
 
+/* Persist the radio chrome across same-origin navigations: the title and the
+   dial/knob morph in place while only the page content cross-fades. Naming is
+   inert when @view-transition is off (reduced-motion / unsupported browsers). */
+h1 { view-transition-name: site-title; }
+#radio { view-transition-name: site-radio; }
+
 :root {
     --body-text-color: #e2c06e;
     --body-font-size: clamp(1rem, 0.158rem + 4.21vw, 2rem);
