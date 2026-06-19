@@ -1,7 +1,7 @@
 ---
 # www.andysamwedding.com-9vd1
 title: Deploy updated Apps Script API
-status: todo
+status: completed
 type: task
 priority: high
 created_at: 2026-06-18T10:59:23Z
@@ -25,4 +25,7 @@ curl -s -A 'Mozilla/5.0' "$LOC"
 Verified 2026-06-18:
 - [x] POST login (password=Harber) -> {status:success, token, redirect:/home/}
 - [x] GUESTS -> success, 93 groups (reads the new sheet)
-- [ ] PUT -> success + row in the NEW RSVP sheet (write path; not yet run — would leave a test row to delete)
+- [x] PUT -> {status:success}; row appended to new RSVP sheet + email to andysam101726@gmail.com. NOTE: also sends an email on every RSVP (Code.gs:84 MailApp.sendEmail).
+
+## Summary of Changes
+New standalone Apps Script Web App + RSVP sheet (same Google account) replaced the old deployment; the planned redeploy-of-old-project path was abandoned, so the old deployment-ID mismatch is moot. Frontend index.js:4 and rsvp/index.js:1 repointed to the new /exec (commit b4b860d). All three verbs smoke-tested green via the two-step curl method (login, GUESTS=93, PUT write). Left a SMOKE-TEST / TEST / DELETE-ME row in the new RSVP sheet + one test email to delete.
