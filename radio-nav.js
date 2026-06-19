@@ -1,3 +1,5 @@
+import { angleFromStation, stationFromAngle, angleFromPointer } from './radio-math.js'
+
 const NAV = [
     ['HOME', '/home/'],
     ['RSVP', '/rsvp/'],
@@ -51,3 +53,51 @@ function positionNeedle(i) {
 }
 
 render()
+
+function go(href) { if (href !== location.pathname) location.href = href }
+
+function setNeedle(i) {
+    const knob = document.getElementById('knob')
+    if (knob) knob.style.transform = `rotate(${angleFromStation(i, NAV.length)}deg)`
+    positionNeedle(i)
+}
+
+function initDesktopKnob() {
+    const knob = document.getElementById('knob')
+    if (!knob) return
+    let dragging = false, target = currentIndex()
+    setNeedle(target)
+    const onMove = e => {
+        if (!dragging) return
+        const r = knob.getBoundingClientRect()
+        const deg = angleFromPointer(r.left + r.width / 2, r.top + r.height / 2, e.clientX, e.clientY)
+        target = stationFromAngle(deg, NAV.length)
+        setNeedle(target)
+    }
+    knob.addEventListener('pointerdown', e => {
+        if (window.matchMedia('(max-width: 700px)').matches) return
+        dragging = true
+        knob.setPointerCapture(e.pointerId)
+    })
+    knob.addEventListener('pointermove', onMove)
+    knob.addEventListener('pointerup', () => {
+        if (!dragging) return
+        dragging = false
+        go(NAV[target][1])
+    })
+}
+
+function initMobileKnob() {
+    const knob = document.getElementById('knob')
+    const menu = document.getElementById('station-menu')
+    if (!knob || !menu) return
+    knob.addEventListener('click', () => {
+        if (window.matchMedia('(max-width: 700px)').matches) menu.classList.toggle('open')
+    })
+}
+
+window.addEventListener('resize', () => positionNeedle(currentIndex()))
+document.fonts.ready.then(() => positionNeedle(currentIndex()))
+
+initDesktopKnob()
+initMobileKnob()
