@@ -39,6 +39,18 @@ main.deco-card::after,
     text-align: center;
 }
 
+/* In-card links (schedule phone, travel hotels, faq registry) */
+.deco-card a {
+    color: #7d5b29;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.deco-card a:hover,
+.deco-card a:focus-visible {
+    color: #4e371b;
+}
+
 /* Art-deco "button" — framed by double rules top & bottom, not fully outlined */
 .deco-card button[type="submit"] {
     background: none;
