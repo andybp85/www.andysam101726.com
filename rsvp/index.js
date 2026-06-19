@@ -35,7 +35,7 @@ function renderParty(group) {
     const wrap = document.getElementById('members')
     wrap.innerHTML = group.members.map((m, i) => {
         const nameCell = m.slot
-            ? `<input class="guest-name" data-i="${i}" placeholder="name">
+            ? `<input class="guest-name" data-i="${i}" placeholder="name" aria-label="Guest ${i + 1} name">
                <label class="guest-flag"><input type="checkbox" class="guest-check" data-i="${i}"> Guest</label>`
             : `<span class="member-name">${m.first} ${m.last}</span>`
         return `<fieldset class="member" data-i="${i}">

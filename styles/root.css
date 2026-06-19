@@ -6,6 +6,11 @@
 @import "contralto.css";
 @import "nav.css";
 
+/* App-like cross-fade between pages; degrades to instant nav where unsupported (e.g. Firefox) */
+@media (prefers-reduced-motion: no-preference) {
+    @view-transition { navigation: auto; }
+}
+
 :root {
     --body-text-color: #e2c06e;
     --body-font-size: clamp(1rem, 0.158rem + 4.21vw, 2rem);
@@ -22,7 +27,11 @@ html {
 
 body {
     font-family: contralto, serif;
-    background-image: url("/images/wood-desktop.webp");
+    background-image: url("/images/wood-desktop.webp"); /* fallback for no image-set() */
+    background-image: image-set(
+        url("/images/wood-desktop.avif") type("image/avif"),
+        url("/images/wood-desktop.webp") type("image/webp")
+    );
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
@@ -36,7 +45,13 @@ body {
 }
 
 @media (max-width: 700px) {
-    body { background-image: url("/images/wood-mobile.webp"); }
+    body {
+        background-image: url("/images/wood-mobile.webp"); /* fallback for no image-set() */
+        background-image: image-set(
+            url("/images/wood-mobile.avif") type("image/avif"),
+            url("/images/wood-mobile.webp") type("image/webp")
+        );
+    }
 }
 
 main {
@@ -107,10 +122,11 @@ button[type="submit"] {
     width: 1px;
 }
 
-@-moz-document url-prefix() {
-    form > fieldset > legend {
-        margin: 0 auto;
-    }
+/* Native, interaction-timed validation: only flags a field after the user has
+   touched it or attempted submit, never on load. */
+input:user-invalid {
+    border-color: #e0574a;
+    outline: 1px solid #e0574a;
 }
 
 /* rotating submit button */

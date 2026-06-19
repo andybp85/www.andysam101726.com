@@ -5,11 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="author" content="Andy & Sam">
     <meta name="description" content="Andy & Sam's digital wedding invitation site">
-    <meta name="theme-color" content="black">
+    <meta name="theme-color" content="#2a1a14">
     <meta name="robots" content="nofollow, noindex">
     <title>RSVP — Andy & Sam's Wedding</title>
     <link rel="stylesheet" href="/rsvp/styles.css">
     <link rel="icon" type="image/svg+xml" href="/images/favicon.svg">
+    <link rel="icon" type="image/png" href="/images/favicon-96x96.png" sizes="96x96">
+    <link rel="shortcut icon" href="/images/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+    <meta name="apple-mobile-web-app-title" content="Andy & Sam">
+    <link rel="manifest" href="/site.webmanifest">
     <script>if (!localStorage.getItem('token')) location.replace('/')</script>
 </head>
 <body>
@@ -26,7 +31,7 @@
             <label class="visuallyhidden" for="last">Last name</label>
             <input id="last" name="last" placeholder="Last name" autocomplete="off">
             <p class="hint">(ie "John Smith", not "The Smith Party" etc)</p>
-            <div id="name-error" class="error"></div>
+            <div id="name-error" class="error" role="alert"></div>
             <button type="submit">continue</button>
         </form>
     </section>
@@ -34,7 +39,7 @@
     <section id="step-party" hidden>
         <form id="party-form">
             <div id="members"></div>
-            <div id="submit-error" class="error"></div>
+            <div id="submit-error" class="error" role="alert"></div>
             <button type="submit">submit</button>
         </form>
     </section>

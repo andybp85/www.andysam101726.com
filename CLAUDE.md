@@ -40,6 +40,10 @@ Pages (custom domain via `CNAME`). Search-indexing disabled (`robots.txt`,
 - Absolute root-relative paths for assets (`/styles/...`, `/images/...`) so
   pages work from any subdirectory.
 - Keep the no-build, dependency-free nature unless there's a strong reason.
+- **Browser support:** target Baseline Widely Available features; use them
+  without polyfills. Baseline Newly Available / limited-availability features
+  (e.g. cross-document View Transitions) are fine only as progressive
+  enhancements that degrade gracefully — no JS polyfills, no external deps.
 
 ## Task tracking — use beans, not TodoWrite
 
