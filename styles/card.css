@@ -1,0 +1,54 @@
+main.deco-card,
+.deco-card {
+    background-color: #f0e6d2;
+    color: #2a1a14;
+    /* Override root.css main defaults */
+    border: 50px solid transparent;
+    border-radius: 0;
+    border-image: url("/images/deco-frame.svg") 230 stretch;
+    width: auto;
+    padding: clamp(1rem, 4vw, 3rem);
+    max-width: 50rem;
+    margin: 2vh auto;
+    font-family: contralto, serif;
+    text-align: center;
+    position: static;
+}
+
+main.deco-card::before,
+main.deco-card::after,
+.deco-card::before,
+.deco-card::after {
+    display: none;
+    content: none;
+}
+
+.deco-card input {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #2a1a14;
+    color: #2a1a14;
+    font-family: contralto, serif;
+    text-align: center;
+    font-size: var(--body-font-size);
+    width: 14rem;
+}
+
+.deco-card input::placeholder {
+    color: #6b4c3b;
+    text-align: center;
+}
+
+.deco-card button[type="submit"] {
+    background: none;
+    border: none;
+    font-family: contralto, serif;
+    font-size: 1.2em;
+    cursor: pointer;
+    color: #2a1a14;
+    padding: 0;
+    margin: 0;
+    width: auto;
+    height: auto;
+    background-image: none;
+}

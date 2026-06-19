@@ -21,23 +21,20 @@
   </script>
 </head>
 <body>
-<main>
-  <h1>Andy & Sam's Wedding</h1>
-
+<h1>Andy &amp; Sam's Wedding</h1>
+<main class="deco-card">
   <form name="login">
-    <label for="password">Enter either the bride or groom's last name:</label>
+    <label for="password">Please enter the last name of the bride or groom.</label>
     <input id="password"
            name="password"
            title="Password"
            type="password"
-           placeholder="Password"
+           placeholder="last name"
            required
     >
     <div id="error-msg" role="alert"></div>
     <input type="hidden" name="VERB" value="POST">
-    <div class="container">
-      <button name="submit-button" type="submit"></button>
-    </div>
+    <button name="submit-button" type="submit">submit</button>
   </form>
 
 </main>

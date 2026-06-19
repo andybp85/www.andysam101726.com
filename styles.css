@@ -1,7 +1,7 @@
 @import "/styles/root.css";
 
 h1 {
-    margin-bottom: 3vh;
+    margin-bottom: 1vh;
 }
 
 form {
@@ -9,20 +9,4 @@ form {
     flex-direction: column;
     align-items: center;
     gap: 3vh;
-
-    input[type="password"] {
-        background-color: black;
-        border: none;
-        border-bottom: solid thin var(--placeholder-color);
-        color: var(--body-text-color);
-        width: 10rem;
-        font-family: sans-serif;
-    }
-    
-    input[type="password"]::placeholder {
-        color: var(--placeholder-color);
-        text-align: center;
-        font-family: dream_orphansregular, sans-serif;
-        font-size: var(--body-font-size);
-    }
 }

@@ -5,6 +5,7 @@
 @import "nickerbocker.css";
 @import "contralto.css";
 @import "nav.css";
+@import "card.css";
 
 /* App-like cross-fade between pages; degrades to instant nav where unsupported (e.g. Firefox) */
 @media (prefers-reduced-motion: no-preference) {
