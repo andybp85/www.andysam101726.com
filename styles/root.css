@@ -27,11 +27,15 @@ html {
 
 body {
     font-family: contralto, serif;
-    background-image: url("/images/wood-desktop.webp"); /* fallback for no image-set() */
-    background-image: image-set(
-        url("/images/wood-desktop.avif") type("image/avif"),
-        url("/images/wood-desktop.webp") type("image/webp")
-    );
+    background-image:
+        linear-gradient(to bottom, transparent 0%, transparent 35%, #000 100%),
+        url("/images/wood-desktop.webp"); /* fallback */
+    background-image:
+        linear-gradient(to bottom, transparent 0%, transparent 35%, #000 100%),
+        image-set(
+            url("/images/wood-desktop.avif") type("image/avif"),
+            url("/images/wood-desktop.webp") type("image/webp")
+        );
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
@@ -46,11 +50,15 @@ body {
 
 @media (max-width: 700px) {
     body {
-        background-image: url("/images/wood-mobile.webp"); /* fallback for no image-set() */
-        background-image: image-set(
-            url("/images/wood-mobile.avif") type("image/avif"),
-            url("/images/wood-mobile.webp") type("image/webp")
-        );
+        background-image:
+            linear-gradient(to bottom, transparent 0%, transparent 35%, #000 100%),
+            url("/images/wood-mobile.webp"); /* fallback */
+        background-image:
+            linear-gradient(to bottom, transparent 0%, transparent 35%, #000 100%),
+            image-set(
+                url("/images/wood-mobile.avif") type("image/avif"),
+                url("/images/wood-mobile.webp") type("image/webp")
+            );
     }
 }
 
@@ -90,6 +98,10 @@ h1 {
     font-size: var(--h1-font-size);
     line-height: calc(var(--h1-font-size) * 1.1);
     margin: 1vh 0 0;
+    background: linear-gradient(180deg, var(--brass) 0%, var(--brass-dark) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
 }
 
 button[type="submit"] {
