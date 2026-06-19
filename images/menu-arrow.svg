@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg
+   id="menu-arrow"
+   viewBox="0 0 101 39"
+   width="101"
+   height="39"
+   xmlns="http://www.w3.org/2000/svg">
+  <!-- Right-pointing triangle: current-station indicator for mobile nav -->
+  <polygon
+     fill="#be1e2d"
+     points="100.58,19.08 0,0 0,38.16" />
+</svg>
