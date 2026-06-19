@@ -48,7 +48,9 @@ body {
         );
     background-size: cover;
     background-position: center;
-    background-attachment: fixed;
+    /* Gradient scrolls so the wood→black fade spans the whole document on every
+       page (not just one viewport); the wood texture stays fixed underneath. */
+    background-attachment: scroll, fixed;
     display: flex;
     flex-direction: column;
     align-items: center;
