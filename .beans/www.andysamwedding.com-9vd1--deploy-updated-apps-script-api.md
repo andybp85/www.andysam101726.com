@@ -9,17 +9,20 @@ updated_at: 2026-06-18T10:59:23Z
 parent: www.andysamwedding.com-wbpd
 ---
 
-Backend code is written/committed in andysamwedding-api but NOT yet deployed. The site's RSVP/guest-lookup won't work until this is done.
+RESOLVED differently than planned: rather than redeploy the old project, a NEW standalone Apps Script Web App + NEW RSVP sheet were stood up (same Google account). The old deployment-ID mismatch is now moot. Frontend repointed to the new /exec.
 
-Symptom while undeployed: submitting a last name at the gate still redirects to /savethedate (the retired page). The deployed Web App serves old code; source Code.gs:45 already returns redirect:'/home/'. Confirmed code committed on api `main` (e911d6c + bugfixes), tree clean, clasp 3.2.0 authed.
+New endpoint (index.js:4, rsvp/index.js:1):
+`https://script.google.com/macros/s/AKfycbwfXZMR_HIAoBzBZaS6bpmgB-pNZRkrjxRn6Bq09__brkhYBJNZUaGrMnPYkYDDoqdiqQ/exec`
 
-## GOTCHA: deployment-ID mismatch (verify BEFORE pushing)
-The /exec URL the frontend calls (index.js:4) is deployment `AKfycbzlDfJdr-lTdTmOuNGXMYS-53jjXf1QCW_dD_I6ZmLYRSO_Y7UCgzcGertCfHIT5nbx`.
-But `clasp deployments` for the configured script (.clasp.json scriptId `1W7yEL...`) lists only ONE deployment: `AKfycbwy67AB2_PtbnsrUXi4LsNZ95a_lN6eGKeDT_mB6ag @HEAD` — a DIFFERENT id.
-clasp does not see the deployment production actually hits. Either (a) .clasp.json points at a different script project than the one serving prod (likely), or (b) the live deployment was made in the UI. Pushing blindly may update the wrong project and leave the live site unchanged.
+## GOTCHA: do NOT smoke-test Apps Script POST with `curl -L`
+Apps Script POST returns a 302 to script.googleusercontent.com/macros/echo?user_content_key=...; curl's auto-follow (-L) invalidates the key -> Google's generic "Sorry, unable to open the file at this time" page (HTTP 200/405), which looks like a deploy failure but is NOT. The server execution shows `Completed` in the Apps Script Executions log. Browser `fetch` handles the redirect fine.
+Test with a TWO-STEP curl instead: POST without -L, grab the `Location:` echo URL, then GET it separately:
+```
+LOC=$(curl -s -o /dev/null -X POST "$URL" --data-urlencode 'VERB=POST' --data-urlencode 'password=Harber' -D - | awk 'tolower($1)=="location:"{print $2}' | tr -d '\r')
+curl -s -A 'Mozilla/5.0' "$LOC"
+```
 
-- [ ] In the Apps Script editor for the LIVE project (open the /exec URL's project, or Deploy -> Manage deployments), copy the script ID from Project Settings and compare to .clasp.json scriptId `1W7yEL...`
-- [ ] If MISMATCH: fix .clasp.json scriptId (or repoint frontend) so clasp targets the live project, before pushing
-- [ ] cd ~/Projects/andysamwedding-api && clasp push
-- [ ] In Manage deployments, EDIT THE EXISTING deployment -> New version -> Deploy. Do NOT run a bare `clasp deploy` (mints a new /exec URL the frontend doesn't use). Editing in place keeps the /exec URL stable.
-- [ ] Smoke-test with the gate password (see plan Task 5 Step 5 for exact curl commands): POST login -> token + redirect:/home/; GUESTS -> 93 groups; PUT -> success + row in sheet
+Verified 2026-06-18:
+- [x] POST login (password=Harber) -> {status:success, token, redirect:/home/}
+- [x] GUESTS -> success, 93 groups (reads the new sheet)
+- [ ] PUT -> success + row in the NEW RSVP sheet (write path; not yet run — would leave a test row to delete)

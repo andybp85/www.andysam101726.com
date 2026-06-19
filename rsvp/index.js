@@ -1,4 +1,4 @@
-const API = 'https://script.google.com/macros/s/AKfycbzlDfJdr-lTdTmOuNGXMYS-53jjXf1QCW_dD_I6ZmLYRSO_Y7UCgzcGertCfHIT5nbx/exec'
+const API = 'https://script.google.com/macros/s/AKfycbwfXZMR_HIAoBzBZaS6bpmgB-pNZRkrjxRn6Bq09__brkhYBJNZUaGrMnPYkYDDoqdiqQ/exec'
 const norm = s => (s || '').trim().toLowerCase()
 
 let matchedGroup = null  // { id, members:[{first,last,slot}] }
