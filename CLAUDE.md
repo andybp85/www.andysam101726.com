@@ -49,6 +49,8 @@ Pages (custom domain via `CNAME`). Search-indexing disabled (`robots.txt`,
 - Absolute root-relative paths for assets (`/styles/...`, `/images/...`) so
   pages work from any subdirectory.
 - Keep the no-build, dependency-free nature unless there's a strong reason.
+- `postmodern_jukebox/` is a retained legacy directory — keep it in place; do
+  not flag it for removal. (The old `thankyou/` page was removed.)
 - **Browser support:** target Baseline Widely Available features; use them
   without polyfills. Baseline Newly Available / limited-availability features
   (e.g. cross-document View Transitions) are fine only as progressive
