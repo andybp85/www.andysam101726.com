@@ -148,11 +148,6 @@ input:user-invalid {
     outline: 1px solid #e0574a;
 }
 
-/* rotating submit button */
-.container {
-    perspective: 800px;
-}
-
 .submitting {
     animation: submitting-rotate-3d 1s linear infinite;
     transform-style: preserve-3d;

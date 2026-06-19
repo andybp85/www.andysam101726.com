@@ -19,7 +19,7 @@ function render() {
         `<a class="station" data-index="${i}" href="${href}">${label}</a>`).join('')
     document.getElementById('site-nav').innerHTML = `
         <div id="radio">
-            <button id="knob" type="button" aria-label="Tuning knob"><span class="knob-label">MENU</span></button>
+            <button id="knob" type="button" aria-label="Tuning knob" aria-expanded="false"><span class="knob-label">MENU</span></button>
             <div id="dial">
                 <div id="needle" aria-hidden="true"></div>
                 <div id="stations">${stations}</div>
@@ -92,7 +92,10 @@ function initMobileKnob() {
     const menu = document.getElementById('station-menu')
     if (!knob || !menu) return
     knob.addEventListener('click', () => {
-        if (window.matchMedia('(max-width: 700px)').matches) menu.classList.toggle('open')
+        if (window.matchMedia('(max-width: 700px)').matches) {
+            const open = menu.classList.toggle('open')
+            knob.setAttribute('aria-expanded', String(open))
+        }
     })
 }
 
