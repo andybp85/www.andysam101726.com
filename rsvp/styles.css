@@ -1,39 +1,172 @@
 @import "/styles/root.css";
 
-main {
-    border: 4px solid var(--body-text-color);
-    border-radius: 1vh;
-    background-color: rgba(0, 0, 0, 0.75);
-    width: 70vw;
-    max-width: 50rem;
-    text-align: center;
-    padding: 2vh 4vw;
-}
+/* ── RSVP page overrides (parchment/ink, deco-card handles the frame) ── */
 
-.deadline { font-weight: bold; }
-.hint { font-size: 0.8em; opacity: 0.8; }
-.error { color: red; min-height: 1.2em; }
-
-#name-form input { display: block; margin: 0.5rem auto; width: min(100%, 24rem); padding: 0.4em; }
-
-.member {
-    border: 2px solid var(--brass-dark);
-    border-radius: 0.4rem;
-    margin: 0.8rem 0;
-    padding: 0.6rem;
-    text-align: left;
-}
-.member-name { font-size: 1.2em; display: block; margin-bottom: 0.3rem; }
-.member label { margin-right: 1rem; }
-.guest-name { padding: 0.3em; margin-right: 0.5rem; }
-
-button[type="submit"] {
+.rsvp-title {
     font-family: nickerbocker, serif;
-    color: var(--ink);
-    background: linear-gradient(180deg, var(--brass), var(--brass-dark));
-    border: 2px solid var(--brass-dark);
-    border-radius: 0.4rem;
-    padding: 0.4em 2.5em;
+    font-size: clamp(2.5rem, 1.5rem + 5vw, 5rem);
+    font-weight: bold;
+    color: #2a1a14;
+    margin: 0 0 0.6em;
+    text-align: center;
+    line-height: 1.1;
+}
+
+.deadline {
+    font-weight: bold;
+    color: #2a1a14;
+}
+
+.hint {
+    font-size: 0.8em;
+    opacity: 0.8;
+}
+
+.error {
+    color: #b22222;
+    min-height: 1.2em;
+}
+
+/* ── Step 1: name form ── */
+#name-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.2rem;
+}
+
+/* ── Step 2: per-member blocks ── */
+.member {
+    margin: 1.2rem 0;
+    padding: 0;
+    border: none;
+    text-align: center;
+}
+
+.member-name {
+    font-family: nickerbocker, serif;
+    font-size: clamp(1.4rem, 1rem + 2vw, 2.2rem);
+    display: block;
+    margin-bottom: 0.4rem;
+    color: #2a1a14;
+}
+
+/* Attending/not-attending row */
+.member label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35em;
+    margin: 0 0.6rem;
+    font-family: contralto, serif;
+    font-size: 1em;
+    color: #2a1a14;
     cursor: pointer;
+}
+
+/* Square deco radio box */
+.member input[type="radio"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 0.85em;
+    height: 0.85em;
+    border: 2px solid #2a1a14;
+    background: transparent;
+    cursor: pointer;
+    flex-shrink: 0;
+    position: relative;
+}
+
+.member input[type="radio"]:checked::after {
+    content: "";
+    display: block;
+    width: 55%;
+    height: 55%;
+    background: #2a1a14;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* Guest slot: "Guest:" label + underline input */
+.guest-flag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35em;
+    font-family: contralto, serif;
+    font-size: clamp(1.2rem, 0.8rem + 2vw, 1.8rem);
+    color: #2a1a14;
+    margin-bottom: 0.3rem;
+}
+
+.guest-flag input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 0.85em;
+    height: 0.85em;
+    border: 2px solid #2a1a14;
+    background: transparent;
+    cursor: pointer;
+    flex-shrink: 0;
+    position: relative;
+}
+
+.guest-flag input[type="checkbox"]:checked::after {
+    content: "";
+    display: block;
+    width: 55%;
+    height: 55%;
+    background: #2a1a14;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.guest-name {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #2a1a14;
+    color: #2a1a14;
+    font-family: contralto, serif;
+    font-size: var(--body-font-size);
+    text-align: center;
+    width: 14rem;
+    padding: 0.2em 0;
+    display: block;
+    margin: 0 auto 0.5rem;
+}
+
+.guest-name::placeholder {
+    color: #6b4c3b;
+}
+
+/* ── Step 2 picker (multi-party disambiguation) ── */
+#party-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.8rem;
     margin-top: 1rem;
+}
+
+.party-pick {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #2a1a14;
+    color: #2a1a14;
+    font-family: contralto, serif;
+    font-size: 1em;
+    cursor: pointer;
+    padding: 0.3em 1em;
+    width: 100%;
+    max-width: 24rem;
+    text-align: center;
+    transition: opacity 0.15s;
+}
+
+.party-pick:hover,
+.party-pick:focus-visible {
+    opacity: 0.65;
+    outline: none;
 }

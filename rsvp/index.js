@@ -1,7 +1,6 @@
 import { partiesByLastName, labelForParty } from './party.js'
 
 const API = 'https://script.google.com/macros/s/AKfycbwfXZMR_HIAoBzBZaS6bpmgB-pNZRkrjxRn6Bq09__brkhYBJNZUaGrMnPYkYDDoqdiqQ/exec'
-const norm = s => (s || '').trim().toLowerCase()
 
 let matchedGroup = null  // { id, members:[{first,last,slot}] }
 
@@ -32,8 +31,8 @@ function renderParty(group) {
             : `<span class="member-name">${m.first} ${m.last}</span>`
         return `<fieldset class="member" data-i="${i}">
             ${nameCell}
-            <label><input type="radio" name="att-${i}" value="yes" checked> Attending</label>
-            <label><input type="radio" name="att-${i}" value="no"> Not attending</label>
+            <label><input type="radio" name="att-${i}" value="yes" checked> attending</label>
+            <label><input type="radio" name="att-${i}" value="no"> not attending</label>
         </fieldset>`
     }).join('')
 }
