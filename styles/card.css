@@ -39,16 +39,28 @@ main.deco-card::after,
     text-align: center;
 }
 
+/* Art-deco "button" — framed by double rules top & bottom, not fully outlined */
 .deco-card button[type="submit"] {
     background: none;
+    background-image: none;
     border: none;
+    border-top: 3px double #8a6d2f;
+    border-bottom: 3px double #8a6d2f;
     font-family: contralto, serif;
-    font-size: 1.2em;
+    font-size: 1.25em;
+    letter-spacing: 0.08em;
     cursor: pointer;
     color: #2a1a14;
-    padding: 0;
-    margin: 0;
+    padding: 0.3em 1.6em 0.35em;
+    margin: 0.5rem auto 0;
     width: auto;
     height: auto;
-    background-image: none;
+    transition: background 0.15s ease, letter-spacing 0.15s ease;
+}
+
+.deco-card button[type="submit"]:hover,
+.deco-card button[type="submit"]:focus-visible {
+    background: rgba(138, 109, 47, 0.14);
+    letter-spacing: 0.12em;
+    outline: none;
 }

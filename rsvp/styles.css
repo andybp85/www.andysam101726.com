@@ -30,6 +30,9 @@
     gap: 1.2rem;
 }
 
+/* Wider last-name field */
+#last { width: min(90%, 24rem); }
+
 /* ── Step 2: per-member blocks ── */
 .member {
     margin: 1.2rem 0;
