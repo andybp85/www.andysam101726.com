@@ -31,7 +31,7 @@ function markCurrent() {
     const i = currentIndex()
     document.querySelectorAll('.station').forEach(a =>
         a.classList.toggle('active', Number(a.dataset.index) === i))
-    positionNeedle(i)
+    requestAnimationFrame(() => positionNeedle(i))
 }
 
 // Position the needle over the active station in the desktop dial.
