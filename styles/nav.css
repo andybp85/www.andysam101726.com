@@ -19,6 +19,25 @@
     cursor: grab;
     padding: 0;
     background-color: transparent;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* MENU label on knob — hidden by default (desktop) */
+.knob-label {
+    display: none;
+    font-family: Georgia, serif;
+    font-size: 10px;
+    font-weight: bold;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--ink);
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
+    pointer-events: none;
+    line-height: 1;
+    white-space: nowrap;
 }
 
 /* Brass plaque — horizontal rounded rectangle */
@@ -155,6 +174,13 @@
         height: auto;
         aspect-ratio: 511 / 676;
         cursor: pointer;
+    }
+
+    /* Show MENU label on mobile knob */
+    .knob-label {
+        display: inline-block;
+        color: white;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
     }
 
     /* Vertical station selector panel */
