@@ -9,6 +9,12 @@ Hand-written HTML/CSS/vanilla JS. No build step, no dependencies. Hosted on
 GitHub Pages with a custom domain (`CNAME`); not search-indexed (`robots.txt`,
 `noindex`).
 
+The visual system is an antique-radio cabinet: a dark wood background fading to
+black, a brass tuning-dial nav (a knob-activated vertical menu on mobile), and
+art-deco parchment "deco cards" (`styles/card.css`) shared by the gate, RSVP,
+and content pages. Same-origin navigations use cross-document View Transitions
+as a progressive enhancement (instant nav where unsupported).
+
 ## How it works
 
 ### Auth gate (`/`)
@@ -23,15 +29,16 @@ their redirect.
 
 | Path | Content |
 |------|---------|
-| `/home/` | Wedding overview, hero image, RSVP call-to-action |
-| `/rsvp/` | Party RSVP — looks up the guest's party, collects attendance for each member plus open slots, submits to the API |
+| `/home/` | Wedding overview, B&W engagement photos (responsive `<picture>`), RSVP call-to-action |
+| `/rsvp/` | Party RSVP — visitor enters a member's last name (a picker disambiguates when several parties share it), then sets attendance for each member plus open guest slots, and submits to the API |
 | `/schedule/` | Weekend schedule (Fri 10/16 – Sun 10/18 2026) |
 | `/travel/` | Hotel blocks, travel info |
 | `/faq/` | Frequently asked questions |
 
 Every page includes a token guard (inline `<script>` in `<head>`) that
-redirects unauthenticated visitors back to `/`. Shared nav is injected by
-`/site.js`.
+redirects unauthenticated visitors back to `/`. The radio-dial nav is rendered
+by `/radio-nav.js` (an ES module; the tuning geometry lives in `radio-math.js`),
+and `/site.js` provides the `aria-invalid` validation bridge.
 
 ### API contract (Apps Script Web App)
 
@@ -63,11 +70,14 @@ node tools/gen-guests.mjs
 ## Layout
 
 ```
-index.html, index.js, styles.css   Login gate
+index.html, index.js, styles.css   Login gate (art-deco deco card)
 home/  rsvp/  schedule/            Content pages
 travel/  faq/                      Content pages (cont.)
-site.js                            Shared nav + token guard helpers
-styles/                            Shared CSS (root tokens, normalize, fonts)
+radio-nav.js                       Radio-dial nav renderer + knob interaction (ES module)
+radio-math.js                      Pure tuning-angle math for the knob (ES module, node-testable)
+rsvp/party.js                      Pure party-lookup helpers (ES module, node-testable)
+site.js                            aria-invalid validation bridge
+styles/                            Shared CSS (root tokens, normalize, fonts, nav.css, card.css)
 fonts/  images/                    Assets
 tools/gen-guests.mjs               Guest-list CSV → guests.gs generator
 scaling.txt                        clamp() fluid-type cheatsheet
