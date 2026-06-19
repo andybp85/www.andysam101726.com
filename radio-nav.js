@@ -19,7 +19,7 @@ function render() {
         `<a class="station" data-index="${i}" href="${href}">${label}</a>`).join('')
     document.getElementById('site-nav').innerHTML = `
         <div id="radio">
-            <button id="knob" type="button" aria-label="Navigation — tune the dial, or open the menu" aria-controls="station-menu" aria-expanded="false"><span class="knob-spin"><span class="knob-arrow"></span></span><span class="knob-label">MENU</span></button>
+            <button id="knob" type="button" aria-label="Navigation — tune the dial, or open the menu" aria-controls="station-menu" aria-expanded="false"><span class="knob-spin"><span class="knob-arrow"><svg viewBox="0 0 103.73 40.77" aria-hidden="true"><path d="M103.73,18.69 L2.58,0 c-1.34,-0.25 -2.58,0.78 -2.58,2.14 v36.49 c0,1.36 1.24,2.39 2.58,2.14 L103.73,22.08 c1.89,-0.35 1.89,-3.05 0,-3.4 z"/></svg></span></span><span class="knob-label">MENU</span></button>
             <div id="dial">
                 <div id="needle" aria-hidden="true"></div>
                 <div id="stations">${stations}</div>
@@ -47,8 +47,11 @@ function positionNeedle(i) {
     if (!stationEl) return
     const dialRect = dial.getBoundingClientRect()
     const stRect = stationEl.getBoundingClientRect()
-    // Center the needle on the station's horizontal midpoint relative to the dial
-    const relCenter = (stRect.left + stRect.width / 2) - dialRect.left
+    // The needle is absolutely positioned against the dial's padding box, but
+    // getBoundingClientRect gives the border box — subtract the border width so
+    // the red line lands exactly on the active station's tick.
+    const borderLeft = parseFloat(getComputedStyle(dial).borderLeftWidth) || 0
+    const relCenter = (stRect.left + stRect.width / 2) - dialRect.left - borderLeft
     needle.style.left = relCenter + 'px'
 }
 

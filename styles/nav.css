@@ -57,19 +57,22 @@
     box-shadow: inset 0 0 0 2px #6a4a23;
 }
 
-/* Brown indicator arrow (points up at rest; rotates with the body) */
+/* Brown indicator arrow — exact shape/proportions from knob_menu_notch.svg
+   (103.73 × 40.77 in a 511 knob ≈ 20% long). Points up at HOME, rotates
+   with the body. The -90° turns the SVG's right-facing arrow to point up. */
 .knob-arrow {
     position: absolute;
     left: 50%;
-    top: 17%;
-    transform: translateX(-50%);
-    width: 0;
-    height: 0;
-    border-left: 0.42em solid transparent;
-    border-right: 0.42em solid transparent;
-    border-bottom: 0.72em solid #4e2e12;
-    filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.45));
+    top: 23%;
+    width: 20%;
+    transform: translate(-50%, -50%) rotate(-90deg);
+    transform-origin: center;
+    line-height: 0;
+    filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.4));
 }
+
+.knob-arrow svg { display: block; width: 100%; height: auto; }
+.knob-arrow path { fill: #5e421c; }
 
 /* Fixed glare — stays in place while the body turns */
 #knob::after {
