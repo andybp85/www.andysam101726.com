@@ -19,7 +19,7 @@ function render() {
         `<a class="station" data-index="${i}" href="${href}">${label}</a>`).join('')
     document.getElementById('site-nav').innerHTML = `
         <div id="radio">
-            <button id="knob" type="button" aria-label="Tuning knob" aria-expanded="false"><span class="knob-label">MENU</span></button>
+            <button id="knob" type="button" aria-label="Tuning knob" aria-expanded="false"><span class="knob-spin"><span class="knob-arrow"></span></span><span class="knob-label">MENU</span></button>
             <div id="dial">
                 <div id="needle" aria-hidden="true"></div>
                 <div id="stations">${stations}</div>
@@ -57,8 +57,9 @@ render()
 function go(href) { if (href !== location.pathname) location.href = href }
 
 function setNeedle(i) {
-    const knob = document.getElementById('knob')
-    if (knob) knob.style.transform = `rotate(${angleFromStation(i, NAV.length)}deg)`
+    // Rotate only the knurled body + arrow; the glare overlay stays fixed.
+    const spin = document.querySelector('.knob-spin')
+    if (spin) spin.style.transform = `rotate(${angleFromStation(i, NAV.length)}deg)`
     positionNeedle(i)
 }
 
