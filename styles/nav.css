@@ -101,8 +101,8 @@
     flex-direction: column;
     align-items: center;
     background:
-        linear-gradient(#ffdc8d, #ffdc8d) padding-box,
-        linear-gradient(135deg, #f9dcaa 0%, #b78951 13%, #9e703b 25%, #7d5b29 37%, #6a4a23 47%, #8f6333 61%, #ad7b47 71%, #deba86 84%, #916534 93%, #745426 100%) border-box;
+        linear-gradient(var(--dial-cream), var(--dial-cream)) padding-box,
+        var(--brass-frame) border-box;
     border: clamp(8px, 1.1vw, 14px) solid transparent;
     border-radius: clamp(0.6rem, 1.4vw, 1.1rem);
     padding: 0.4rem clamp(1rem, 2.5vw, 2rem);
@@ -211,17 +211,30 @@
     transition: left 0.3s ease;
 }
 
-/* Mobile station menu — hidden by default */
+/* Mobile station menu — present only on mobile (laid out off-screen there) */
 #station-menu {
     display: none;
 }
 
 /* ── Mobile (≤700px) ────────────────────────────────────────────── */
 @media (max-width: 700px) {
-    /* Hide horizontal dial */
+    /* Push-drawer: the menu sits off-screen left; opening slides the whole
+       page right to reveal it. Clip the overflow so the page never widens. */
+    html { overflow-x: hidden; }
+
+    body { --menu-w: min(74vw, 19rem); overflow-x: hidden; }
+
+    /* The page content slides right to reveal the drawer; clipped at the edge */
+    main {
+        transition: transform 0.38s cubic-bezier(0.4, 0, 0.2, 1);
+        will-change: transform;
+    }
+
+    body.menu-open main { transform: translateX(var(--menu-w)); }
+
+    /* Hide horizontal dial; knob stays put as the MENU toggle */
     #dial { display: none; }
 
-    /* Reflow radio container */
     #radio {
         flex-direction: column;
         align-items: flex-start;
@@ -229,100 +242,107 @@
         margin: 0.5vh auto 1vh;
     }
 
-    /* Knob becomes MENU button — keep knob.svg appearance */
     #knob {
-        width: clamp(4rem, 14vw, 6rem);
-        height: auto;
-        aspect-ratio: 511 / 676;
+        --knob-size: clamp(4.5rem, 16vw, 6rem);
         cursor: pointer;
-    }
-
-    /* Show MENU label on mobile knob */
-    .knob-label {
-        display: inline-block;
-        color: white;
-        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
-    }
-
-    /* Vertical station selector panel */
-    #station-menu {
-        display: none;
-        flex-direction: column;
-        align-items: center;
-        background: linear-gradient(180deg, var(--brass) 0%, var(--brass-dark) 100%);
-        border: 3px solid var(--brass-dark);
-        border-radius: 0.75rem;
-        padding: 0.75rem 2.5rem;
         position: relative;
+        z-index: 6;
     }
 
-    /* Vertical center line */
+    /* Show the (level) MENU label on the brass face */
+    .knob-label { display: inline-block; }
+
+    /* Vertical station selector — cream face + beveled brass frame,
+       matching the dial; slides in from the left edge. */
+    #station-menu {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        position: fixed;
+        top: 50%;
+        left: 0;
+        width: var(--menu-w);
+        padding: 1.2rem 0;
+        background:
+            linear-gradient(var(--dial-cream), var(--dial-cream)) padding-box,
+            var(--brass-frame) border-box;
+        border: clamp(9px, 3vw, 13px) solid transparent;
+        border-radius: 1rem;
+        margin-left: 0.4rem;
+        box-shadow:
+            inset 0 0 0 2px #4e371b,
+            6px 7px 14px rgba(35, 31, 32, 0.6);
+        z-index: 5;
+        /* Slid off-screen left when closed; eased into view when open */
+        transform: translate(-112%, -50%);
+        transition: transform 0.38s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    body.menu-open #station-menu { transform: translate(0, -50%); }
+
+    /* Vertical center line — thick ink */
     #station-menu::before {
         content: '';
         position: absolute;
-        top: 0.75rem;
-        bottom: 0.75rem;
+        top: 1.2rem;
+        bottom: 1.2rem;
         left: 50%;
-        width: 2px;
-        background-color: var(--brass-dark);
+        width: clamp(4px, 1.4vw, 7px);
+        background-color: #231f20;
         transform: translateX(-50%);
+        box-shadow: 2px 0 2px rgba(35, 31, 32, 0.4);
+        z-index: 0;
     }
 
-    #station-menu.open {
-        display: flex;
-    }
-
-    /* Stations in vertical menu */
+    /* Stations stacked along the line */
     #station-menu .station {
+        display: block;
         font-family: nickerbocker, serif;
-        font-size: clamp(1.1rem, 4vw, 1.5rem);
-        letter-spacing: 0.08em;
+        font-size: clamp(1.3rem, 6vw, 1.8rem);
+        letter-spacing: 0.06em;
         text-decoration: none;
-        color: var(--ink);
-        padding: 0.65rem 0;
+        color: #231f20;
+        text-shadow: 1px 1px 1px rgba(35, 31, 32, 0.35);
+        padding: 0.7rem 0;
         position: relative;
         text-align: center;
         width: 100%;
-        /* override desktop tick-mark positioning */
         align-self: auto;
-        padding-top: 0.65rem;
-        padding-bottom: 0.65rem;
+        z-index: 1;
     }
 
-    /* Remove desktop tick pseudo-element from mobile station items */
-    #station-menu .station::before {
-        display: none;
-    }
-
-    /* Tick marks between stations (horizontal separator) */
+    /* Tick mark — short horizontal bar across the line at the top of each station */
     #station-menu .station::after {
         content: '';
         position: absolute;
-        bottom: 0;
-        left: 30%;
-        right: 30%;
-        height: 2px;
-        background-color: var(--brass-dark);
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: clamp(16px, 5vw, 26px);
+        height: clamp(4px, 1.4vw, 7px);
+        background-color: #231f20;
+        z-index: 1;
     }
 
-    #station-menu .station:last-child::after {
-        display: none;
+    /* Active station — bold + red right-pointing triangle on the left edge */
+    #station-menu .station::before { display: none; }
+
+    #station-menu .station.active {
+        font-weight: bold;
     }
 
-    /* Red arrow for active station in mobile menu */
     #station-menu .station.active::before {
         display: block;
         content: '';
         position: absolute;
-        left: -1.4rem;
+        left: 0.3rem;
         top: 50%;
         transform: translateY(-50%);
-        width: 1rem;
-        height: 0.39rem;
-        background: url("/images/menu-arrow.svg") center / contain no-repeat;
-    }
-
-    #station-menu .station.active {
-        font-weight: bold;
+        width: 0;
+        height: 0;
+        border-top: 0.55rem solid transparent;
+        border-bottom: 0.55rem solid transparent;
+        border-left: 0.8rem solid #be1e2d;
+        filter: drop-shadow(1px 1px 1px rgba(35, 31, 32, 0.5));
     }
 }
