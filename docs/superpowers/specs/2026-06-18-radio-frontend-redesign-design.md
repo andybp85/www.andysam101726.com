@@ -172,6 +172,8 @@ fallback path. No test framework is added.
 
 ## Open Items (carried into implementation)
 
-- Contralto weight files vs approximation (resolve before stage 3/4).
+- Contralto weight files vs approximation — **RESOLVED 2026-06-18: approximation.**
+  Use the single existing Contralto family + CSS `font-weight`/`font-style`; no
+  new weight files are sourced. Minor drift on form text accepted.
 - Exact dial geometry — traced from `full_page_updated_with_knob_desktop.svg`
   during stage 2.
