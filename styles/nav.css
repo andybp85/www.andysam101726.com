@@ -18,9 +18,9 @@
    (fixed lighting) and MENU label stay put — like a real knob. */
 #knob {
     flex-shrink: 0;
-    /* sit at the left end of the left track, near the page edge */
-    justify-self: start;
-    margin-left: clamp(0.5rem, 4vw, 3rem);
+    /* hug the right end of the left track so the knob sits just left of the
+       page-centred dial (column-gap provides the spacing) */
+    justify-self: end;
     --knob-size: clamp(5.5rem, 9vw, 7.5rem);
     width: var(--knob-size);
     height: var(--knob-size);
