@@ -59,10 +59,21 @@ render()
 
 function go(href) { if (href !== location.pathname) location.href = href }
 
-function setNeedle(i) {
-    // Rotate only the knurled body + arrow; the glare overlay stays fixed.
+// Largest valid tuning angle (last station). Used to clamp the live drag so the
+// knob never spins past the dial into the dead zone.
+const MAX_ANGLE = angleFromStation(NAV.length - 1, NAV.length)
+
+// Rotate only the knurled body + arrow; the glare overlay stays fixed.
+// `animate` eases the turn (snapping to a station); off = follow the finger 1:1.
+function rotateKnob(deg, animate) {
     const spin = document.querySelector('.knob-spin')
-    if (spin) spin.style.transform = `rotate(${angleFromStation(i, NAV.length)}deg)`
+    if (!spin) return
+    spin.style.transition = animate ? 'transform 0.22s cubic-bezier(0.22, 1, 0.36, 1)' : 'none'
+    spin.style.transform = `rotate(${deg}deg)`
+}
+
+function setNeedle(i, animate = true) {
+    rotateKnob(angleFromStation(i, NAV.length), animate)
     positionNeedle(i)
 }
 
@@ -70,13 +81,18 @@ function initDesktopKnob() {
     const knob = document.getElementById('knob')
     if (!knob) return
     let dragging = false, target = currentIndex()
-    setNeedle(target)
+    // Initial orientation: no spin-on-load.
+    setNeedle(target, false)
     const onMove = e => {
         if (!dragging) return
         const r = knob.getBoundingClientRect()
-        const deg = angleFromPointer(r.left + r.width / 2, r.top + r.height / 2, e.clientX, e.clientY)
+        const raw = angleFromPointer(r.left + r.width / 2, r.top + r.height / 2, e.clientX, e.clientY)
+        const deg = Math.max(0, Math.min(MAX_ANGLE, raw))
         target = stationFromAngle(deg, NAV.length)
-        setNeedle(target)
+        // Knob follows the finger continuously; the needle snaps to the nearest
+        // station (its own CSS-eased `left`).
+        rotateKnob(deg, false)
+        positionNeedle(target)
     }
     knob.addEventListener('pointerdown', e => {
         if (window.matchMedia('(max-width: 700px)').matches) return
@@ -87,6 +103,8 @@ function initDesktopKnob() {
     knob.addEventListener('pointerup', () => {
         if (!dragging) return
         dragging = false
+        // Ease the knob onto the exact station angle, then navigate.
+        setNeedle(target, true)
         go(NAV[target][1])
     })
 }
