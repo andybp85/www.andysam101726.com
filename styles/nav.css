@@ -163,43 +163,48 @@
     z-index: 1;
 }
 
-/* Station container — flex row, all in a single line,
-   used as the positioning anchor for above/below alternation */
+/* Station container — flex row, all in a single line, the positioning anchor
+   for above/below alternation. Geometry is em-based off the station font so the
+   text, ticks and row height all scale together at every width (the center line
+   sits at 50%, i.e. exactly one half-height from top). */
 #stations {
+    /* big on wide screens, scales down toward the 700px breakpoint so the row
+       never crowds before the dial gives way to the mobile menu */
+    font-size: clamp(1.45rem, 0.1rem + 3vw, 2.7rem);
+    line-height: 1.1;
     display: flex;
-    align-items: center;
+    align-items: stretch;
     gap: clamp(0.6rem, 2.5vw, 2rem);
     position: relative;
     /* above the center line and the red needle */
     z-index: 2;
-    /* Combined height: above slots + center line + below slots */
-    height: clamp(3.5rem, 8vw, 5.5rem);
+    /* Two stacked half-rows (text above the line + text below it) */
+    height: 2.4em;
 }
 
-/* Individual station links */
+/* Individual station links — font inherited from #stations so 1em tracks it */
 .station {
     font-family: nickerbocker, serif;
-    /* big on wide screens, scales down toward the 700px breakpoint so the row
-       never crowds before the dial gives way to the mobile menu */
-    font-size: clamp(1.45rem, 0.1rem + 3vw, 2.7rem);
     letter-spacing: 0.06em;
     text-decoration: none;
     color: #231f20;
     text-shadow: 0 1px 2px rgba(35, 31, 32, 0.5);
     position: relative;
     display: flex;
-    align-items: center;
+    justify-content: center;
     white-space: nowrap;
 }
 
-/* Tick mark — thick vertical bar on the center line for each station */
+/* Tick mark — short vertical bar centred on the line at each station's x.
+   Anchored to the line (top:50%), so it always lands on it regardless of width. */
 .station::before {
     content: '';
     position: absolute;
     left: 50%;
-    transform: translateX(-50%);
-    width: clamp(3px, 0.4vw, 5px);
-    height: clamp(9px, 1.2vw, 16px);
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: clamp(2px, 0.12em, 5px);
+    height: 0.5em;
     background-color: #231f20;
 }
 
@@ -207,26 +212,8 @@
 /* Odd stations (1, 3, 5 = HOME, SCHEDULE, FAQ) go ABOVE the line */
 /* Even stations (2, 4 = RSVP, TRAVEL) go BELOW the line */
 
-.station:nth-child(odd) {
-    align-self: flex-start;
-    padding-bottom: 1.4em;
-}
-
-.station:nth-child(even) {
-    align-self: flex-end;
-    padding-top: 1.4em;
-}
-
-/* Tick mark position per alternation */
-.station:nth-child(odd)::before {
-    bottom: 1.1em;
-    top: auto;
-}
-
-.station:nth-child(even)::before {
-    top: 1.1em;
-    bottom: auto;
-}
+.station:nth-child(odd) { align-items: flex-start; }   /* text in the top half */
+.station:nth-child(even) { align-items: flex-end; }    /* text in the bottom half */
 
 /* Keyboard focus ring for station links (dial + mobile drawer) */
 .station:focus-visible {
