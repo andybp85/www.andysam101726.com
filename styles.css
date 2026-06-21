@@ -8,13 +8,13 @@ form {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 3vh;
+    gap: 2vh;
 
     label[for="password"] {
         font-size: calc(var(--body-font-size) * 1.2)
     }
 
     input {
-        width: 22rem;
+        width: min(22rem, 100%);
     }
 }
