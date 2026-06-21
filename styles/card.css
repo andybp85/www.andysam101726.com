@@ -3,11 +3,11 @@ main.deco-card,
     background-color: #f0e6d2;
     color: #2a1a14;
     /* Override root.css main defaults */
-    border: 50px solid transparent;
+    border: 100px solid transparent;
     border-radius: 0;
     border-image: url("/images/deco-frame.svg") 230 stretch;
     width: auto;
-    padding: clamp(1rem, 4vw, 3rem);
+    /*padding: clamp(1rem, 4vw, 3rem);*/
     max-width: 50rem;
     margin: 2vh auto;
     font-family: contralto, serif;
@@ -31,7 +31,6 @@ main.deco-card::after,
     font-family: contralto, serif;
     text-align: center;
     font-size: var(--body-font-size);
-    width: 14rem;
 }
 
 .deco-card input::placeholder {
@@ -54,10 +53,7 @@ main.deco-card::after,
 /* Art-deco "button" — framed by double rules top & bottom, not fully outlined */
 .deco-card button[type="submit"] {
     background: none;
-    background-image: none;
     border: none;
-    border-top: 3px double #8a6d2f;
-    border-bottom: 3px double #8a6d2f;
     font-family: contralto, serif;
     font-size: 1.25em;
     letter-spacing: 0.08em;
@@ -76,10 +72,18 @@ main.deco-card::after,
     letter-spacing: 0.12em;
 }
 
-/* Keep a real focus ring for keyboard users */
+/* no border */
 .deco-card button[type="submit"]:focus-visible,
 .deco-card a:focus-visible,
 .deco-card input:focus-visible {
-    outline: 2px solid #8a6d2f;
-    outline-offset: 2px;
+    outline: none;
 }
+
+
+/* Keep a real focus ring for keyboard users */
+/*.deco-card button[type="submit"]:focus-visible,*/
+/*.deco-card a:focus-visible,*/
+/*.deco-card input:focus-visible {*/
+/*    outline: 2px solid #8a6d2f;*/
+/*    outline-offset: 2px;*/
+/*}*/

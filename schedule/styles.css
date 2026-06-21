@@ -1,5 +1,27 @@
 @import "/styles/root.css";
 
-main section { margin: 2.5vh 0; }
-h2 { font-family: nickerbocker, serif; font-weight: normal; }
-.tbd { opacity: 0.7; font-style: italic; }
+main section {
+    margin: 2.5vh 0;
+
+    .times {
+        text-align: left;
+
+        span {
+            display: block;
+            margin-top: 0.5em;
+            text-indent: 1em hanging;
+
+            :first-child {
+                margin-top: 0;
+            }
+        }
+    }
+}
+
+h2 {
+    font-weight: normal;
+}
+
+.tbd {
+    font-style: italic;
+}

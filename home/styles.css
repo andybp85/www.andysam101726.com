@@ -1,13 +1,47 @@
 @import "/styles/root.css";
 
 /* Home content lives in the shared parchment .deco-card (set on <main>) */
-.hero picture { display: block; }
-.hero img { width: 100%; height: auto; border-radius: 0.5rem; display: block; aspect-ratio: 1600 / 1067; }
-@media (max-width: 700px) { .hero img { aspect-ratio: 900 / 1350; } }
-.details { margin-top: 3vh; }
-.names { font-size: 1.4em; }
-.date { font-size: 1.2em; }
-.place { margin-bottom: 1.5rem; }
+.hero {
+    border: 15px #f0e6d2 solid;
+
+    img {
+        width: 100%;
+        height: auto;
+        display: block;
+        aspect-ratio: 1600 / 1067;
+    }
+
+    picture {
+        display: block;
+    }
+}
+
+@media (max-width: 700px) {
+    .hero img {
+        aspect-ratio: 900 / 1350;
+    }
+}
+
+.details {
+    /*margin-top: 3vh;*/
+    position: absolute;
+    right: 5%;
+    top: 15%;
+    --drop-shadow: drop-shadow(#301934 0.05em 0.05em 0.05em);
+
+
+    .date {
+        font-size: 1.6em;
+        filter: var(--drop-shadow);
+        margin-bottom: 0;
+    }
+
+    .place {
+        margin-bottom: 1.5rem;
+        filter: var(--drop-shadow);
+    }
+}
+
 
 .rsvp-btn {
     display: inline-block;
@@ -19,4 +53,8 @@
     padding: 0.4em 2em;
     text-decoration: none;
 }
-.rsvp-btn.big { padding: 0.5em 3em; font-size: 1.2em; }
+
+.rsvp-btn.big {
+    padding: 0.5em 3em;
+    font-size: 1.2em;
+}

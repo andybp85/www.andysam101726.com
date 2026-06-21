@@ -24,16 +24,6 @@ loginForm.addEventListener('submit', e => {
         .finally(() => submitButton.classList.remove('submitting'))
 })
 
-// Mirror the CSS :user-invalid state onto aria-invalid for assistive tech.
-function syncInvalid(el) {
-    if (!el.matches || !el.matches('input, textarea, select')) return
-    if (el.matches(':user-invalid')) el.setAttribute('aria-invalid', 'true')
-    else el.removeAttribute('aria-invalid')
-}
-
-document.addEventListener('blur', e => syncInvalid(e.target), true)
-document.addEventListener('input', e => syncInvalid(e.target))
-
 async function prefetchGuests(token) {
     try {
         const body = new FormData()
