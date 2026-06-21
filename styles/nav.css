@@ -259,8 +259,9 @@
        page right to reveal it. Clip the overflow so the page never widens. */
     html { overflow-x: hidden; }
 
-    /* Narrow vertical dial (was way too wide); also the page-shift distance. */
-    body { --menu-w: min(56vw, 11rem); overflow-x: hidden; }
+    /* Narrow vertical dial — snug around the longest word (SCHEDULE); also the
+       page-shift distance. Gentle slope so it scales smoothly with the font. */
+    body { --menu-w: clamp(8rem, 5.6rem + 6vw, 9.6rem); overflow-x: hidden; }
 
     /* The page content slides right to reveal the drawer; clipped at the edge */
     main {
@@ -270,21 +271,23 @@
 
     body.menu-open main { transform: translateX(var(--menu-w)); }
 
-    /* Hide horizontal dial; knob stays put as the MENU toggle */
+    /* Hide horizontal dial; knob stays put as the MENU toggle. #radio is the
+       positioning anchor so the drawer can sit directly below the knob. */
     #dial { display: none; }
 
     #radio {
         display: flex;
         flex-direction: column;
         align-items: flex-start;
-        gap: 0.5rem;
-        margin: 0.5vh auto 1vh;
+        margin: 0.5vh 0 1vh;
+        position: relative;
     }
 
-    #knob { justify-self: auto; margin-left: 0; }
-
     #knob {
-        --knob-size: clamp(4.5rem, 16vw, 6rem);
+        justify-self: auto;
+        /* Gentle slope, and hung off the left edge a little */
+        --knob-size: clamp(4rem, 2.6rem + 5vw, 5.4rem);
+        margin-left: clamp(-1rem, -2.6vw, -0.5rem);
         cursor: pointer;
         position: relative;
         z-index: 6;
@@ -296,26 +299,28 @@
     /* Show a bigger MENU label on the brass face */
     .knob-label {
         display: inline-block;
-        font-size: clamp(1rem, 4.4vw, 1.5rem);
+        font-size: clamp(0.95rem, 0.6rem + 1.9vw, 1.4rem);
     }
 
-    /* Vertical station selector — cream face + beveled brass frame,
-       matching the dial; slides in from the left edge. */
+    /* Vertical station selector — cream face + beveled brass frame, matching the
+       dial. Anchored just below the knob (top:100% of #radio) so it never
+       collides with it regardless of viewport height; slides in from the left. */
     #station-menu {
         display: flex;
         flex-direction: column;
         align-items: stretch;
-        position: fixed;
-        top: 50%;
+        gap: 0.9rem;
+        position: absolute;
+        top: 100%;
         left: 0;
+        margin: 0.7rem 0 0 0.4rem;
         width: var(--menu-w);
-        padding: 1.2rem 0;
+        padding: 0.9rem 0;
         background:
             linear-gradient(var(--dial-cream), var(--dial-cream)) padding-box,
             var(--brass-frame) border-box;
-        border: clamp(9px, 3vw, 13px) solid transparent;
-        border-radius: 1rem;
-        margin-left: 0.4rem;
+        border: clamp(8px, 2.6vw, 12px) solid transparent;
+        border-radius: 0.9rem;
         box-shadow:
             inset 0 0 0 2px #4e371b,
             6px 7px 14px rgba(35, 31, 32, 0.6);
@@ -324,7 +329,7 @@
            visibility:hidden keeps the closed drawer out of the tab order and
            a11y tree (it's only translated, not display:none), then defers the
            hide until the slide-out finishes. */
-        transform: translate(-112%, -50%);
+        transform: translateX(-115%);
         visibility: hidden;
         transition:
             transform 0.38s cubic-bezier(0.4, 0, 0.2, 1),
@@ -332,56 +337,64 @@
     }
 
     body.menu-open #station-menu {
-        transform: translate(0, -50%);
+        transform: translateX(0);
         visibility: visible;
         transition: transform 0.38s cubic-bezier(0.4, 0, 0.2, 1), visibility 0s;
     }
 
-    /* Vertical center line — thick ink */
+    /* Vertical center line — full height; the cream word-bands mask it so each
+       word sits in a gap in the line (matching the mockup). */
     #station-menu::before {
         content: '';
         position: absolute;
-        top: 1.2rem;
-        bottom: 1.2rem;
+        top: 0.5rem;
+        bottom: 0.5rem;
         left: 50%;
-        width: clamp(4px, 1.4vw, 7px);
+        width: clamp(3px, 0.9vw, 5px);
         background-color: #231f20;
         transform: translateX(-50%);
-        box-shadow: 2px 0 2px rgba(35, 31, 32, 0.4);
+        box-shadow: 1px 0 2px rgba(35, 31, 32, 0.4);
         z-index: 0;
     }
 
-    /* Stations stacked along the line */
+    /* Stations stacked along the line. The cream background (same as the dial
+       face) masks the line behind each word, leaving the line visible only in
+       the gaps between them. */
     #station-menu .station {
         display: block;
         font-family: nickerbocker, serif;
-        font-size: clamp(1.3rem, 6vw, 1.8rem);
-        letter-spacing: 0.06em;
+        font-size: clamp(1.15rem, 0.9rem + 1.1vw, 1.5rem);
+        letter-spacing: 0.04em;
         text-decoration: none;
         color: #231f20;
-        text-shadow: 1px 1px 1px rgba(35, 31, 32, 0.35);
-        padding: 0.7rem 0;
+        text-shadow: 1px 1px 1px rgba(35, 31, 32, 0.3);
+        padding: 0.12rem 0;
         position: relative;
         text-align: center;
         width: 100%;
-        align-self: auto;
+        background-color: var(--dial-cream);
         z-index: 1;
     }
 
-    /* Tick mark — short horizontal bar across the line at the top of each station */
+    /* Tick mark — short horizontal bar centred in the gap above each station
+       (so ticks fall between the words, on the line, not under the text). */
     #station-menu .station::after {
         content: '';
         position: absolute;
-        top: 0;
+        top: -0.45rem;
         left: 50%;
-        transform: translateX(-50%);
-        width: clamp(16px, 5vw, 26px);
-        height: clamp(4px, 1.4vw, 7px);
+        transform: translate(-50%, -50%);
+        width: clamp(12px, 3.6vw, 18px);
+        height: clamp(3px, 0.9vw, 5px);
         background-color: #231f20;
         z-index: 1;
     }
 
-    /* Active station — bold + red right-pointing triangle on the left edge */
+    /* No tick above the first station — the line runs to the top edge instead */
+    #station-menu .station:first-child::after { display: none; }
+
+    /* Active station — bold + a wide, short red right-pointing triangle on the
+       cream (no black behind it). */
     #station-menu .station::before { display: none; }
 
     #station-menu .station.active {
@@ -392,14 +405,14 @@
         display: block;
         content: '';
         position: absolute;
-        left: 0.3rem;
+        left: 0.15rem;
         top: 50%;
         transform: translateY(-50%);
         width: 0;
         height: 0;
-        border-top: 0.7rem solid transparent;
-        border-bottom: 0.7rem solid transparent;
-        border-left: 1.05rem solid #be1e2d;
-        filter: drop-shadow(1px 1px 1px rgba(35, 31, 32, 0.5));
+        border-top: 0.32rem solid transparent;
+        border-bottom: 0.32rem solid transparent;
+        border-left: 0.95rem solid #be1e2d;
+        filter: drop-shadow(1px 1px 1px rgba(35, 31, 32, 0.45));
     }
 }
