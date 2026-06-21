@@ -285,9 +285,9 @@
 
     #knob {
         justify-self: auto;
-        /* Gentle slope, and hung off the left edge a little */
+        /* Gentle slope; small gap between the knob and the page edge */
         --knob-size: clamp(4rem, 2.6rem + 5vw, 5.4rem);
-        margin-left: clamp(-1rem, -2.6vw, -0.5rem);
+        margin-left: 0.9rem;
         cursor: pointer;
         position: relative;
         z-index: 6;
