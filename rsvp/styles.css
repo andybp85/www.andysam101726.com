@@ -2,8 +2,11 @@
 
 /* ── RSVP page overrides (parchment/ink, deco-card handles the frame) ── */
 
+/* All RSVP text — including titles — is Contralto (matches rsvp_page_1.svg). */
+#step-name, #step-pick, #step-party, #step-thanks { font-family: contralto, serif; }
+
 .rsvp-title {
-    font-family: nickerbocker, serif;
+    font-family: contralto, serif;
     font-size: clamp(2.5rem, 1.5rem + 5vw, 5rem);
     font-weight: bold;
     color: #2a1a14;
@@ -11,6 +14,9 @@
     text-align: center;
     line-height: 1.1;
 }
+
+/* Gray, non-bold placeholder for the last-name field (rsvp_page_1.svg). */
+#last::placeholder { color: rgba(35, 31, 32, 0.45); font-weight: normal; }
 
 .deadline {
     font-weight: bold;
@@ -42,7 +48,7 @@
 }
 
 .member-name {
-    font-family: nickerbocker, serif;
+    font-family: contralto, serif;
     font-size: clamp(1.4rem, 1rem + 2vw, 2.2rem);
     display: block;
     margin-bottom: 0.4rem;
