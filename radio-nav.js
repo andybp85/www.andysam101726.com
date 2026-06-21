@@ -81,13 +81,26 @@ function initDesktopKnob() {
     const knob = document.getElementById('knob')
     if (!knob) return
     let dragging = false, target = currentIndex()
+    // Track the knob's current angle so the dead zone can act as a hard stop.
+    let lastDeg = angleFromStation(target, NAV.length)
     // Initial orientation: no spin-on-load.
     setNeedle(target, false)
     const onMove = e => {
         if (!dragging) return
         const r = knob.getBoundingClientRect()
         const raw = angleFromPointer(r.left + r.width / 2, r.top + r.height / 2, e.clientX, e.clientY)
-        const deg = Math.max(0, Math.min(MAX_ANGLE, raw))
+        // The 90° wedge past FAQ (MAX_ANGLE..360, the dial's bottom-left) is the
+        // dead zone. Treat it as a hard stop: when the pointer strays in there,
+        // hold the knob at whichever end it's already nearest instead of letting
+        // it snap across the dead zone (HOME<->FAQ). Inside the range it tracks
+        // the finger 1:1.
+        let deg
+        if (raw <= MAX_ANGLE) {
+            deg = raw
+        } else {
+            deg = lastDeg >= MAX_ANGLE / 2 ? MAX_ANGLE : 0
+        }
+        lastDeg = deg
         target = stationFromAngle(deg, NAV.length)
         // Knob follows the finger continuously; the needle snaps to the nearest
         // station (its own CSS-eased `left`).
@@ -97,6 +110,8 @@ function initDesktopKnob() {
     knob.addEventListener('pointerdown', e => {
         if (window.matchMedia('(max-width: 700px)').matches) return
         dragging = true
+        // Resume the hard-stop logic from the knob's current resting angle.
+        lastDeg = angleFromStation(target, NAV.length)
         knob.setPointerCapture(e.pointerId)
     })
     knob.addEventListener('pointermove', onMove)
