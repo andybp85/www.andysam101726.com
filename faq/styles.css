@@ -1,5 +1,20 @@
 @import "/styles/root.css";
 
-.deco-card dl { text-align: left; }
-dt { font-family: nickerbocker, serif; margin-top: 1.2rem; }
-dd { margin: 0.2rem 0 0; }
+/* Left-aligned gold-on-wood Q&A */
+main { text-align: left; }
+
+/* Questions: bigger + bolder than the answers */
+dt {
+    font-family: nickerbocker, serif;
+    font-size: clamp(1.6rem, 1.1rem + 2.2vw, 2.5rem);
+    font-weight: bold;
+    line-height: 1.15;
+    margin-top: 1.6rem;
+}
+
+/* Answers: smaller than the body default */
+dd {
+    font-size: clamp(1rem, 0.8rem + 1vw, 1.45rem);
+    line-height: 1.45;
+    margin: 0.3rem 0 0;
+}

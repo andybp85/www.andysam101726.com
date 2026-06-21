@@ -168,3 +168,15 @@ input:user-invalid {
     color: var(--body-text-color);
     text-decoration: none;
 }
+
+/* Links on the card-less (gold-on-wood) pages — readable brass, not default blue */
+.no-card a {
+    color: var(--brass);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.no-card a:hover,
+.no-card a:focus-visible {
+    color: #f3d896;
+}

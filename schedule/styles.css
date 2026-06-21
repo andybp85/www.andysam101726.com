@@ -20,6 +20,9 @@ main section {
 
 h2 {
     font-weight: normal;
+    /* Bigger than the body so day/title reads distinct from the details */
+    font-size: clamp(1.8rem, 1.1rem + 2.5vw, 2.7rem);
+    line-height: 1.2;
 }
 
 .tbd {
