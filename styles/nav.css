@@ -29,6 +29,9 @@
     padding: 0;
     background: transparent;
     cursor: grab;
+    /* Own the touch gesture: dragging/tapping the knob must not scroll the page
+       (Firefox/touch would otherwise pan instead of turning or toggling). */
+    touch-action: none;
     position: relative;
     display: flex;
     align-items: center;
