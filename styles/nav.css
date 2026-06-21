@@ -269,7 +269,8 @@
        page right to reveal it. Clip the overflow so the page never widens. */
     html { overflow-x: hidden; }
 
-    body { --menu-w: min(74vw, 19rem); overflow-x: hidden; }
+    /* Narrow vertical dial (was way too wide); also the page-shift distance. */
+    body { --menu-w: min(56vw, 11rem); overflow-x: hidden; }
 
     /* The page content slides right to reveal the drawer; clipped at the edge */
     main {
@@ -299,8 +300,14 @@
         z-index: 6;
     }
 
-    /* Show the (level) MENU label on the brass face */
-    .knob-label { display: inline-block; }
+    /* Drop the indicator arrow on mobile; the knob is just the MENU toggle */
+    .knob-arrow { display: none; }
+
+    /* Show a bigger MENU label on the brass face */
+    .knob-label {
+        display: inline-block;
+        font-size: clamp(1rem, 4.4vw, 1.5rem);
+    }
 
     /* Vertical station selector — cream face + beveled brass frame,
        matching the dial; slides in from the left edge. */
@@ -400,9 +407,9 @@
         transform: translateY(-50%);
         width: 0;
         height: 0;
-        border-top: 0.55rem solid transparent;
-        border-bottom: 0.55rem solid transparent;
-        border-left: 0.8rem solid #be1e2d;
+        border-top: 0.7rem solid transparent;
+        border-bottom: 0.7rem solid transparent;
+        border-left: 1.05rem solid #be1e2d;
         filter: drop-shadow(1px 1px 1px rgba(35, 31, 32, 0.5));
     }
 }
