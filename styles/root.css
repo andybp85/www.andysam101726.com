@@ -91,6 +91,10 @@ h1 {
     padding: 0.18em 0.3em 0;
     text-align: center;
     background: linear-gradient(180deg, var(--brass) 0%, var(--brass-dark) 100%);
+    /* Tile the gradient per line-height so a wrapped title (mobile) gives every
+       line the same top→bottom sheen, instead of one vertical gradient split
+       across both lines (which darkened "Wedding"). */
+    background-size: 100% 1.3em;
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
