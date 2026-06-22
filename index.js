@@ -1,4 +1,4 @@
-import { postForm } from '/api.js'
+import { postForm, ensureOk } from '/api.js'
 
 const loginForm = document.forms['login']
 const submitButton = document.forms['login']['submit-button']
@@ -8,8 +8,8 @@ loginForm.addEventListener('submit', e => {
     submitButton.classList.add('submitting')
 
     postForm(new FormData(e.target))
+        .then(ensureOk)
         .then(async r => {
-            if (r.status !== 'success') throw new Error(r.message)
             localStorage.setItem('token', r.token)
             localStorage.setItem('redirect', r.redirect)
             await prefetchGuests(r.token)

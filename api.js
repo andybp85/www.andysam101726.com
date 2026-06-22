@@ -13,3 +13,10 @@ export async function postForm(fields) {
     const res = await fetch(API, {method: 'POST', body})
     return res.json()
 }
+
+// Pass a parsed response through, or throw its message. Lets a promise chain
+// read as a pipeline: postForm(...).then(ensureOk).then(...)
+export const ensureOk = r => {
+    if (r.status !== 'success') throw new Error(r.message)
+    return r
+}

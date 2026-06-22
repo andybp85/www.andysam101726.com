@@ -1,5 +1,7 @@
 import { partiesByLastName, labelForParty } from './party.js'
-import { postForm } from '/api.js'
+import { postForm, ensureOk } from '/api.js'
+
+const $ = id => document.getElementById(id)
 
 let matchedGroup = null  // { id, members:[{first,last,slot}] }
 
@@ -18,29 +20,36 @@ async function getGuests() {
     return r.guests
 }
 
+// ── Pure view helpers: member data → markup string ──
+const guestCell = i =>
+    `<input class="guest-name" data-i="${i}" placeholder="name" aria-label="Guest ${i + 1} name">
+        <label class="guest-flag"><input type="checkbox" class="guest-check" data-i="${i}"> Guest</label>`
+
+const nameCell = m => `<span class="member-name">${m.first} ${m.last}</span>`
+
+const memberRow = (m, i) => `<fieldset class="member" data-i="${i}">
+        ${m.slot ? guestCell(i) : nameCell(m)}
+        <label><input type="radio" name="att-${i}" value="yes" checked> attending</label>
+        <label><input type="radio" name="att-${i}" value="no"> not attending</label>
+    </fieldset>`
+
 function renderParty(group) {
-    const wrap = document.getElementById('members')
-    wrap.innerHTML = group.members.map((m, i) => {
-        const nameCell = m.slot
-            ? `<input class="guest-name" data-i="${i}" placeholder="name" aria-label="Guest ${i + 1} name">
-               <label class="guest-flag"><input type="checkbox" class="guest-check" data-i="${i}"> Guest</label>`
-            : `<span class="member-name">${m.first} ${m.last}</span>`
-        return `<fieldset class="member" data-i="${i}">
-            ${nameCell}
-            <label><input type="radio" name="att-${i}" value="yes" checked> attending</label>
-            <label><input type="radio" name="att-${i}" value="no"> not attending</label>
-        </fieldset>`
-    }).join('')
+    $('members').innerHTML = group.members.map(memberRow).join('')
 }
 
-document.getElementById('name-form').addEventListener('submit', async e => {
+// Guest's typed name → {first, last}; blank becomes "Guest".
+const parseGuest = name => {
+    const [first, ...rest] = name.split(' ')
+    return {first: first || 'Guest', last: rest.join(' ')}
+}
+
+$('name-form').addEventListener('submit', async e => {
     e.preventDefault()
-    const err = document.getElementById('name-error')
+    const err = $('name-error')
     err.textContent = ''
     try {
         const guests = await getGuests()
-        const lastValue = e.target.last.value
-        const parties = partiesByLastName(guests, lastValue)
+        const parties = partiesByLastName(guests, e.target.last.value)
         if (parties.length === 0) {
             err.textContent = "We couldn't find that name. Please check the spelling, or contact us."
             return
@@ -48,10 +57,10 @@ document.getElementById('name-form').addEventListener('submit', async e => {
         if (parties.length === 1) {
             matchedGroup = parties[0]
             renderParty(matchedGroup)
-            document.getElementById('step-name').hidden = true
-            document.getElementById('step-party').hidden = false
+            $('step-name').hidden = true
+            $('step-party').hidden = false
         } else {
-            const list = document.getElementById('party-list')
+            const list = $('party-list')
             list.innerHTML = ''
             for (const p of parties) {
                 const btn = document.createElement('button')
@@ -61,36 +70,33 @@ document.getElementById('name-form').addEventListener('submit', async e => {
                 btn.addEventListener('click', () => {
                     matchedGroup = p
                     renderParty(matchedGroup)
-                    document.getElementById('step-pick').hidden = true
-                    document.getElementById('step-party').hidden = false
+                    $('step-pick').hidden = true
+                    $('step-party').hidden = false
                 })
                 list.appendChild(btn)
             }
-            document.getElementById('step-name').hidden = true
-            document.getElementById('step-pick').hidden = false
+            $('step-name').hidden = true
+            $('step-pick').hidden = false
         }
     } catch (ex) {
         err.textContent = ex.message
     }
 })
 
-document.getElementById('party-form').addEventListener('submit', e => {
+$('party-form').addEventListener('submit', e => {
     e.preventDefault()
     const responses = matchedGroup.members.map((m, i) => {
         const fs = document.querySelector(`.member[data-i="${i}"]`)
         const attending = fs.querySelector(`input[name="att-${i}"]:checked`).value === 'yes'
-        if (m.slot) {
-            const name = fs.querySelector('.guest-name').value.trim()
-            const isGuest = fs.querySelector('.guest-check').checked || name === ''
-            const [first, ...rest] = name.split(' ')
-            return {first: isGuest && !name ? 'Guest' : (first || 'Guest'), last: rest.join(' '), attending, isGuest}
-        }
-        return {first: m.first, last: m.last, attending, isGuest: false}
+        if (!m.slot) return {first: m.first, last: m.last, attending, isGuest: false}
+        const name = fs.querySelector('.guest-name').value.trim()
+        const isGuest = fs.querySelector('.guest-check').checked || name === ''
+        return {...parseGuest(name), attending, isGuest}
     })
 
     // optimistic: confirm immediately, write in background
-    document.getElementById('step-party').hidden = true
-    document.getElementById('step-thanks').hidden = false
+    $('step-party').hidden = true
+    $('step-thanks').hidden = false
 
     postForm({
         VERB: 'PUT',
@@ -98,11 +104,11 @@ document.getElementById('party-form').addEventListener('submit', e => {
         group: matchedGroup.id,
         responses: JSON.stringify(responses),
     })
-        .then(r => { if (r.status !== 'success') throw new Error(r.message) })
+        .then(ensureOk)
         .catch(ex => {
-            document.getElementById('step-thanks').hidden = true
-            document.getElementById('step-party').hidden = false
-            document.getElementById('submit-error').textContent =
+            $('step-thanks').hidden = true
+            $('step-party').hidden = false
+            $('submit-error').textContent =
                 'Something went wrong saving your RSVP. Please try submitting again.'
             console.error(ex)
         })
