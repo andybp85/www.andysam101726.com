@@ -60,6 +60,19 @@ Pages (custom domain via `CNAME`). Search-indexing disabled (`robots.txt`,
   (e.g. cross-document View Transitions) are fine only as progressive
   enhancements that degrade gracefully — no JS polyfills, no external deps.
 
+## Local dev & testing
+
+- A dev server is usually **already running manually** (e.g. `python3 -m
+  http.server`). Leave it running. **Never `pkill -f "http.server"`** or
+  otherwise blanket-kill servers by name pattern — that takes down the manual
+  one too.
+- Only stop the manual server when genuinely necessary. When you must interrupt
+  it, **suspend** it (`kill -STOP <pid>`) and **restart/resume** it
+  (`kill -CONT <pid>`) afterward — don't kill it.
+- For headless screenshot/diff testing, start your **own** server on a distinct
+  port, record its PID, and on cleanup kill **only that PID** — never a broad
+  pattern match that could hit the manual server.
+
 ## Task tracking — use beans, not TodoWrite
 
 This project tracks work with **beans** (markdown-backed issue tracker, CLI on
