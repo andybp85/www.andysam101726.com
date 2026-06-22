@@ -169,3 +169,7 @@ input:user-invalid {
         color: #f3d896;
     }
 }
+
+hr {
+    color: var(--body-text-color);
+}

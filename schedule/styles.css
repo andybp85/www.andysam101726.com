@@ -28,7 +28,3 @@ h2 {
 .tbd {
     font-style: italic;
 }
-
-hr {
-    color: var(--body-text-color);
-}
