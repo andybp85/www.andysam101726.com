@@ -5,7 +5,6 @@ main { text-align: left; }
 
 /* Questions: bigger + bolder than the answers */
 dt {
-    font-family: nickerbocker, serif;
     font-size: clamp(1.6rem, 1.1rem + 2.2vw, 2.5rem);
     font-weight: bold;
     line-height: 1.15;
@@ -14,7 +13,7 @@ dt {
 
 /* Answers: smaller than the body default */
 dd {
-    font-size: clamp(1rem, 0.8rem + 1vw, 1.45rem);
+    font-size: var(--body-font-size);
     line-height: 1.45;
     margin: 0.3rem 0 0;
 }

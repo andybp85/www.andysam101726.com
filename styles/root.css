@@ -39,9 +39,6 @@ body {
     font-family: contralto, serif;
     background-image:
         linear-gradient(to bottom, transparent 0%, transparent 25%, #190D0A 100%),
-        url("/images/wood-desktop.webp"); /* fallback */
-    background-image:
-        linear-gradient(to bottom, transparent 0%, transparent 25%, #190D0A 100%),
         image-set(
             url("/images/wood-desktop.avif") type("image/avif"),
             url("/images/wood-desktop.webp") type("image/webp")
@@ -62,9 +59,6 @@ body {
     body {
         background-image:
             linear-gradient(to bottom, transparent 0%, transparent 35%, #000 100%),
-            url("/images/wood-mobile.webp"); /* fallback */
-        background-image:
-            linear-gradient(to bottom, transparent 0%, transparent 35%, #000 100%),
             image-set(
                 url("/images/wood-mobile.avif") type("image/avif"),
                 url("/images/wood-mobile.webp") type("image/webp")
@@ -73,7 +67,7 @@ body {
 }
 
 main {
-    padding: 0 10vw 1vh;
+    padding: 0 3vw 1vh;
     width: 70vw;
     max-width: 57rem;
     text-align: center;
