@@ -94,12 +94,9 @@ function initDesktopKnob() {
         // hold the knob at whichever end it's already nearest instead of letting
         // it snap across the dead zone (HOME<->FAQ). Inside the range it tracks
         // the finger 1:1.
-        let deg
-        if (raw <= MAX_ANGLE) {
-            deg = raw
-        } else {
-            deg = lastDeg >= MAX_ANGLE / 2 ? MAX_ANGLE : 0
-        }
+        const deg = raw <= MAX_ANGLE
+            ? raw
+            : lastDeg >= MAX_ANGLE / 2 ? MAX_ANGLE : 0
         lastDeg = deg
         target = stationFromAngle(deg, NAV.length)
         // Knob follows the finger continuously; the needle snaps to the nearest
