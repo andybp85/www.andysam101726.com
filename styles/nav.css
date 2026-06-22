@@ -273,6 +273,16 @@ main {
     &:nth-child(odd) { align-items: flex-start; }   /* text in the top half */
     &:nth-child(even) { align-items: flex-end; }    /* text in the bottom half */
 
+    /* Desktop dial only: all-caps have no descenders, so flex-end parks
+       RSVP/TRAVEL tight under the line; nudge the text down a hair so the gap to
+       the tick above matches the top row's. The tick is counter-translated to
+       stay on the line. Scoped to #stations so it never reaches the mobile drawer. */
+    #stations &:nth-child(even) {
+        transform: translateY(0.12em);
+
+        &::before { transform: translate(-50%, -50%) translateY(-0.12em); }
+    }
+
     /* Keyboard focus ring for station links (dial + mobile drawer) */
     &:focus-visible {
         outline: 2px solid var(--brass-dark);
