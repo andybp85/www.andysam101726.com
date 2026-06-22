@@ -3,11 +3,10 @@ main.deco-card,
     background-color: #f0e6d2;
     color: var(--ink);
     /* Override root.css main defaults */
-    border: solid transparent;
     /* Big frame on the sides, slim top/bottom so the card isn't mostly empty
        cream vertically (keeps the prominent deco border, drops the padding).
        Responsive so the side frame doesn't eat the viewport down at 320px. */
-    border-width: clamp(18px, 5.5vw, 40px) clamp(30px, 12vw, 100px);
+    border: clamp(30px, 12vw, 100px) solid transparent;
     border-radius: 0;
     border-image: url("/images/deco-frame.svg") 230 stretch;
     /* Cap to the viewport (border-box) so the framed card never overflows at

@@ -9,7 +9,7 @@
        the knob lives in the left track, the right track is empty ballast */
     grid-template-columns: 1fr auto 1fr;
     align-items: center;
-    column-gap: 1rem;
+    gap: 1rem;
     margin: 1vh 0 2vh;
 
     /* Mobile: stack the knob above the drawer; #radio anchors the drawer. */

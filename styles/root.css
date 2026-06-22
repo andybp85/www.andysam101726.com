@@ -39,15 +39,12 @@ html {
 
 body {
     font-family: contralto, serif;
-    background-image:
-        linear-gradient(to bottom, transparent 0%, transparent 25%, #190D0A 100%),
+    background:
+        linear-gradient(to bottom, transparent 0%, transparent 25%, #190D0A 100%) center / cover fixed,
         image-set(
             url("/images/wood-desktop.avif") type("image/avif"),
             url("/images/wood-desktop.webp") type("image/webp")
-        );
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
+        ) center / cover fixed;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -84,11 +81,10 @@ h1 {
     margin: 1.5vh 0 0.5vh;
     padding: 0.18em 0.3em 0;
     text-align: center;
-    background: linear-gradient(180deg, var(--brass) 0%, var(--brass-dark) 100%);
-    /* Tile the gradient per line-height so a wrapped title (mobile) gives every
-       line the same top→bottom sheen, instead of one vertical gradient split
-       across both lines (which darkened "Wedding"). */
-    background-size: 100% 1.3em;
+    /* Tile the gradient per line-height (size 100% 1.3em) so a wrapped title
+       (mobile) gives every line the same top→bottom sheen, instead of one
+       vertical gradient split across both lines (which darkened "Wedding"). */
+    background: linear-gradient(180deg, var(--brass) 0%, var(--brass-dark) 100%) 0 0 / 100% 1.3em;
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
@@ -107,12 +103,10 @@ h1 {
 button[type="submit"] {
     --button-width: clamp(7rem, 1.94rem + 25.3vw, 14rem);
     border: none;
-    background-color: transparent;
+    background: transparent url("/images/whole-submit-button.svg") no-repeat;
     position: relative;
     width: var(--button-width);
     height: calc(var(--button-width) / 3.333);
-    background-repeat: no-repeat;
-    background-image: url("/images/whole-submit-button.svg");
     cursor: pointer;
     margin-bottom: var(--body-font-size);
 }
