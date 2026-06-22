@@ -11,6 +11,41 @@
     align-items: center;
     column-gap: 1rem;
     margin: 1vh 0 2vh;
+
+    /* Mobile: stack the knob above the drawer; #radio anchors the drawer. */
+    @media (max-width: 700px) {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        margin: 0.5vh 0 1vh;
+        position: relative;
+    }
+}
+
+/* ── Mobile push-drawer page-shift ───────────────────────────────────
+   The menu sits off-screen left; opening slides the whole page right to
+   reveal it. Clip the overflow so the page never widens. */
+html {
+    @media (max-width: 700px) { overflow-x: hidden; }
+}
+
+body {
+    @media (max-width: 700px) {
+        /* Narrow vertical dial — snug around the longest word (SCHEDULE); also the
+           page-shift distance. Gentle slope so it scales smoothly with the font. */
+        --menu-w: clamp(8rem, 5.6rem + 6vw, 9.6rem);
+        overflow-x: hidden;
+    }
+}
+
+main {
+    @media (max-width: 700px) {
+        /* The page content slides right to reveal the drawer; clipped at the edge */
+        transition: transform 0.38s cubic-bezier(0.4, 0, 0.2, 1);
+        will-change: transform;
+
+        body.menu-open & { transform: translateX(var(--menu-w)); }
+    }
 }
 
 /* Tuning knob — round brass knob, left of the plaque.
@@ -41,13 +76,41 @@
         0 1px 2px rgba(0, 0, 0, 0.5),
         0 5px 10px rgba(0, 0, 0, 0.45),
         0 11px 22px rgba(0, 0, 0, 0.3);
-}
 
-#knob:active { cursor: grabbing; }
+    &:active { cursor: grabbing; }
 
-#knob:focus-visible {
-    outline: 3px solid var(--brass);
-    outline-offset: 3px;
+    &:focus-visible {
+        outline: 3px solid var(--brass);
+        outline-offset: 3px;
+    }
+
+    /* Fixed glare — rim light, shaded side, edge occlusion. Stays in place while
+       the body turns; edge-only, so its transparent centre never veils the MENU
+       label. */
+    &::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        background:
+            /* crisp bright rim catching the top edge */
+            radial-gradient(ellipse 80% 50% at 50% -6%, rgba(255, 248, 214, 0.5) 0%, rgba(255, 248, 214, 0.4) 22%, transparent 30%),
+            /* shaded side opposite the light (fixed, so it never spins) */
+            radial-gradient(circle at 73% 79%, rgba(0, 0, 0, 0.5) 0%, transparent 50%),
+            /* occlusion pooling at the bottom edge */
+            radial-gradient(ellipse 72% 58% at 50% 112%, rgba(0, 0, 0, 0.48), transparent 52%);
+        pointer-events: none;
+    }
+
+    @media (max-width: 700px) {
+        justify-self: auto;
+        /* Gentle slope; small gap between the knob and the page edge */
+        --knob-size: clamp(4rem, 2.6rem + 5vw, 5.4rem);
+        margin-left: 0.9rem;
+        cursor: pointer;
+        position: relative;
+        z-index: 6;
+    }
 }
 
 /* Rotating layer: knurled brass edge + domed face + brown arrow */
@@ -63,19 +126,19 @@
     box-shadow:
         inset 0 0 0 3px #8a5e23,
         inset 0 0 6px rgba(0, 0, 0, 0.35);
-}
 
-/* Domed brass face on top of the knurled ring */
-.knob-spin::before {
-    content: '';
-    position: absolute;
-    inset: 15%;
-    border-radius: 50%;
-    /* centered dome (rotation-invariant); the fixed glare adds the lit side */
-    background: radial-gradient(circle at 50% 50%, #eec06a 0%, #c08836 58%, #7d531f 100%);
-    box-shadow:
-        inset 0 0 0 2px #6a4a23,
-        inset 0 0 8px rgba(0, 0, 0, 0.38);
+    /* Domed brass face on top of the knurled ring */
+    &::before {
+        content: '';
+        position: absolute;
+        inset: 15%;
+        border-radius: 50%;
+        /* centered dome (rotation-invariant); the fixed glare adds the lit side */
+        background: radial-gradient(circle at 50% 50%, #eec06a 0%, #c08836 58%, #7d531f 100%);
+        box-shadow:
+            inset 0 0 0 2px #6a4a23,
+            inset 0 0 8px rgba(0, 0, 0, 0.38);
+    }
 }
 
 /* Brown indicator arrow — exact shape/proportions from knob_menu_notch.svg
@@ -90,27 +153,12 @@
     transform-origin: center;
     line-height: 0;
     filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.4));
-}
 
-.knob-arrow svg { display: block; width: 100%; height: auto; }
-.knob-arrow path { fill: #5e421c; }
+    svg { display: block; width: 100%; height: auto; }
+    path { fill: #5e421c; }
 
-/* Fixed glare — rim light, shaded side, edge occlusion. Stays in place while
-   the body turns; edge-only, so its transparent centre never veils the MENU
-   label. */
-#knob::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: 50%;
-    background:
-        /* crisp bright rim catching the top edge */
-        radial-gradient(ellipse 80% 50% at 50% -6%, rgba(255, 248, 214, 0.5) 0%, rgba(255, 248, 214, 0.4) 22%, transparent 30%),
-        /* shaded side opposite the light (fixed, so it never spins) */
-        radial-gradient(circle at 73% 79%, rgba(0, 0, 0, 0.5) 0%, transparent 50%),
-        /* occlusion pooling at the bottom edge */
-        radial-gradient(ellipse 72% 58% at 50% 112%, rgba(0, 0, 0, 0.48), transparent 52%);
-    pointer-events: none;
+    /* Drop the indicator arrow on mobile; the knob is just the MENU toggle */
+    @media (max-width: 700px) { display: none; }
 }
 
 /* MENU label on knob — hidden by default (desktop) */
@@ -126,6 +174,12 @@
     pointer-events: none;
     line-height: 1;
     white-space: nowrap;
+
+    /* Show a bigger MENU label on the brass face */
+    @media (max-width: 700px) {
+        display: inline-block;
+        font-size: clamp(0.95rem, 0.6rem + 1.9vw, 1.4rem);
+    }
 }
 
 /* Cream dial face — horizontal rounded rectangle with a beveled brass
@@ -149,21 +203,24 @@
         inset 0 3px 7px rgba(35, 31, 32, 0.45),
         /* outer drop shadow — whole plaque lifts off the wood */
         0 4px 11px rgba(35, 31, 32, 0.55);
-}
 
-/* Center frequency line — thick ink line */
-#dial::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: clamp(0.8rem, 2vw, 1.6rem);
-    right: clamp(0.8rem, 2vw, 1.6rem);
-    height: clamp(2px, 0.55vw, 4px);
-    background-color: #231f20;
-    transform: translateY(-50%);
-    box-shadow: 0 2px 2px rgba(35, 31, 32, 0.4);
-    /* above the red needle, below the station text/ticks */
-    z-index: 1;
+    /* Center frequency line — thick ink line */
+    &::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: clamp(0.8rem, 2vw, 1.6rem);
+        right: clamp(0.8rem, 2vw, 1.6rem);
+        height: clamp(2px, 0.55vw, 4px);
+        background-color: #231f20;
+        transform: translateY(-50%);
+        box-shadow: 0 2px 2px rgba(35, 31, 32, 0.4);
+        /* above the red needle, below the station text/ticks */
+        z-index: 1;
+    }
+
+    /* Hide horizontal dial on mobile; the knob stays put as the MENU toggle */
+    @media (max-width: 700px) { display: none; }
 }
 
 /* Station container — flex row, all in a single line, the positioning anchor
@@ -196,39 +253,38 @@
     display: flex;
     justify-content: center;
     white-space: nowrap;
-}
 
-/* Tick mark — short vertical bar centred on the line at each station's x.
-   Anchored to the line (top:50%), so it always lands on it regardless of width. */
-.station::before {
-    content: '';
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    width: clamp(2px, 0.12em, 5px);
-    height: 0.5em;
-    background-color: #231f20;
-}
+    /* Tick mark — short vertical bar centred on the line at each station's x.
+       Anchored to the line (top:50%), so it always lands on it regardless of width. */
+    &::before {
+        content: '';
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: clamp(2px, 0.12em, 5px);
+        height: 0.5em;
+        background-color: #231f20;
+    }
 
-/* ── Alternating above / below the center line ─────────────────── */
-/* Odd stations (1, 3, 5 = HOME, SCHEDULE, FAQ) go ABOVE the line */
-/* Even stations (2, 4 = RSVP, TRAVEL) go BELOW the line */
+    /* ── Alternating above / below the center line ─────────────────── */
+    /* Odd stations (1, 3, 5 = HOME, SCHEDULE, FAQ) go ABOVE the line */
+    /* Even stations (2, 4 = RSVP, TRAVEL) go BELOW the line */
+    &:nth-child(odd) { align-items: flex-start; }   /* text in the top half */
+    &:nth-child(even) { align-items: flex-end; }    /* text in the bottom half */
 
-.station:nth-child(odd) { align-items: flex-start; }   /* text in the top half */
-.station:nth-child(even) { align-items: flex-end; }    /* text in the bottom half */
+    /* Keyboard focus ring for station links (dial + mobile drawer) */
+    &:focus-visible {
+        outline: 2px solid var(--brass-dark);
+        outline-offset: 2px;
+        border-radius: 2px;
+    }
 
-/* Keyboard focus ring for station links (dial + mobile drawer) */
-.station:focus-visible {
-    outline: 2px solid var(--brass-dark);
-    outline-offset: 2px;
-    border-radius: 2px;
-}
-
-/* Active station highlight */
-.station.active {
-    color: #231f20;
-    font-weight: bold;
+    /* Active station highlight */
+    &.active {
+        color: #231f20;
+        font-weight: bold;
+    }
 }
 
 /* Red tuning indicator — thick vertical line over the current station. */
@@ -248,64 +304,14 @@
     transition: left 0.3s ease;
 }
 
-/* Mobile station menu — present only on mobile (laid out off-screen there) */
+/* Mobile station menu — present only on mobile (laid out off-screen there).
+   Vertical station selector — cream face + beveled brass frame, matching the
+   dial. Anchored just below the knob (top:100% of #radio) so it never collides
+   with it regardless of viewport height; slides in from the left. */
 #station-menu {
     display: none;
-}
 
-/* ── Mobile (≤700px) ────────────────────────────────────────────── */
-@media (max-width: 700px) {
-    /* Push-drawer: the menu sits off-screen left; opening slides the whole
-       page right to reveal it. Clip the overflow so the page never widens. */
-    html { overflow-x: hidden; }
-
-    /* Narrow vertical dial — snug around the longest word (SCHEDULE); also the
-       page-shift distance. Gentle slope so it scales smoothly with the font. */
-    body { --menu-w: clamp(8rem, 5.6rem + 6vw, 9.6rem); overflow-x: hidden; }
-
-    /* The page content slides right to reveal the drawer; clipped at the edge */
-    main {
-        transition: transform 0.38s cubic-bezier(0.4, 0, 0.2, 1);
-        will-change: transform;
-    }
-
-    body.menu-open main { transform: translateX(var(--menu-w)); }
-
-    /* Hide horizontal dial; knob stays put as the MENU toggle. #radio is the
-       positioning anchor so the drawer can sit directly below the knob. */
-    #dial { display: none; }
-
-    #radio {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        margin: 0.5vh 0 1vh;
-        position: relative;
-    }
-
-    #knob {
-        justify-self: auto;
-        /* Gentle slope; small gap between the knob and the page edge */
-        --knob-size: clamp(4rem, 2.6rem + 5vw, 5.4rem);
-        margin-left: 0.9rem;
-        cursor: pointer;
-        position: relative;
-        z-index: 6;
-    }
-
-    /* Drop the indicator arrow on mobile; the knob is just the MENU toggle */
-    .knob-arrow { display: none; }
-
-    /* Show a bigger MENU label on the brass face */
-    .knob-label {
-        display: inline-block;
-        font-size: clamp(0.95rem, 0.6rem + 1.9vw, 1.4rem);
-    }
-
-    /* Vertical station selector — cream face + beveled brass frame, matching the
-       dial. Anchored just below the knob (top:100% of #radio) so it never
-       collides with it regardless of viewport height; slides in from the left. */
-    #station-menu {
+    @media (max-width: 700px) {
         display: flex;
         flex-direction: column;
         align-items: stretch;
@@ -334,85 +340,84 @@
         transition:
             transform 0.38s cubic-bezier(0.4, 0, 0.2, 1),
             visibility 0s linear 0.38s;
-    }
 
-    body.menu-open #station-menu {
-        transform: translateX(0);
-        visibility: visible;
-        transition: transform 0.38s cubic-bezier(0.4, 0, 0.2, 1), visibility 0s;
-    }
+        body.menu-open & {
+            transform: translateX(0);
+            visibility: visible;
+            transition: transform 0.38s cubic-bezier(0.4, 0, 0.2, 1), visibility 0s;
+        }
 
-    /* Vertical center line — full height; the cream word-bands mask it so each
-       word sits in a gap in the line (matching the mockup). */
-    #station-menu::before {
-        content: '';
-        position: absolute;
-        top: 0.5rem;
-        bottom: 0.5rem;
-        left: 50%;
-        width: clamp(3px, 0.9vw, 5px);
-        background-color: #231f20;
-        transform: translateX(-50%);
-        box-shadow: 1px 0 2px rgba(35, 31, 32, 0.4);
-        z-index: 0;
-    }
+        /* Vertical center line — full height; the cream word-bands mask it so each
+           word sits in a gap in the line (matching the mockup). */
+        &::before {
+            content: '';
+            position: absolute;
+            top: 0.5rem;
+            bottom: 0.5rem;
+            left: 50%;
+            width: clamp(3px, 0.9vw, 5px);
+            background-color: #231f20;
+            transform: translateX(-50%);
+            box-shadow: 1px 0 2px rgba(35, 31, 32, 0.4);
+            z-index: 0;
+        }
 
-    /* Stations stacked along the line. The cream background (same as the dial
-       face) masks the line behind each word, leaving the line visible only in
-       the gaps between them. */
-    #station-menu .station {
-        display: block;
-        font-family: nickerbocker, serif;
-        font-size: clamp(1.15rem, 0.9rem + 1.1vw, 1.5rem);
-        letter-spacing: 0.04em;
-        text-decoration: none;
-        color: #231f20;
-        text-shadow: 1px 1px 1px rgba(35, 31, 32, 0.3);
-        padding: 0.12rem 0;
-        position: relative;
-        text-align: center;
-        width: 100%;
-        background-color: var(--dial-cream);
-        z-index: 1;
-    }
+        /* Stations stacked along the line. The cream background (same as the dial
+           face) masks the line behind each word, leaving the line visible only in
+           the gaps between them. */
+        .station {
+            display: block;
+            font-family: nickerbocker, serif;
+            font-size: clamp(1.15rem, 0.9rem + 1.1vw, 1.5rem);
+            letter-spacing: 0.04em;
+            text-decoration: none;
+            color: #231f20;
+            text-shadow: 1px 1px 1px rgba(35, 31, 32, 0.3);
+            padding: 0.12rem 0;
+            position: relative;
+            text-align: center;
+            width: 100%;
+            background-color: var(--dial-cream);
+            z-index: 1;
 
-    /* Tick mark — short horizontal bar centred in the gap above each station
-       (so ticks fall between the words, on the line, not under the text). */
-    #station-menu .station::after {
-        content: '';
-        position: absolute;
-        top: -0.45rem;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: clamp(12px, 3.6vw, 18px);
-        height: clamp(3px, 0.9vw, 5px);
-        background-color: #231f20;
-        z-index: 1;
-    }
+            /* Tick mark — short horizontal bar centred in the gap above each station
+               (so ticks fall between the words, on the line, not under the text). */
+            &::after {
+                content: '';
+                position: absolute;
+                top: -0.45rem;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: clamp(12px, 3.6vw, 18px);
+                height: clamp(3px, 0.9vw, 5px);
+                background-color: #231f20;
+                z-index: 1;
+            }
 
-    /* No tick above the first station — the line runs to the top edge instead */
-    #station-menu .station:first-child::after { display: none; }
+            /* No tick above the first station — the line runs to the top edge instead */
+            &:first-child::after { display: none; }
 
-    /* Active station — bold + a wide, short red right-pointing triangle on the
-       cream (no black behind it). */
-    #station-menu .station::before { display: none; }
+            /* Drop the vertical (desktop) tick in the drawer */
+            &::before { display: none; }
 
-    #station-menu .station.active {
-        font-weight: bold;
-    }
+            &.active { font-weight: bold; }
 
-    #station-menu .station.active::before {
-        display: block;
-        content: '';
-        position: absolute;
-        left: 0.15rem;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 0;
-        height: 0;
-        border-top: 0.32rem solid transparent;
-        border-bottom: 0.32rem solid transparent;
-        border-left: 0.95rem solid #be1e2d;
-        filter: drop-shadow(1px 1px 1px rgba(35, 31, 32, 0.45));
+            /* Active station — a wide, short red right-pointing triangle on the
+               cream (no black behind it). */
+            &.active::before {
+                display: block;
+                content: '';
+                position: absolute;
+                left: 0.15rem;
+                top: 50%;
+                transform: translateY(-50%);
+                width: 0;
+                height: 0;
+                border-top: 0.32rem solid transparent;
+                border-bottom: 0.32rem solid transparent;
+                border-left: 0.95rem solid #be1e2d;
+                filter: drop-shadow(1px 1px 1px rgba(35, 31, 32, 0.45));
+            }
+        }
     }
 }

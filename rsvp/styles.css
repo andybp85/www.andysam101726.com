@@ -16,7 +16,12 @@
 }
 
 /* Gray, non-bold placeholder for the last-name field (rsvp_page_1.svg). */
-#last::placeholder { color: rgba(35, 31, 32, 0.45); font-weight: normal; }
+#last {
+    /* Wider last-name field */
+    width: min(90%, 24rem);
+
+    &::placeholder { color: rgba(35, 31, 32, 0.45); font-weight: normal; }
+}
 
 .deadline {
     color: #2a1a14;
@@ -36,15 +41,55 @@
     gap: 1.2rem;
 }
 
-/* Wider last-name field */
-#last { width: min(90%, 24rem); }
-
 /* ── Step 2: per-member blocks ── */
 .member {
     margin: 1.2rem 0;
     padding: 0;
     border: none;
     text-align: center;
+
+    /* Attending/not-attending row */
+    label {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35em;
+        margin: 0 0.6rem;
+        font-family: contralto, serif;
+        font-size: 1em;
+        color: #2a1a14;
+        cursor: pointer;
+    }
+
+    /* Square deco radio box */
+    input[type="radio"] {
+        appearance: none;
+        -webkit-appearance: none;
+        width: 0.85em;
+        height: 0.85em;
+        border: 2px solid #2a1a14;
+        background: transparent;
+        cursor: pointer;
+        flex-shrink: 0;
+        position: relative;
+
+        &:checked::after {
+            content: "";
+            display: block;
+            width: 55%;
+            height: 55%;
+            background: #2a1a14;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* Keyboard focus ring for the custom (appearance:none) box */
+        &:focus-visible {
+            outline: 2px solid #8a6d2f;
+            outline-offset: 2px;
+        }
+    }
 }
 
 .member-name {
@@ -53,43 +98,6 @@
     display: block;
     margin-bottom: 0.4rem;
     color: #2a1a14;
-}
-
-/* Attending/not-attending row */
-.member label {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35em;
-    margin: 0 0.6rem;
-    font-family: contralto, serif;
-    font-size: 1em;
-    color: #2a1a14;
-    cursor: pointer;
-}
-
-/* Square deco radio box */
-.member input[type="radio"] {
-    appearance: none;
-    -webkit-appearance: none;
-    width: 0.85em;
-    height: 0.85em;
-    border: 2px solid #2a1a14;
-    background: transparent;
-    cursor: pointer;
-    flex-shrink: 0;
-    position: relative;
-}
-
-.member input[type="radio"]:checked::after {
-    content: "";
-    display: block;
-    width: 55%;
-    height: 55%;
-    background: #2a1a14;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
 }
 
 /* Guest slot: "Guest:" label + underline input */
@@ -101,37 +109,36 @@
     font-size: clamp(1.2rem, 0.8rem + 2vw, 1.8rem);
     color: #2a1a14;
     margin-bottom: 0.3rem;
-}
 
-.guest-flag input[type="checkbox"] {
-    appearance: none;
-    -webkit-appearance: none;
-    width: 0.85em;
-    height: 0.85em;
-    border: 2px solid #2a1a14;
-    background: transparent;
-    cursor: pointer;
-    flex-shrink: 0;
-    position: relative;
-}
+    input[type="checkbox"] {
+        appearance: none;
+        -webkit-appearance: none;
+        width: 0.85em;
+        height: 0.85em;
+        border: 2px solid #2a1a14;
+        background: transparent;
+        cursor: pointer;
+        flex-shrink: 0;
+        position: relative;
 
-.guest-flag input[type="checkbox"]:checked::after {
-    content: "";
-    display: block;
-    width: 55%;
-    height: 55%;
-    background: #2a1a14;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
+        &:checked::after {
+            content: "";
+            display: block;
+            width: 55%;
+            height: 55%;
+            background: #2a1a14;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
 
-/* Keyboard focus ring for the custom (appearance:none) attending/guest boxes */
-.member input[type="radio"]:focus-visible,
-.guest-flag input[type="checkbox"]:focus-visible {
-    outline: 2px solid #8a6d2f;
-    outline-offset: 2px;
+        /* Keyboard focus ring for the custom (appearance:none) box */
+        &:focus-visible {
+            outline: 2px solid #8a6d2f;
+            outline-offset: 2px;
+        }
+    }
 }
 
 .guest-name {
@@ -146,10 +153,10 @@
     padding: 0.2em 0;
     display: block;
     margin: 0 auto 0.5rem;
-}
 
-.guest-name::placeholder {
-    color: #6b4c3b;
+    &::placeholder {
+        color: #6b4c3b;
+    }
 }
 
 /* ── Step 2 picker (multi-party disambiguation) ── */
@@ -174,10 +181,10 @@
     max-width: 24rem;
     text-align: center;
     transition: opacity 0.15s;
-}
 
-.party-pick:hover,
-.party-pick:focus-visible {
-    opacity: 0.65;
-    outline: none;
+    &:hover,
+    &:focus-visible {
+        opacity: 0.65;
+        outline: none;
+    }
 }

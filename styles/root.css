@@ -53,10 +53,8 @@ body {
     line-height: 1.5;
     color: var(--body-text-color);
     font-size: var(--body-font-size);
-}
 
-@media (max-width: 700px) {
-    body {
+    @media (max-width: 700px) {
         background-image:
             linear-gradient(to bottom, transparent 0%, transparent 35%, #000 100%),
             image-set(
@@ -93,14 +91,15 @@ h1 {
     background-clip: text;
     color: transparent;
     filter: drop-shadow(#301934 0.05em 0.05em 0.05em);
+
+    @media (max-width: 700px) { --h1-font-size: clamp(2.5rem, 0.8rem + 8vw, 5rem); }
 }
 
 /* Title line-break shown only on mobile (Andy & Sam's / Wedding) */
-.title-break { display: none; }
+.title-break {
+    display: none;
 
-@media (max-width: 700px) {
-    h1 { --h1-font-size: clamp(2.5rem, 0.8rem + 8vw, 5rem); }
-    .title-break { display: block; }
+    @media (max-width: 700px) { display: block; }
 }
 
 button[type="submit"] {
@@ -168,9 +167,9 @@ input:user-invalid {
     color: var(--brass);
     text-decoration: underline;
     text-underline-offset: 2px;
-}
 
-.no-card a:hover,
-.no-card a:focus-visible {
-    color: #f3d896;
+    &:hover,
+    &:focus-visible {
+        color: #f3d896;
+    }
 }

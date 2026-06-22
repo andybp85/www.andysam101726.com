@@ -21,68 +21,64 @@ main.deco-card,
     font-family: contralto, serif;
     text-align: center;
     position: static;
-}
 
-main.deco-card::before,
-main.deco-card::after,
-.deco-card::before,
-.deco-card::after {
-    display: none;
-    content: none;
-}
+    &::before,
+    &::after {
+        display: none;
+        content: none;
+    }
 
-.deco-card input {
-    background: transparent;
-    border: none;
-    border-bottom: 1px solid #2a1a14;
-    color: #2a1a14;
-    font-family: contralto, serif;
-    text-align: center;
-    font-size: var(--body-font-size);
-}
+    input {
+        background: transparent;
+        border: none;
+        border-bottom: 1px solid #2a1a14;
+        color: #2a1a14;
+        font-family: contralto, serif;
+        text-align: center;
+        font-size: var(--body-font-size);
 
-.deco-card input::placeholder {
-    color: #6b4c3b;
-    text-align: center;
-}
+        &::placeholder {
+            color: #6b4c3b;
+            text-align: center;
+        }
 
-/* In-card links (schedule phone, travel hotels, faq registry) */
-.deco-card a {
-    color: #7d5b29;
-    text-decoration: underline;
-    text-underline-offset: 2px;
-}
+        &:focus-visible { outline: none; }
+    }
 
-.deco-card a:hover,
-.deco-card a:focus-visible {
-    color: #4e371b;
-}
+    /* In-card links (schedule phone, travel hotels, faq registry) */
+    a {
+        color: #7d5b29;
+        text-decoration: underline;
+        text-underline-offset: 2px;
 
-/* Art-deco "button" — framed by double rules top & bottom, not fully outlined */
-.deco-card button[type="submit"] {
-    background: none;
-    border: none;
-    font-family: contralto, serif;
-    font-size: 1.25em;
-    letter-spacing: 0.08em;
-    cursor: pointer;
-    color: #2a1a14;
-    padding: 0.3em 1.6em 0.35em;
-    margin: 0.5rem auto 0;
-    width: auto;
-    height: auto;
-    transition: background 0.15s ease, letter-spacing 0.15s ease;
-}
+        &:hover,
+        &:focus-visible { color: #4e371b; }
 
-.deco-card button[type="submit"]:hover,
-.deco-card button[type="submit"]:focus-visible {
-    background: rgba(138, 109, 47, 0.14);
-    letter-spacing: 0.12em;
-}
+        &:focus-visible { outline: none; }
+    }
 
-/* no border */
-.deco-card button[type="submit"]:focus-visible,
-.deco-card a:focus-visible,
-.deco-card input:focus-visible {
-    outline: none;
+    /* Art-deco "button" — framed by double rules top & bottom, not fully outlined */
+    button[type="submit"] {
+        background: none;
+        border: none;
+        font-family: contralto, serif;
+        font-size: 1.25em;
+        letter-spacing: 0.08em;
+        cursor: pointer;
+        color: #2a1a14;
+        padding: 0.3em 1.6em 0.35em;
+        margin: 0.5rem auto 0;
+        width: auto;
+        height: auto;
+        transition: background 0.15s ease, letter-spacing 0.15s ease;
+
+        &:hover,
+        &:focus-visible {
+            background: rgba(138, 109, 47, 0.14);
+            letter-spacing: 0.12em;
+        }
+
+        /* no border */
+        &:focus-visible { outline: none; }
+    }
 }
