@@ -1,6 +1,5 @@
 import { partiesByLastName, labelForParty } from './party.js'
-
-const API = 'https://script.google.com/macros/s/AKfycbwfXZMR_HIAoBzBZaS6bpmgB-pNZRkrjxRn6Bq09__brkhYBJNZUaGrMnPYkYDDoqdiqQ/exec'
+import { postForm } from '/api.js'
 
 let matchedGroup = null  // { id, members:[{first,last,slot}] }
 
@@ -13,10 +12,7 @@ async function getGuests() {
             sessionStorage.removeItem('guests')
         }
     }
-    const body = new FormData()
-    body.append('VERB', 'GUESTS')
-    body.append('token', localStorage.getItem('token'))
-    const r = await (await fetch(API, {method: 'POST', body})).json()
+    const r = await postForm({VERB: 'GUESTS', token: localStorage.getItem('token')})
     if (r.status !== 'success') throw new Error('Could not load the guest list. Please try again.')
     sessionStorage.setItem('guests', JSON.stringify(r.guests))
     return r.guests
@@ -96,13 +92,12 @@ document.getElementById('party-form').addEventListener('submit', e => {
     document.getElementById('step-party').hidden = true
     document.getElementById('step-thanks').hidden = false
 
-    const body = new FormData()
-    body.append('VERB', 'PUT')
-    body.append('token', localStorage.getItem('token'))
-    body.append('group', matchedGroup.id)
-    body.append('responses', JSON.stringify(responses))
-    fetch(API, {method: 'POST', body})
-        .then(r => r.json())
+    postForm({
+        VERB: 'PUT',
+        token: localStorage.getItem('token'),
+        group: matchedGroup.id,
+        responses: JSON.stringify(responses),
+    })
         .then(r => { if (r.status !== 'success') throw new Error(r.message) })
         .catch(ex => {
             document.getElementById('step-thanks').hidden = true

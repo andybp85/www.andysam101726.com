@@ -25,6 +25,8 @@ h1 { view-transition-name: site-title; }
     --brass: #e2c06e;
     --brass-dark: #8a6d2f;
     --ink: #2a1a14;
+    /* Deep ink for the dial face — ticks, frequency line, station text */
+    --dial-ink: #231f20;
     /* Beveled brass frame + cream face shared by the dial and the mobile menu */
     --dial-cream: #ffdc8d;
     --brass-frame: linear-gradient(135deg, #f9dcaa 0%, #b78951 13%, #9e703b 25%, #7d5b29 37%, #6a4a23 47%, #8f6333 61%, #ad7b47 71%, #deba86 84%, #916534 93%, #745426 100%);
@@ -32,7 +34,7 @@ h1 { view-transition-name: site-title; }
 
 html {
     height: 100%;
-    background-color: #2a1a14;
+    background-color: var(--ink);
 }
 
 body {

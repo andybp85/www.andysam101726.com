@@ -30,7 +30,11 @@ Pages (custom domain via `CNAME`). Search-indexing disabled (`robots.txt`,
   bridge. The art-deco parchment card is `.deco-card` (`styles/card.css`),
   reused by the gate, RSVP, and content pages.
 - **Backend is the Apps Script**, not in this repo. Verb is passed as a hidden
-  `VERB` form field (`POST` login, `GUESTS` guest-list fetch, `PUT` rsvp).
+  `VERB` form field (`POST` login, `GUESTS` guest-list fetch, `PUT` rsvp). All
+  calls go through `api.js` (ES module): the endpoint URL plus `postForm(fields)`
+  — pass a whole `FormData` (the login form) or a plain object whose entries it
+  appends; it POSTs and resolves the parsed JSON. `index.js` and `rsvp/index.js`
+  both import it, so the endpoint lives in exactly one place.
 
 ## Styling
 

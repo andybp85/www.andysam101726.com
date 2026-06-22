@@ -1,15 +1,13 @@
+import { postForm } from '/api.js'
+
 const loginForm = document.forms['login']
 const submitButton = document.forms['login']['submit-button']
-
-const API = 'https://script.google.com/macros/s/AKfycbwfXZMR_HIAoBzBZaS6bpmgB-pNZRkrjxRn6Bq09__brkhYBJNZUaGrMnPYkYDDoqdiqQ/exec'
 
 loginForm.addEventListener('submit', e => {
     e.preventDefault()
     submitButton.classList.add('submitting')
-    const formData = new FormData(e.target)
 
-    fetch(API, {method: 'POST', body: formData})
-        .then(r => r.json())
+    postForm(new FormData(e.target))
         .then(async r => {
             if (r.status !== 'success') throw new Error(r.message)
             localStorage.setItem('token', r.token)
@@ -26,10 +24,7 @@ loginForm.addEventListener('submit', e => {
 
 async function prefetchGuests(token) {
     try {
-        const body = new FormData()
-        body.append('VERB', 'GUESTS')
-        body.append('token', token)
-        const r = await (await fetch(API, {method: 'POST', body})).json()
+        const r = await postForm({VERB: 'GUESTS', token})
         if (r.status === 'success')
             sessionStorage.setItem('guests', JSON.stringify(r.guests))
     } catch (err) {

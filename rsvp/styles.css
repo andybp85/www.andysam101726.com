@@ -9,7 +9,7 @@
     font-family: contralto, serif;
     font-size: clamp(2.5rem, 1.5rem + 5vw, 5rem);
     font-weight: bold;
-    color: #2a1a14;
+    color: var(--ink);
     margin: 0 0 0.6em;
     text-align: center;
     line-height: 1.1;
@@ -24,7 +24,7 @@
 }
 
 .deadline {
-    color: #2a1a14;
+    color: var(--ink);
     font-style: italic;
 }
 
@@ -56,39 +56,8 @@
         margin: 0 0.6rem;
         font-family: contralto, serif;
         font-size: 1em;
-        color: #2a1a14;
+        color: var(--ink);
         cursor: pointer;
-    }
-
-    /* Square deco radio box */
-    input[type="radio"] {
-        appearance: none;
-        -webkit-appearance: none;
-        width: 0.85em;
-        height: 0.85em;
-        border: 2px solid #2a1a14;
-        background: transparent;
-        cursor: pointer;
-        flex-shrink: 0;
-        position: relative;
-
-        &:checked::after {
-            content: "";
-            display: block;
-            width: 55%;
-            height: 55%;
-            background: #2a1a14;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-
-        /* Keyboard focus ring for the custom (appearance:none) box */
-        &:focus-visible {
-            outline: 2px solid #8a6d2f;
-            outline-offset: 2px;
-        }
     }
 }
 
@@ -97,7 +66,7 @@
     font-size: clamp(1.4rem, 1rem + 2vw, 2.2rem);
     display: block;
     margin-bottom: 0.4rem;
-    color: #2a1a14;
+    color: var(--ink);
 }
 
 /* Guest slot: "Guest:" label + underline input */
@@ -107,48 +76,56 @@
     gap: 0.35em;
     font-family: contralto, serif;
     font-size: clamp(1.2rem, 0.8rem + 2vw, 1.8rem);
-    color: #2a1a14;
+    color: var(--ink);
     margin-bottom: 0.3rem;
+}
 
-    input[type="checkbox"] {
-        appearance: none;
-        -webkit-appearance: none;
-        width: 0.85em;
-        height: 0.85em;
-        border: 2px solid #2a1a14;
-        background: transparent;
-        cursor: pointer;
-        flex-shrink: 0;
-        position: relative;
+/* Square deco toggle — shared by the attending radios and the Guest checkbox */
+.member input[type="radio"],
+.guest-flag input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 0.85em;
+    height: 0.85em;
+    border: 2px solid var(--ink);
+    background: transparent;
+    cursor: pointer;
+    flex-shrink: 0;
+    position: relative;
 
-        &:checked::after {
-            content: "";
-            display: block;
-            width: 55%;
-            height: 55%;
-            background: #2a1a14;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
+    &:checked::after {
+        content: "";
+        display: block;
+        width: 55%;
+        height: 55%;
+        background: var(--ink);
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
 
-        /* Keyboard focus ring for the custom (appearance:none) box */
-        &:focus-visible {
-            outline: 2px solid #8a6d2f;
-            outline-offset: 2px;
-        }
+    /* Keyboard focus ring for the custom (appearance:none) boxes */
+    &:focus-visible {
+        outline: 2px solid #8a6d2f;
+        outline-offset: 2px;
     }
 }
 
-.guest-name {
+/* Underline text fields — the guest-name input and party-picker buttons share
+   the bare bottom-rule look. */
+.guest-name,
+.party-pick {
     background: transparent;
     border: none;
-    border-bottom: 1px solid #2a1a14;
-    color: #2a1a14;
+    border-bottom: 1px solid var(--ink);
+    color: var(--ink);
     font-family: contralto, serif;
-    font-size: var(--body-font-size);
     text-align: center;
+}
+
+.guest-name {
+    font-size: var(--body-font-size);
     width: 14rem;
     padding: 0.2em 0;
     display: block;
@@ -169,17 +146,11 @@
 }
 
 .party-pick {
-    background: transparent;
-    border: none;
-    border-bottom: 1px solid #2a1a14;
-    color: #2a1a14;
-    font-family: contralto, serif;
     font-size: 1em;
     cursor: pointer;
     padding: 0.3em 1em;
     width: 100%;
     max-width: 24rem;
-    text-align: center;
     transition: opacity 0.15s;
 
     &:hover,

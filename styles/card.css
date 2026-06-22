@@ -1,7 +1,7 @@
 main.deco-card,
 .deco-card {
     background-color: #f0e6d2;
-    color: #2a1a14;
+    color: var(--ink);
     /* Override root.css main defaults */
     border: solid transparent;
     /* Big frame on the sides, slim top/bottom so the card isn't mostly empty
@@ -31,8 +31,8 @@ main.deco-card,
     input {
         background: transparent;
         border: none;
-        border-bottom: 1px solid #2a1a14;
-        color: #2a1a14;
+        border-bottom: 1px solid var(--ink);
+        color: var(--ink);
         font-family: contralto, serif;
         text-align: center;
         font-size: var(--body-font-size);
@@ -65,7 +65,7 @@ main.deco-card,
         font-size: 1.25em;
         letter-spacing: 0.08em;
         cursor: pointer;
-        color: #2a1a14;
+        color: var(--ink);
         padding: 0.3em 1.6em 0.35em;
         margin: 0.5rem auto 0;
         width: auto;
