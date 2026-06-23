@@ -29,7 +29,7 @@ h1 { view-transition-name: site-title; }
     --dial-ink: #231f20;
     /* Beveled brass frame + cream face shared by the dial and the mobile menu */
     --dial-cream: #ffdc8d;
-    --brass-frame: linear-gradient(135deg, #f9dcaa 0%, #b78951 13%, #9e703b 25%, #7d5b29 37%, #6a4a23 47%, #8f6333 61%, #ad7b47 71%, #deba86 84%, #916534 93%, #745426 100%);
+    --brass-frame: linear-gradient(135deg, #ffe9b8 0%, #b58340 13%, #946530 25%, #6c4b20 37%, #4f3814 47%, #875a28 61%, #b5824b 71%, #f0cd8d 84%, #835520 93%, #5b3f17 100%);
 }
 
 html {

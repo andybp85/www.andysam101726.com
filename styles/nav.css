@@ -32,8 +32,8 @@ html {
 body {
     @media (max-width: 700px) {
         /* Narrow vertical dial — snug around the longest word (SCHEDULE); also the
-           page-shift distance. ~130px at 600px, gentle slope so it scales smoothly. */
-        --menu-w: clamp(8rem, 5.6rem + 6.75vw, 9.8rem);
+           page-shift distance. ~125px at 600px, gentle slope so it scales smoothly. */
+        --menu-w: clamp(7.69rem, 5.29rem + 6.75vw, 9.49rem);
         overflow-x: hidden;
     }
 }
@@ -104,9 +104,10 @@ main {
 
     @media (max-width: 700px) {
         justify-self: auto;
-        /* Gentle slope; small gap between the knob and the page edge */
-        --knob-size: clamp(4rem, 2.6rem + 5vw, 5.4rem);
-        margin-left: 0.9rem;
+        /* Knob diameter tracks the drawer width and their left edges align, so the
+           MENU knob caps the drawer like one instrument (per the design). */
+        --knob-size: var(--menu-w);
+        margin-left: 0.4rem;
         cursor: pointer;
         position: relative;
         z-index: 6;
@@ -175,10 +176,10 @@ main {
     line-height: 1;
     white-space: nowrap;
 
-    /* Show a bigger MENU label on the brass face */
+    /* Big MENU label filling most of the knob face */
     @media (max-width: 700px) {
         display: inline-block;
-        font-size: clamp(0.95rem, 0.6rem + 1.9vw, 1.4rem);
+        font-size: clamp(1.7rem, 1.1rem + 2.6vw, 2.3rem);
     }
 }
 
@@ -196,13 +197,15 @@ main {
     border-radius: clamp(0.6rem, 1.4vw, 1.1rem);
     padding: 0.4rem clamp(1rem, 2.5vw, 2rem);
     min-width: clamp(14rem, 50vw, 36rem);
+    /* Same 3D rim treatment as the mobile drawer (pulled from the design SVG):
+       #4e371b strokes on both edges of the brass, the recess offset down-right so
+       it sits on the lit top-left, and the drop shadow falling to the right and
+       bottom so the plaque's depth shows only on those sides. */
     box-shadow:
-        /* thin dark rim between frame and face */
-        inset 0 0 0 2px #4e371b,
-        /* inner drop shadow — face sits below the frame */
-        inset 0 3px 7px rgba(35, 31, 32, 0.45),
-        /* outer drop shadow — whole plaque lifts off the wood */
-        0 4px 11px rgba(35, 31, 32, 0.55);
+        inset 0 0 0 1.5px #4e371b,
+        inset 3px 3px 8px rgba(35, 31, 32, 0.45),
+        0 0 0 1.5px #4e371b,
+        4px 5px 13px rgba(35, 31, 32, 0.6);
 
     /* Center frequency line — thick ink line */
     &::before {
@@ -325,24 +328,38 @@ main {
         display: flex;
         flex-direction: column;
         align-items: stretch;
-        /* Vertical rhythm — drives the gaps, the end padding and the tick offset
-           so the whole dial scales together (~440px tall at 600px). */
-        --st-gap: clamp(1.8rem, 1.375rem + 3vw, 2.8rem);
+        /* Vertical rhythm between stations + the tick offset. Sized from the design:
+           baselines sit ~2.9x the station font apart (airy, evenly distributed). */
+        --st-gap: clamp(2.6rem, 1.375rem + 5.5vw, 4.3rem);
+        /* Beveled brass frame width — ~10px at 600px, gentle scale. */
+        --frame-w: clamp(8px, 4px + 1vw, 12px);
         gap: var(--st-gap);
         position: absolute;
         top: 100%;
         left: 0;
-        margin: 0.7rem 0 0 0.4rem;
+        margin: 1.4rem 0 0 0.4rem;
         width: var(--menu-w);
-        padding: var(--st-gap) 0;
+        /* Small end padding so HOME/FAQ sit near the top/bottom edges (per design). */
+        padding: clamp(0.9rem, 0.675rem + 1.2vw, 1.5rem) 0;
+        /* Frame pulled exactly from the design SVG (full_page_updated_with_knob_mobile):
+           the brass gradient is its linear-gradient-2 — identical to --brass-frame —
+           angled bottom-left→top-right (its userSpace direction, bright toward the
+           bottom). Cream fill via padding-box, brass ring via border-box. */
         background:
             linear-gradient(var(--dial-cream), var(--dial-cream)) padding-box,
-            var(--brass-frame) border-box;
-        border: clamp(8px, 2.6vw, 12px) solid transparent;
-        border-radius: 0.9rem;
+            linear-gradient(45deg,
+                #f9dcaa 0%, #b78951 13%, #9e703b 25%, #7d5b29 37%, #6a4a23 47%,
+                #8f6333 61%, #ad7b47 71%, #deba86 84%, #916534 93%, #745426 100%) border-box;
+        border: var(--frame-w) solid transparent;
+        border-radius: 1.2rem;
+        /* Depth on the right + bottom (the design does this with a drop shadow): an
+           outer #4e371b stroke on every edge, a thin solid side-face for a crisp 3D
+           edge, then a deep soft shadow falling down-right so the plaque reads raised
+           with visible thickness. Its inner half (recess on top/left) is on ::after. */
         box-shadow:
-            inset 0 0 0 2px #4e371b,
-            6px 7px 14px rgba(35, 31, 32, 0.6);
+            0 0 0 1px #4e371b,
+            2px 2px 0 0 #3a2a16,
+            5px 7px 14px rgba(16, 11, 7, 0.7);
         z-index: 5;
         /* Slid off-screen left when closed; eased into view when open.
            visibility:hidden keeps the closed drawer out of the tab order and
@@ -365,14 +382,35 @@ main {
         &::before {
             content: '';
             position: absolute;
-            top: 0.5rem;
-            bottom: 0.5rem;
+            top: 0.35rem;
+            bottom: 0.35rem;
             left: 50%;
-            width: clamp(3px, 0.9vw, 5px);
+            width: clamp(2px, 0.4vw, 3px);
             background-color: var(--dial-ink);
             transform: translateX(-50%);
             box-shadow: 1px 0 2px rgba(35, 31, 32, 0.4);
             z-index: 0;
+        }
+
+        /* Inner drop shadow — a continuous soft recess around the cream face's
+           inner edge so it reads as set back below the brass frame (3D), per the
+           design. Sits above the station bands (z-index over them) so the
+           full-width cream word-blocks can't break it into segments the way the
+           old hard inset rim was. Radius tracks the padding-box inner corner. */
+        &::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: calc(1.2rem - var(--frame-w));
+            pointer-events: none;
+            /* Inner half of the design's drop-shadow-2: the ring's #4e371b inner
+               stroke, plus the same offset shadow falling inward — so the cream
+               recess sits on the top/left (the lit side), mirroring the down-right
+               depth on the outside. Above the cream bands so they can't break it. */
+            box-shadow:
+                inset 0 0 0 1px #4e371b,
+                inset 3px 4px 9px rgba(35, 31, 32, 0.62);
+            z-index: 3;
         }
 
         /* Stations stacked along the line. The cream background (same as the dial
@@ -381,8 +419,12 @@ main {
         .station {
             display: block;
             font-family: nickerbocker, serif;
-            font-size: clamp(1.15rem, 0.9rem + 1.1vw, 1.5rem);
-            letter-spacing: 0.04em;
+            /* ~26% of the cream's inner width, so SCHEDULE fills it with a little
+               breathing room at the sides; nowrap keeps it on one line at every size. */
+            font-size: clamp(1.4rem, 0.95rem + 1.9vw, 1.9rem);
+            line-height: 1;
+            letter-spacing: 0.03em;
+            white-space: nowrap;
             text-decoration: none;
             color: var(--dial-ink);
             text-shadow: 0 2px 3px rgba(35, 31, 32, 0.65);
@@ -401,8 +443,8 @@ main {
                 top: calc(var(--st-gap) / -2);
                 left: 50%;
                 transform: translate(-50%, -50%);
-                width: clamp(12px, 3.6vw, 18px);
-                height: clamp(3px, 0.9vw, 5px);
+                width: clamp(8px, 1.8vw, 13px);
+                height: clamp(2px, 0.5vw, 3.5px);
                 background-color: var(--dial-ink);
                 z-index: 1;
             }
@@ -415,21 +457,26 @@ main {
 
             &.active { font-weight: bold; }
 
-            /* Active station — a wide, short red right-pointing triangle on the
-               cream (no black behind it). */
+            /* Active station — a wide, short red right-pointing triangle from the
+               left edge toward the word (~27% of the width, per design). Sits behind
+               the text (z-index -1, above the cream) with no shadow, matching the
+               design's flat red indicator. */
             &.active::before {
                 display: block;
                 content: '';
                 position: absolute;
-                left: 0.15rem;
+                left: 0.1rem;
                 top: 50%;
                 transform: translateY(-50%);
                 width: 0;
                 height: 0;
-                border-top: 0.32rem solid transparent;
-                border-bottom: 0.32rem solid transparent;
-                border-left: 0.95rem solid #be1e2d;
-                filter: drop-shadow(1px 1px 1px rgba(35, 31, 32, 0.45));
+                /* clear the tick's ink fill this pseudo otherwise inherits — without
+                   it the dark background shows through the transparent borders. */
+                background: none;
+                border-top: 0.34rem solid transparent;
+                border-bottom: 0.34rem solid transparent;
+                border-left: 1.7rem solid #be1e2d;
+                z-index: -1;
             }
         }
     }
