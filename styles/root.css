@@ -172,4 +172,5 @@ input:user-invalid {
 
 hr {
     color: var(--body-text-color);
+    margin: 4vh 0;
 }
