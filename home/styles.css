@@ -70,10 +70,8 @@ main {
         padding: 6% 4% 0;
 
         .rsvp-btn.big {
-            position: absolute;
             top: 72%;
             left: 50%;
-            transform: translateX(-50%);
             font-size: clamp(1.2rem, 5vw, 1.6rem);
         }
     }
