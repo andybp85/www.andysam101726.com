@@ -24,7 +24,10 @@
         flex-direction: column;
         align-items: flex-start;
         position: absolute;
-        top: var(--knob-top, 2.6rem);
+        /* Vertically centre the knob on the title's middle: title top (its 1.5vh
+           margin) + half the two-line block (~1.39 x font) - half the knob. Floor
+           at 0.4rem so a small title on narrow screens can't push it off-screen. */
+        top: max(0.4rem, calc(1.5vh + 1.39 * var(--title-fs) - var(--menu-w) * 0.4));
         left: 0;
         margin: 0;
         z-index: 5;
@@ -44,20 +47,30 @@ body {
         /* Narrow vertical dial — snug around the longest word (SCHEDULE).
            ~125px at 600px, gentle slope so it scales smoothly. */
         --menu-w: clamp(7.69rem, 5.29rem + 6.75vw, 9.49rem);
+        /* Mobile title size, shared with #radio so the knob can centre on the
+           title's middle. Default (bare auth gate, no knob): big, screen-centred. */
+        --title-fs: clamp(2.2rem, -0.3rem + 12.5vw, 5rem);
         overflow-x: hidden;
         /* Positioning context for the out-of-flow knob/nav in the title gutter. */
         position: relative;
     }
 }
 
-/* On nav pages (not the bare auth gate), the knob sits in the title's left
-   gutter, so span the title full-width and pad its left by the knob footprint —
-   the centred title then clears the knob on every width. :has scopes this to
-   pages that actually render #site-nav. */
+/* Nav pages (the whole two-line title range, <=700px): the knob sits in the
+   title's left gutter. A purely screen-centred title would have to be small to
+   clear the corner knob, so shift it slightly right of centre instead — span the
+   title full-width and pad its left by ~half the knob, which lets it grow while
+   still clearing the knob. --title-fs is sized to hold ~8-14px knob clearance
+   across the range; the knob re-centres on the title's middle automatically,
+   since #radio's top is derived from --title-fs. :has scopes this off the bare
+   auth gate (no knob), where the title stays fully centred at the larger size. */
+body:has(#site-nav) {
+    @media (max-width: 700px) { --title-fs: clamp(1.8rem, -1.75rem + 17.8vw, 5rem); }
+}
 body:has(#site-nav) h1 {
     @media (max-width: 700px) {
         align-self: stretch;
-        padding-left: calc(var(--menu-w) * 0.8 + 1.4rem);
+        padding-left: calc(var(--menu-w) * 0.5);
     }
 }
 
