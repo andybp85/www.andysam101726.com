@@ -12,19 +12,21 @@
     gap: 1rem;
     margin: 1vh 0 2vh;
 
-    /* Mobile: stack the knob above the drawer; #radio anchors the drawer.
+    /* Mobile: the knob tucks into the title's left gutter (no separate nav band),
+       so page content rises right under the title. #radio is taken out of flow
+       (absolute, anchored to body) and #radio anchors the drawer below the knob.
        #radio carries view-transition-name (root.css), so it's already a stacking
        context — which means the absolutely-positioned drawer's own z-index can't
-       lift it above page content. Raising #radio itself lifts the whole nav (and
-       the drawer it anchors) above main, so the open drawer floats OVER the
-       content. Page content uses no z-index, so a small value clears it; the knob
-       still sits off-screen-clear when closed, so this is safe permanently. */
+       lift it above page content. The high z-index here lifts the whole nav (and
+       the drawer it anchors) above main, so the open drawer floats OVER content. */
     @media (max-width: 700px) {
         display: flex;
         flex-direction: column;
         align-items: flex-start;
-        margin: 0.5vh 0 1vh;
-        position: relative;
+        position: absolute;
+        top: var(--knob-top, 2.6rem);
+        left: 0;
+        margin: 0;
         z-index: 5;
     }
 }
@@ -43,6 +45,19 @@ body {
            ~125px at 600px, gentle slope so it scales smoothly. */
         --menu-w: clamp(7.69rem, 5.29rem + 6.75vw, 9.49rem);
         overflow-x: hidden;
+        /* Positioning context for the out-of-flow knob/nav in the title gutter. */
+        position: relative;
+    }
+}
+
+/* On nav pages (not the bare auth gate), the knob sits in the title's left
+   gutter, so span the title full-width and pad its left by the knob footprint —
+   the centred title then clears the knob on every width. :has scopes this to
+   pages that actually render #site-nav. */
+body:has(#site-nav) h1 {
+    @media (max-width: 700px) {
+        align-self: stretch;
+        padding-left: calc(var(--menu-w) * 0.8 + 1.4rem);
     }
 }
 
@@ -102,9 +117,9 @@ body {
 
     @media (max-width: 700px) {
         justify-self: auto;
-        /* Knob diameter tracks the drawer width and their left edges align, so the
-           MENU knob caps the drawer like one instrument (per the design). */
-        --knob-size: var(--menu-w);
+        /* Knob is 80% of the drawer width — small enough to tuck beside the title;
+           left edges still align with the drawer below it. */
+        --knob-size: calc(var(--menu-w) * 0.8);
         margin-left: 0.4rem;
         cursor: pointer;
         position: relative;

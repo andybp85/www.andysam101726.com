@@ -90,7 +90,9 @@ h1 {
     color: transparent;
     filter: drop-shadow(#301934 0.05em 0.05em 0.05em);
 
-    @media (max-width: 700px) { --h1-font-size: clamp(2.5rem, 0.8rem + 8vw, 5rem); }
+    /* Bigger on mobile now that the knob no longer sits in its own band. On nav
+       pages the title is offset to clear the gutter knob — see nav.css. */
+    @media (max-width: 700px) { --h1-font-size: clamp(2.2rem, -0.3rem + 12.5vw, 5rem); }
 }
 
 /* Title line-break shown only on mobile (Andy & Sam's / Wedding) */

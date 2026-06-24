@@ -127,7 +127,7 @@ function initMobileKnob() {
     if (!knob || !menu) return
     knob.addEventListener('click', () => {
         if (window.matchMedia('(max-width: 700px)').matches) {
-            // Push-drawer: slide the whole page right to reveal the left menu
+            // Toggle the overlay drawer (slides in over the page content)
             const open = document.body.classList.toggle('menu-open')
             knob.setAttribute('aria-expanded', String(open))
         }
