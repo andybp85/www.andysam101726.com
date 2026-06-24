@@ -1,19 +1,66 @@
 @import "/styles/root.css";
 
-/* Left-aligned gold-on-wood Q&A */
+/* Left-aligned gold-on-wood Q&A, collapsible (closed by default) */
 main { text-align: left; }
 
-/* Questions: bigger + bolder than the answers */
-dt {
+.faq {
+    border-bottom: 1px solid rgba(226, 192, 110, 0.35);
+}
+.faq:first-of-type {
+    border-top: 1px solid rgba(226, 192, 110, 0.35);
+}
+
+/* Question = the clickable summary. Native marker removed; we draw our own
+   chevron that rotates open. */
+summary {
     font-size: clamp(1.6rem, 1.1rem + 2.2vw, 2.5rem);
     font-weight: bold;
     line-height: 1.15;
-    margin-top: 1.6rem;
+    padding: 1.1rem 0;
+    cursor: pointer;
+    list-style: none;                 /* Firefox disclosure marker */
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6em;
+    justify-content: space-between;
+}
+summary::-webkit-details-marker { display: none; }   /* WebKit/Blink marker */
+
+summary:focus-visible {
+    outline: 2px solid var(--brass);
+    outline-offset: 4px;
+    border-radius: 2px;
 }
 
-/* Answers: smaller than the body default */
-dd {
+/* Chevron: a right-pointing ">" when closed, rotates to "v" (down) when open.
+   Built from two borders so it inherits the brass text color. */
+summary::after {
+    content: '';
+    flex: none;
+    align-self: flex-start;
+    box-sizing: border-box;
+    width: 0.6em;
+    height: 0.6em;
+    /* drop to roughly the cap height of the first line */
+    margin-top: 0.3em;
+    border-right: 0.13em solid currentColor;
+    border-bottom: 0.13em solid currentColor;
+    transform: rotate(-45deg);
+    transition: transform 0.2s ease;
+}
+details[open] summary::after {
+    transform: rotate(45deg);
+    margin-top: 0.15em;
+}
+
+/* Answer: smaller than the body default */
+.answer {
     font-size: var(--body-font-size);
     line-height: 1.45;
-    margin: 0.3rem 0 0;
+    margin: 0;
+    padding: 0 0 1.2rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    summary::after { transition: none; }
 }
