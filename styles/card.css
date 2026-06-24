@@ -1,31 +1,23 @@
-main.deco-card,
+/* Art-deco parchment card — shared by the auth gate and the RSVP page. */
 .deco-card {
     background-color: #f0e6d2;
-    color: var(--ink);
-    /* Override root.css main defaults */
     /* Big frame on the sides, slim top/bottom so the card isn't mostly empty
        cream vertically (keeps the prominent deco border, drops the padding).
        Responsive so the side frame doesn't eat the viewport down at 320px. */
     border: clamp(30px, 12vw, 100px) solid transparent;
-    border-radius: 0;
     border-image: url("/images/deco-frame.svg") 230 stretch;
-    /* Cap to the viewport (border-box) so the framed card never overflows at
-       320px; border + padding are included in this width. */
-    width: min(50rem, 92vw);
+    color: var(--ink);
+    font-family: contralto, serif;
+    margin: 2vh auto;
     /* Small inner gutter (replaces main's 10vw padding) so text clears the frame
        without re-introducing the old empty space. */
     padding: 0 clamp(0.5rem, 3vw, 2rem);
-    max-width: 50rem;
-    margin: 2vh auto;
-    font-family: contralto, serif;
-    text-align: center;
+    /* Cancel root main's position: relative. */
     position: static;
-
-    &::before,
-    &::after {
-        display: none;
-        content: none;
-    }
+    text-align: center;
+    /* Cap to the viewport (border-box) so the framed card never overflows at
+       320px; border + padding are included in this width. */
+    width: min(50rem, 92vw);
 
     input {
         background: transparent;
@@ -33,8 +25,8 @@ main.deco-card,
         border-bottom: 1px solid var(--ink);
         color: var(--ink);
         font-family: contralto, serif;
-        text-align: center;
         font-size: var(--body-font-size);
+        text-align: center;
 
         &::placeholder {
             color: #6b4c3b;
@@ -44,7 +36,7 @@ main.deco-card,
         &:focus-visible { outline: none; }
     }
 
-    /* In-card links (schedule phone, travel hotels, faq registry) */
+    /* Links placed inside the card */
     a {
         color: #7d5b29;
         text-decoration: underline;
@@ -60,16 +52,16 @@ main.deco-card,
     button[type="submit"] {
         background: none;
         border: none;
+        color: var(--ink);
+        cursor: pointer;
         font-family: contralto, serif;
         font-size: 1.25em;
-        letter-spacing: 0.08em;
-        cursor: pointer;
-        color: var(--ink);
-        padding: 0.3em 1.6em 0.35em;
-        margin: 0.5rem auto 0;
-        width: auto;
         height: auto;
+        letter-spacing: 0.08em;
+        margin: 0.5rem auto 0;
+        padding: 0.3em 1.6em 0.35em;
         transition: background 0.15s ease, letter-spacing 0.15s ease;
+        width: auto;
 
         &:hover,
         &:focus-visible {
@@ -77,7 +69,6 @@ main.deco-card,
             letter-spacing: 0.12em;
         }
 
-        /* no border */
         &:focus-visible { outline: none; }
     }
 }

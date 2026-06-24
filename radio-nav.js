@@ -35,7 +35,12 @@ function render() {
         `<a class="station" data-index="${i}" href="${href}">${label}</a>`).join('')
     document.getElementById('site-nav').innerHTML = `
         <div id="radio">
-            <button id="knob" type="button" aria-label="Navigation — tune the dial, or open the menu" aria-controls="station-menu" aria-expanded="false"><span class="knob-spin"><span class="knob-arrow"><svg viewBox="0 0 103.73 40.77" aria-hidden="true"><path d="M103.73,18.69 L2.58,0 c-1.34,-0.25 -2.58,0.78 -2.58,2.14 v36.49 c0,1.36 1.24,2.39 2.58,2.14 L103.73,22.08 c1.89,-0.35 1.89,-3.05 0,-3.4 z"/></svg></span></span><span class="knob-label">MENU</span></button>
+            <button id="knob" type="button" aria-controls="station-menu" aria-expanded="false"
+                    aria-label="Navigation — tune the dial, or open the menu"><span
+                    class="knob-spin"><span class="knob-arrow"><svg viewBox="0 0 103.73 40.77"
+                    aria-hidden="true"><path d="M103.73,18.69 L2.58,0 c-1.34,-0.25 -2.58,0.78 -2.58,2.14
+                    v36.49 c0,1.36 1.24,2.39 2.58,2.14 L103.73,22.08 c1.89,-0.35 1.89,-3.05 0,-3.4
+                    z"/></svg></span></span><span class="knob-label">MENU</span></button>
             <div id="dial">
                 <div id="needle" aria-hidden="true"></div>
                 <div id="stations">${stations}</div>
@@ -153,7 +158,7 @@ function initDesktopKnob() {
         hoverTip.style.top = e.clientY + 'px'
         hoverTip.hidden = false
     })
-    const hideHover = () => { hoverTip.hidden = true }
+    const hideHover = () => hoverTip.hidden = true
     knob.addEventListener('pointerleave', hideHover)
     knob.addEventListener('pointerdown', hideHover)
 }
@@ -181,9 +186,7 @@ function initSpinTip() {
     // Capture-phase scroll catches nested scrollers too; the rest cover click,
     // wheel, keyboard, touch, and engaging the knob itself.
     window.addEventListener('scroll', dismiss, { signal: ac.signal, passive: true, capture: true })
-    for (const t of ['wheel', 'pointerdown', 'keydown', 'touchstart']) {
-        window.addEventListener(t, dismiss, opts)
-    }
+    for (const t of ['wheel', 'pointerdown', 'keydown', 'touchstart']) window.addEventListener(t, dismiss, opts)
     knob.addEventListener('pointerenter', dismiss, opts)
     // Keep it pinned to the knob if the layout reflows while it's still up.
     window.addEventListener('resize', place, opts)

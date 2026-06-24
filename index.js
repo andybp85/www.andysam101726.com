@@ -1,7 +1,7 @@
 import { postForm, ensureOk } from '/api.js'
 
 const loginForm = document.forms['login']
-const submitButton = document.forms['login']['submit-button']
+const submitButton = loginForm['submit-button']
 
 loginForm.addEventListener('submit', e => {
     e.preventDefault()

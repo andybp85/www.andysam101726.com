@@ -4,12 +4,12 @@
 #site-nav { display: block; width: 100%; }
 
 #radio {
+    align-items: center;
     display: grid;
+    gap: 1rem;
     /* equal side tracks keep the dial (centre track) centred on the page;
        the knob lives in the left track, the right track is empty ballast */
     grid-template-columns: 1fr auto 1fr;
-    align-items: center;
-    gap: 1rem;
     margin: 1vh 0 2vh;
 
     /* Mobile: the knob tucks into the title's left gutter (no separate nav band),
@@ -20,16 +20,16 @@
        lift it above page content. The high z-index here lifts the whole nav (and
        the drawer it anchors) above main, so the open drawer floats OVER content. */
     @media (max-width: 700px) {
+        align-items: flex-start;
         display: flex;
         flex-direction: column;
-        align-items: flex-start;
+        left: 0;
+        margin: 0;
         position: absolute;
         /* Vertically centre the knob on the title's middle: title top (its 1.5vh
            margin) + half the two-line block (~1.39 x font) - half the knob. Floor
            at 0.4rem so a small title on narrow screens can't push it off-screen. */
         top: max(0.4rem, calc(1.5vh + 1.39 * var(--title-fs) - var(--menu-w) * 0.4));
-        left: 0;
-        margin: 0;
         z-index: 5;
     }
 }
@@ -78,30 +78,30 @@ body:has(#site-nav) h1 {
    Layered so the knurled body + brown arrow ROTATE while the glare
    (fixed lighting) and MENU label stay put — like a real knob. */
 #knob {
-    flex-shrink: 0;
-    /* hug the right end of the left track so the knob sits just left of the
-       page-centred dial (column-gap provides the spacing) */
-    justify-self: end;
     --knob-size: clamp(5.5rem, 9vw, 7.5rem);
-    width: var(--knob-size);
-    height: var(--knob-size);
-    border-radius: 50%;
-    border: none;
-    padding: 0;
-    background: transparent;
-    cursor: grab;
-    /* Own the touch gesture: dragging/tapping the knob must not scroll the page
-       (Firefox/touch would otherwise pan instead of turning or toggling). */
-    touch-action: none;
-    position: relative;
-    display: flex;
     align-items: center;
-    justify-content: center;
+    background: transparent;
+    border: none;
+    border-radius: 50%;
     /* Layered contact + ambient shadow so the knob sits on the plaque. */
     box-shadow:
         0 1px 2px rgba(0, 0, 0, 0.5),
         0 5px 10px rgba(0, 0, 0, 0.45),
         0 11px 22px rgba(0, 0, 0, 0.3);
+    cursor: grab;
+    display: flex;
+    flex-shrink: 0;
+    height: var(--knob-size);
+    justify-content: center;
+    /* hug the right end of the left track so the knob sits just left of the
+       page-centred dial (column-gap provides the spacing) */
+    justify-self: end;
+    padding: 0;
+    position: relative;
+    /* Own the touch gesture: dragging/tapping the knob must not scroll the page
+       (Firefox/touch would otherwise pan instead of turning or toggling). */
+    touch-action: none;
+    width: var(--knob-size);
 
     &:active { cursor: grabbing; }
 
@@ -114,10 +114,6 @@ body:has(#site-nav) h1 {
        the body turns; edge-only, so its transparent centre never veils the MENU
        label. */
     &::after {
-        content: '';
-        position: absolute;
-        inset: 0;
-        border-radius: 50%;
         background:
             /* crisp bright rim catching the top edge */
             radial-gradient(ellipse 80% 50% at 50% -6%, rgba(255, 248, 214, 0.5) 0%, rgba(255, 248, 214, 0.4) 22%, transparent 30%),
@@ -125,16 +121,20 @@ body:has(#site-nav) h1 {
             radial-gradient(circle at 73% 79%, rgba(0, 0, 0, 0.5) 0%, transparent 50%),
             /* occlusion pooling at the bottom edge */
             radial-gradient(ellipse 72% 58% at 50% 112%, rgba(0, 0, 0, 0.48), transparent 52%);
+        border-radius: 50%;
+        content: '';
+        inset: 0;
         pointer-events: none;
+        position: absolute;
     }
 
     @media (max-width: 700px) {
-        justify-self: auto;
         /* Knob is 80% of the drawer width — small enough to tuck beside the title;
            left edges still align with the drawer below it. */
         --knob-size: calc(var(--menu-w) * 0.8);
-        margin-left: 0.4rem;
         cursor: pointer;
+        justify-self: auto;
+        margin-left: 0.4rem;
         position: relative;
         z-index: 6;
     }
@@ -142,29 +142,29 @@ body:has(#site-nav) h1 {
 
 /* Rotating layer: knurled brass edge + domed face + brown arrow */
 .knob-spin {
-    position: absolute;
-    inset: 0;
-    border-radius: 50%;
-    transform-origin: 50% 50%;
     background:
         radial-gradient(circle at 50% 50%, #c9992f 0 56%, rgba(0, 0, 0, 0.3) 56% 59%, transparent 59%),
         repeating-conic-gradient(from -2deg, #6a4a23 0deg 5deg, #d2a64d 5deg 10deg);
+    border-radius: 50%;
     /* rotation-invariant depth only; directional light lives on the fixed glare */
     box-shadow:
         inset 0 0 0 3px #8a5e23,
         inset 0 0 6px rgba(0, 0, 0, 0.35);
+    inset: 0;
+    position: absolute;
+    transform-origin: 50% 50%;
 
     /* Domed brass face on top of the knurled ring */
     &::before {
-        content: '';
-        position: absolute;
-        inset: 15%;
-        border-radius: 50%;
         /* centered dome (rotation-invariant); the fixed glare adds the lit side */
         background: radial-gradient(circle at 50% 50%, #eec06a 0%, #c08836 58%, #7d531f 100%);
+        border-radius: 50%;
         box-shadow:
             inset 0 0 0 2px #6a4a23,
             inset 0 0 8px rgba(0, 0, 0, 0.38);
+        content: '';
+        inset: 15%;
+        position: absolute;
     }
 }
 
@@ -172,16 +172,16 @@ body:has(#site-nav) h1 {
    (103.73 × 40.77 in a 511 knob ≈ 20% long). Points up at HOME, rotates
    with the body. The -90° turns the SVG's right-facing arrow to point up. */
 .knob-arrow {
-    position: absolute;
+    filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.4));
     left: 50%;
+    line-height: 0;
+    position: absolute;
     top: 23%;
-    width: 20%;
     transform: translate(-50%, -50%) rotate(-90deg);
     transform-origin: center;
-    line-height: 0;
-    filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.4));
+    width: 20%;
 
-    svg { display: block; width: 100%; height: auto; }
+    svg { display: block; height: auto; width: 100%; }
     path { fill: #5e421c; }
 
     /* Drop the indicator arrow on mobile; the knob is just the MENU toggle */
@@ -190,17 +190,17 @@ body:has(#site-nav) h1 {
 
 /* MENU label on knob — hidden by default (desktop) */
 .knob-label {
+    color: var(--ink);
     display: none;
-    position: relative;
-    z-index: 1;
     font-family: nickerbocker, serif;
     font-size: clamp(0.7rem, 2.6vw, 1rem);
     letter-spacing: 0.06em;
-    color: var(--ink);
-    text-shadow: 0 1px 1px rgba(255, 240, 210, 0.6);
-    pointer-events: none;
     line-height: 1;
+    pointer-events: none;
+    position: relative;
+    text-shadow: 0 1px 1px rgba(255, 240, 210, 0.6);
     white-space: nowrap;
+    z-index: 1;
 
     /* Big MENU label filling most of the knob face */
     @media (max-width: 700px) {
@@ -214,27 +214,27 @@ body:has(#site-nav) h1 {
    Free-floating: position:fixed, placed in JS (radio-nav.js), appended to
    <body>. Hidden on mobile, where the knob is just the MENU toggle. */
 .knob-tip {
-    position: fixed;
-    z-index: 50;
-    pointer-events: none;
-    font-family: nickerbocker, serif;
-    font-size: 0.95rem;
-    letter-spacing: 0.04em;
-    line-height: 1;
-    white-space: nowrap;
-    color: var(--dial-ink);
-    text-shadow: 0 1px 1px rgba(255, 240, 210, 0.5);
     /* cream fill (padding-box) inside the beveled brass frame (border-box) */
     background:
         linear-gradient(var(--dial-cream), var(--dial-cream)) padding-box,
         var(--brass-frame) border-box;
     border: 2px solid transparent;
     border-radius: 0.55rem;
-    padding: 0.4rem 0.6rem;
     /* crisp dark edge + soft drop so the chip reads raised, like the plaque */
     box-shadow:
         0 0 0 1px #4e371b,
         0 3px 9px rgba(35, 31, 32, 0.5);
+    color: var(--dial-ink);
+    font-family: nickerbocker, serif;
+    font-size: 0.95rem;
+    letter-spacing: 0.04em;
+    line-height: 1;
+    padding: 0.4rem 0.6rem;
+    pointer-events: none;
+    position: fixed;
+    text-shadow: 0 1px 1px rgba(255, 240, 210, 0.5);
+    white-space: nowrap;
+    z-index: 50;
 
     @media (max-width: 700px) { display: none !important; }
 }
@@ -246,37 +246,32 @@ body:has(#site-nav) h1 {
    element is lifted fully above via translateY(-100%)). The down-arrow points
    back at the knob. */
 .knob-tip--spin {
-    transform: translate(-50%, -100%);
     font-size: 1.05rem;
+    transform: translate(-50%, -100%);
 
     &::before {
-        content: '';
-        position: absolute;
-        top: 100%;
-        left: 50%;
-        transform: translateX(-50%);
         border: 7px solid transparent;
         border-top-color: var(--dial-cream);
+        content: '';
+        filter: drop-shadow(0 1px 0 #4e371b);
+        left: 50%;
         /* lift it a hair to overlap the bubble's brass edge */
         margin-top: -1px;
-        filter: drop-shadow(0 1px 0 #4e371b);
+        position: absolute;
+        top: 100%;
+        transform: translateX(-50%);
     }
 }
 
 /* Cream dial face — horizontal rounded rectangle with a beveled brass
    gradient frame (cream fill via padding-box, gradient via border-box). */
 #dial {
-    position: relative;
-    display: flex;
-    flex-direction: column;
     align-items: center;
     background:
         linear-gradient(var(--dial-cream), var(--dial-cream)) padding-box,
         var(--brass-frame) border-box;
     border: clamp(5px, 0.8vw, 9px) solid transparent;
     border-radius: clamp(0.6rem, 1.4vw, 1.1rem);
-    padding: 0.4rem clamp(1rem, 2.5vw, 2rem);
-    min-width: clamp(14rem, 50vw, 36rem);
     /* Same 3D rim treatment as the mobile drawer (pulled from the design SVG):
        #4e371b strokes on both edges of the brass, the recess offset down-right so
        it sits on the lit top-left, and the drop shadow falling to the right and
@@ -286,18 +281,23 @@ body:has(#site-nav) h1 {
         inset 3px 3px 8px rgba(35, 31, 32, 0.45),
         0 0 0 1.5px #4e371b,
         4px 5px 13px rgba(35, 31, 32, 0.6);
+    display: flex;
+    flex-direction: column;
+    min-width: clamp(14rem, 50vw, 36rem);
+    padding: 0.4rem clamp(1rem, 2.5vw, 2rem);
+    position: relative;
 
     /* Center frequency line — thick ink line */
     &::before {
-        content: '';
-        position: absolute;
-        top: 50%;
-        left: clamp(0.8rem, 2vw, 1.6rem);
-        right: clamp(0.8rem, 2vw, 1.6rem);
-        height: clamp(2px, 0.55vw, 4px);
         background-color: var(--dial-ink);
-        transform: translateY(-50%);
         box-shadow: 0 2px 2px rgba(35, 31, 32, 0.4);
+        content: '';
+        height: clamp(2px, 0.55vw, 4px);
+        left: clamp(0.8rem, 2vw, 1.6rem);
+        position: absolute;
+        right: clamp(0.8rem, 2vw, 1.6rem);
+        top: 50%;
+        transform: translateY(-50%);
         /* above the red needle, below the station text/ticks */
         z-index: 1;
     }
@@ -311,43 +311,43 @@ body:has(#site-nav) h1 {
    text, ticks and row height all scale together at every width (the center line
    sits at 50%, i.e. exactly one half-height from top). */
 #stations {
+    align-items: stretch;
+    display: flex;
     /* big on wide screens, scales down toward the 700px breakpoint so the row
        never crowds before the dial gives way to the mobile menu */
     font-size: clamp(1.45rem, 0.1rem + 3vw, 2.7rem);
-    line-height: 1.1;
-    display: flex;
-    align-items: stretch;
     gap: clamp(0.6rem, 2.5vw, 2rem);
+    /* Two stacked half-rows (text above the line + text below it) */
+    height: 2.4em;
+    line-height: 1.1;
     position: relative;
     /* above the center line and the red needle */
     z-index: 2;
-    /* Two stacked half-rows (text above the line + text below it) */
-    height: 2.4em;
 }
 
 /* Individual station links — font inherited from #stations so 1em tracks it */
 .station {
-    font-family: nickerbocker, serif;
-    letter-spacing: 0.06em;
-    text-decoration: none;
     color: var(--dial-ink);
-    text-shadow: 0 2px 4px rgba(35, 31, 32, 0.7);
-    position: relative;
     display: flex;
+    font-family: nickerbocker, serif;
     justify-content: center;
+    letter-spacing: 0.06em;
+    position: relative;
+    text-decoration: none;
+    text-shadow: 0 2px 4px rgba(35, 31, 32, 0.7);
     white-space: nowrap;
 
     /* Tick mark — short vertical bar centred on the line at each station's x.
        Anchored to the line (top:50%), so it always lands on it regardless of width. */
     &::before {
+        background-color: var(--dial-ink);
         content: '';
-        position: absolute;
+        height: 0.5em;
         left: 50%;
+        position: absolute;
         top: 50%;
         transform: translate(-50%, -50%);
         width: clamp(2px, 0.12em, 5px);
-        height: 0.5em;
-        background-color: var(--dial-ink);
     }
 
     /* ── Alternating above / below the center line ─────────────────── */
@@ -368,9 +368,9 @@ body:has(#site-nav) h1 {
 
     /* Keyboard focus ring for station links (dial + mobile drawer) */
     &:focus-visible {
+        border-radius: 2px;
         outline: 2px solid var(--brass-dark);
         outline-offset: 2px;
-        border-radius: 2px;
     }
 
     /* Active station highlight */
@@ -382,19 +382,19 @@ body:has(#site-nav) h1 {
 
 /* Red tuning indicator — thick vertical line over the current station. */
 #needle {
-    position: absolute;
-    top: 8%;
-    height: 84%;
-    width: clamp(2px, 0.3vw, 4px);
     background-color: #be1e2d;
     border-radius: 1px;
-    pointer-events: none;
-    /* behind the center line and the station text/ticks */
-    z-index: 0;
+    height: 84%;
     /* Default position: station 0 (HOME); JS repositions on load/resize. */
     left: 10%;
+    pointer-events: none;
+    position: absolute;
+    top: 8%;
     transform: translateX(-50%);
     transition: left 0.3s ease;
+    width: clamp(2px, 0.3vw, 4px);
+    /* behind the center line and the station text/ticks */
+    z-index: 0;
 }
 
 /* Mobile station menu — present only on mobile (laid out off-screen there).
@@ -405,22 +405,9 @@ body:has(#site-nav) h1 {
     display: none;
 
     @media (max-width: 700px) {
-        display: flex;
-        flex-direction: column;
-        align-items: stretch;
-        /* Vertical rhythm between stations + the tick offset. Sized from the design:
-           baselines sit ~2.9x the station font apart (airy, evenly distributed). */
-        --st-gap: clamp(2.6rem, 1.375rem + 5.5vw, 4.3rem);
-        /* Beveled brass frame width — ~10px at 600px, gentle scale. */
         --frame-w: clamp(8px, 4px + 1vw, 12px);
-        gap: var(--st-gap);
-        position: absolute;
-        top: 100%;
-        left: 0;
-        margin: 1.4rem 0 0 0.4rem;
-        width: var(--menu-w);
-        /* Small end padding so HOME/FAQ sit near the top/bottom edges (per design). */
-        padding: clamp(0.9rem, 0.675rem + 1.2vw, 1.5rem) 0;
+        --st-gap: clamp(2.6rem, 1.375rem + 5.5vw, 4.3rem);
+        align-items: stretch;
         /* Frame pulled exactly from the design SVG (full_page_updated_with_knob_mobile):
            the brass gradient is its linear-gradient-2 — identical to --brass-frame —
            angled bottom-left→top-right (its userSpace direction, bright toward the
@@ -440,35 +427,45 @@ body:has(#site-nav) h1 {
             0 0 0 1px #4e371b,
             2px 2px 0 0 #3a2a16,
             5px 7px 14px rgba(16, 11, 7, 0.7);
-        z-index: 5;
+        display: flex;
+        flex-direction: column;
+        gap: var(--st-gap);
+        left: 0;
+        margin: 1.4rem 0 0 0.4rem;
+        /* Small end padding so HOME/FAQ sit near the top/bottom edges (per design). */
+        padding: clamp(0.9rem, 0.675rem + 1.2vw, 1.5rem) 0;
+        position: absolute;
+        top: 100%;
         /* Slid off-screen left when closed; eased into view when open.
            visibility:hidden keeps the closed drawer out of the tab order and
            a11y tree (it's only translated, not display:none), then defers the
            hide until the slide-out finishes. */
         transform: translateX(-115%);
-        visibility: hidden;
         transition:
             transform 0.38s cubic-bezier(0.4, 0, 0.2, 1),
             visibility 0s linear 0.38s;
+        visibility: hidden;
+        width: var(--menu-w);
+        z-index: 5;
 
         body.menu-open & {
             transform: translateX(0);
-            visibility: visible;
             transition: transform 0.38s cubic-bezier(0.4, 0, 0.2, 1), visibility 0s;
+            visibility: visible;
         }
 
         /* Vertical center line — full height; the cream word-bands mask it so each
            word sits in a gap in the line (matching the mockup). */
         &::before {
+            background-color: var(--dial-ink);
+            bottom: 0.35rem;
+            box-shadow: 1px 0 2px rgba(35, 31, 32, 0.4);
             content: '';
+            left: 50%;
             position: absolute;
             top: 0.35rem;
-            bottom: 0.35rem;
-            left: 50%;
-            width: clamp(2px, 0.4vw, 3px);
-            background-color: var(--dial-ink);
             transform: translateX(-50%);
-            box-shadow: 1px 0 2px rgba(35, 31, 32, 0.4);
+            width: clamp(2px, 0.4vw, 3px);
             z-index: 0;
         }
 
@@ -478,11 +475,7 @@ body:has(#site-nav) h1 {
            full-width cream word-blocks can't break it into segments the way the
            old hard inset rim was. Radius tracks the padding-box inner corner. */
         &::after {
-            content: '';
-            position: absolute;
-            inset: 0;
             border-radius: calc(1.2rem - var(--frame-w));
-            pointer-events: none;
             /* Inner half of the design's drop-shadow-2: the ring's #4e371b inner
                stroke, plus the same offset shadow falling inward — so the cream
                recess sits on the top/left (the lit side), mirroring the down-right
@@ -490,6 +483,10 @@ body:has(#site-nav) h1 {
             box-shadow:
                 inset 0 0 0 1px #4e371b,
                 inset 3px 4px 9px rgba(35, 31, 32, 0.62);
+            content: '';
+            inset: 0;
+            pointer-events: none;
+            position: absolute;
             z-index: 3;
         }
 
@@ -497,35 +494,35 @@ body:has(#site-nav) h1 {
            face) masks the line behind each word, leaving the line visible only in
            the gaps between them. */
         .station {
+            background-color: var(--dial-cream);
+            color: var(--dial-ink);
             display: block;
             font-family: nickerbocker, serif;
             /* ~26% of the cream's inner width, so SCHEDULE fills it with a little
                breathing room at the sides; nowrap keeps it on one line at every size. */
             font-size: clamp(1.4rem, 0.95rem + 1.9vw, 1.9rem);
-            line-height: 1;
             letter-spacing: 0.03em;
-            white-space: nowrap;
-            text-decoration: none;
-            color: var(--dial-ink);
-            text-shadow: 0 2px 3px rgba(35, 31, 32, 0.65);
+            line-height: 1;
             padding: 0.12rem 0;
             position: relative;
             text-align: center;
+            text-decoration: none;
+            text-shadow: 0 2px 3px rgba(35, 31, 32, 0.65);
+            white-space: nowrap;
             width: 100%;
-            background-color: var(--dial-cream);
             z-index: 1;
 
             /* Tick mark — short horizontal bar centred in the gap above each station
                (so ticks fall between the words, on the line, not under the text). */
             &::after {
+                background-color: var(--dial-ink);
                 content: '';
+                height: clamp(2px, 0.5vw, 3.5px);
+                left: 50%;
                 position: absolute;
                 top: calc(var(--st-gap) / -2);
-                left: 50%;
                 transform: translate(-50%, -50%);
                 width: clamp(8px, 1.8vw, 13px);
-                height: clamp(2px, 0.5vw, 3.5px);
-                background-color: var(--dial-ink);
                 z-index: 1;
             }
 
@@ -542,20 +539,20 @@ body:has(#site-nav) h1 {
                the text (z-index -1, above the cream) with no shadow, matching the
                design's flat red indicator. */
             &.active::before {
-                display: block;
-                content: '';
-                position: absolute;
-                left: 0.1rem;
-                top: 50%;
-                transform: translateY(-50%);
-                width: 0;
-                height: 0;
                 /* clear the tick's ink fill this pseudo otherwise inherits — without
                    it the dark background shows through the transparent borders. */
                 background: none;
-                border-top: 0.34rem solid transparent;
                 border-bottom: 0.34rem solid transparent;
                 border-left: 1.7rem solid #be1e2d;
+                border-top: 0.34rem solid transparent;
+                content: '';
+                display: block;
+                height: 0;
+                left: 0.1rem;
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+                width: 0;
                 z-index: -1;
             }
         }

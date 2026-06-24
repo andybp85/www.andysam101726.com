@@ -11,16 +11,10 @@ h2 {
 
 ol,
 ul {
-    margin: 0.6rem 0;
-    margin-block-end: 0;
-    margin-block-start: 0;
-    padding-left: 1.4rem;
-    padding-inline-end: 0;
-    padding-inline-start: 2em;
+    margin: 0;
+    padding-inline: 2em 0;
 }
 
-ul {
-    padding-inline-start: 1.1em;
-}
+ul { padding-inline-start: 1.1em; }
 
 li { margin: 0.4rem 0; }

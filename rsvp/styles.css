@@ -6,13 +6,13 @@
 #step-name, #step-pick, #step-party, #step-thanks { font-family: contralto, serif; }
 
 .rsvp-title {
+    color: var(--ink);
     font-family: contralto, serif;
     font-size: clamp(2.5rem, 1.5rem + 5vw, 5rem);
     font-weight: bold;
-    color: var(--ink);
+    line-height: 1.1;
     margin: 0 0 0.6em;
     text-align: center;
-    line-height: 1.1;
 }
 
 /* Gray, non-bold placeholder for the last-name field (rsvp_page_1.svg). */
@@ -20,7 +20,10 @@
     /* Wider last-name field */
     width: min(90%, 24rem);
 
-    &::placeholder { color: rgba(35, 31, 32, 0.45); font-weight: normal; }
+    &::placeholder {
+        color: rgba(35, 31, 32, 0.45);
+        font-weight: normal;
+    }
 }
 
 .deadline {
@@ -35,74 +38,74 @@
 
 /* ── Step 1: name form ── */
 #name-form {
+    align-items: center;
     display: flex;
     flex-direction: column;
-    align-items: center;
     gap: 1.2rem;
 }
 
 /* ── Step 2: per-member blocks ── */
 .member {
+    border: none;
     margin: 1.2rem 0;
     padding: 0;
-    border: none;
     text-align: center;
 
     /* Attending/not-attending row */
     label {
-        display: inline-flex;
         align-items: center;
-        gap: 0.35em;
-        margin: 0 0.6rem;
-        font-family: contralto, serif;
-        font-size: 1em;
         color: var(--ink);
         cursor: pointer;
+        display: inline-flex;
+        font-family: contralto, serif;
+        font-size: 1em;
+        gap: 0.35em;
+        margin: 0 0.6rem;
     }
 }
 
 .member-name {
+    color: var(--ink);
+    display: block;
     font-family: contralto, serif;
     font-size: clamp(1.4rem, 1rem + 2vw, 2.2rem);
-    display: block;
     margin-bottom: 0.4rem;
-    color: var(--ink);
 }
 
 /* Guest slot: "Guest:" label + underline input */
 .guest-flag {
-    display: inline-flex;
     align-items: center;
-    gap: 0.35em;
+    color: var(--ink);
+    display: inline-flex;
     font-family: contralto, serif;
     font-size: clamp(1.2rem, 0.8rem + 2vw, 1.8rem);
-    color: var(--ink);
+    gap: 0.35em;
     margin-bottom: 0.3rem;
 }
 
 /* Square deco toggle — shared by the attending radios and the Guest checkbox */
 .member input[type="radio"],
 .guest-flag input[type="checkbox"] {
-    appearance: none;
     -webkit-appearance: none;
-    width: 0.85em;
-    height: 0.85em;
-    border: 2px solid var(--ink);
+    appearance: none;
     background: transparent;
+    border: 2px solid var(--ink);
     cursor: pointer;
     flex-shrink: 0;
+    height: 0.85em;
     position: relative;
+    width: 0.85em;
 
     &:checked::after {
+        background: var(--ink);
         content: "";
         display: block;
-        width: 55%;
         height: 55%;
-        background: var(--ink);
+        left: 50%;
         position: absolute;
         top: 50%;
-        left: 50%;
         transform: translate(-50%, -50%);
+        width: 55%;
     }
 
     /* Keyboard focus ring for the custom (appearance:none) boxes */
@@ -125,33 +128,31 @@
 }
 
 .guest-name {
-    font-size: var(--body-font-size);
-    width: 14rem;
-    padding: 0.2em 0;
     display: block;
+    font-size: var(--body-font-size);
     margin: 0 auto 0.5rem;
+    padding: 0.2em 0;
+    width: 14rem;
 
-    &::placeholder {
-        color: #6b4c3b;
-    }
+    &::placeholder { color: #6b4c3b; }
 }
 
 /* ── Step 2 picker (multi-party disambiguation) ── */
 #party-list {
+    align-items: center;
     display: flex;
     flex-direction: column;
-    align-items: center;
     gap: 0.8rem;
     margin-top: 1rem;
 }
 
 .party-pick {
-    font-size: 1em;
     cursor: pointer;
-    padding: 0.3em 1em;
-    width: 100%;
+    font-size: 1em;
     max-width: 24rem;
+    padding: 0.3em 1em;
     transition: opacity 0.15s;
+    width: 100%;
 
     &:hover,
     &:focus-visible {
