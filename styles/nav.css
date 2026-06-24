@@ -12,39 +12,37 @@
     gap: 1rem;
     margin: 1vh 0 2vh;
 
-    /* Mobile: stack the knob above the drawer; #radio anchors the drawer. */
+    /* Mobile: stack the knob above the drawer; #radio anchors the drawer.
+       #radio carries view-transition-name (root.css), so it's already a stacking
+       context — which means the absolutely-positioned drawer's own z-index can't
+       lift it above page content. Raising #radio itself lifts the whole nav (and
+       the drawer it anchors) above main, so the open drawer floats OVER the
+       content. Page content uses no z-index, so a small value clears it; the knob
+       still sits off-screen-clear when closed, so this is safe permanently. */
     @media (max-width: 700px) {
         display: flex;
         flex-direction: column;
         align-items: flex-start;
         margin: 0.5vh 0 1vh;
         position: relative;
+        z-index: 5;
     }
 }
 
-/* ── Mobile push-drawer page-shift ───────────────────────────────────
-   The menu sits off-screen left; opening slides the whole page right to
-   reveal it. Clip the overflow so the page never widens. */
+/* ── Mobile overlay drawer ───────────────────────────────────────────
+   The menu sits off-screen left and slides in OVER the page content — the
+   content stays put. Clip the overflow so the parked, off-screen drawer
+   never widens the page. */
 html {
     @media (max-width: 700px) { overflow-x: hidden; }
 }
 
 body {
     @media (max-width: 700px) {
-        /* Narrow vertical dial — snug around the longest word (SCHEDULE); also the
-           page-shift distance. ~125px at 600px, gentle slope so it scales smoothly. */
+        /* Narrow vertical dial — snug around the longest word (SCHEDULE).
+           ~125px at 600px, gentle slope so it scales smoothly. */
         --menu-w: clamp(7.69rem, 5.29rem + 6.75vw, 9.49rem);
         overflow-x: hidden;
-    }
-}
-
-main {
-    @media (max-width: 700px) {
-        /* The page content slides right to reveal the drawer; clipped at the edge */
-        transition: transform 0.38s cubic-bezier(0.4, 0, 0.2, 1);
-        will-change: transform;
-
-        body.menu-open & { transform: translateX(var(--menu-w)); }
     }
 }
 
