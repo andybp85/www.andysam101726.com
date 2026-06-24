@@ -44,14 +44,14 @@
     gap: 1.2rem;
 }
 
-/* ── Step 2: per-member blocks ── */
+/* ── Step 2: per-member blocks ── (left-aligned roster) */
 .member {
     border: none;
     margin: 1.2rem 0;
     padding: 0;
-    text-align: center;
+    text-align: left;
 
-    /* Attending/not-attending row */
+    /* Attending/not-attending choices */
     label {
         align-items: center;
         color: var(--ink);
@@ -60,7 +60,6 @@
         font-family: contralto, serif;
         font-size: 1em;
         gap: 0.35em;
-        margin: 0 0.6rem;
     }
 }
 
@@ -72,20 +71,26 @@
     margin-bottom: 0.4rem;
 }
 
-/* Guest slot: "Guest:" label + underline input */
-.guest-flag {
-    align-items: center;
-    color: var(--ink);
-    display: inline-flex;
-    font-family: contralto, serif;
-    font-size: clamp(1.2rem, 0.8rem + 2vw, 1.8rem);
-    gap: 0.35em;
-    margin-bottom: 0.3rem;
+/* attending / not attending — side-by-side, indented under the name. */
+.attend {
+    display: flex;
+    gap: 1.2rem;
+    margin-inline-start: 1.5rem;
 }
 
-/* Square deco toggle — shared by the attending radios and the Guest checkbox */
+/* Below ~510px the pair would wrap with each line centring on its own; stack it
+   into a left-aligned column so the boxes line up under the name. */
+@media (max-width: 510px) {
+    .attend {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 0.2em;
+    }
+}
+
+/* Square deco toggle — the attending radios and the guest "not attending" box */
 .member input[type="radio"],
-.guest-flag input[type="checkbox"] {
+.member input[type="checkbox"] {
     -webkit-appearance: none;
     appearance: none;
     background: transparent;
@@ -127,14 +132,18 @@
     text-align: center;
 }
 
-.guest-name {
+/* Scoped under .member to beat `.deco-card input` (which left-aligns to center). */
+.member .guest-name {
     display: block;
     font-size: var(--body-font-size);
-    margin: 0 auto 0.5rem;
+    margin: 0 0 0.5rem;
     padding: 0.2em 0;
-    width: 14rem;
+    text-align: left;
 
-    &::placeholder { color: #6b4c3b; }
+    &::placeholder {
+        color: #6b4c3b;
+        text-align: left;
+    }
 }
 
 /* ── Step 2 picker (multi-party disambiguation) ── */
