@@ -209,6 +209,60 @@ body:has(#site-nav) h1 {
     }
 }
 
+/* ── Knob tooltips (desktop only) ──────────────────────────────────
+   Cream face + beveled brass frame matching the dial, rounded corners.
+   Free-floating: position:fixed, placed in JS (radio-nav.js), appended to
+   <body>. Hidden on mobile, where the knob is just the MENU toggle. */
+.knob-tip {
+    position: fixed;
+    z-index: 50;
+    pointer-events: none;
+    font-family: nickerbocker, serif;
+    font-size: 0.95rem;
+    letter-spacing: 0.04em;
+    line-height: 1;
+    white-space: nowrap;
+    color: var(--dial-ink);
+    text-shadow: 0 1px 1px rgba(255, 240, 210, 0.5);
+    /* cream fill (padding-box) inside the beveled brass frame (border-box) */
+    background:
+        linear-gradient(var(--dial-cream), var(--dial-cream)) padding-box,
+        var(--brass-frame) border-box;
+    border: 2px solid transparent;
+    border-radius: 0.55rem;
+    padding: 0.4rem 0.6rem;
+    /* crisp dark edge + soft drop so the chip reads raised, like the plaque */
+    box-shadow:
+        0 0 0 1px #4e371b,
+        0 3px 9px rgba(35, 31, 32, 0.5);
+
+    @media (max-width: 700px) { display: none !important; }
+}
+
+/* Hover hint — JS pins left/top to the cursor; sit it down-right of the tip. */
+.knob-tip--hover { transform: translate(0.9rem, 1rem); }
+
+/* "Spin me!" bubble — JS centres left on the knob, top just above it (the
+   element is lifted fully above via translateY(-100%)). The down-arrow points
+   back at the knob. */
+.knob-tip--spin {
+    transform: translate(-50%, -100%);
+    font-size: 1.05rem;
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        border: 7px solid transparent;
+        border-top-color: var(--dial-cream);
+        /* lift it a hair to overlap the bubble's brass edge */
+        margin-top: -1px;
+        filter: drop-shadow(0 1px 0 #4e371b);
+    }
+}
+
 /* Cream dial face — horizontal rounded rectangle with a beveled brass
    gradient frame (cream fill via padding-box, gradient via border-box). */
 #dial {

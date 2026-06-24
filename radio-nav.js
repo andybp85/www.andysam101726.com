@@ -14,6 +14,22 @@ function currentIndex() {
     return i < 0 ? 0 : i
 }
 
+// Tooltips are a desktop affair — on mobile the knob is just the MENU toggle.
+const isPhone = () => window.matchMedia('(max-width: 700px)').matches
+// localStorage flag so the "Spin me!" onboarding bubble shows once, ever.
+const SPIN_TIP_SEEN = 'andysam:knob-tip-seen'
+
+// Free-floating cream/brass bubble (position: fixed, placed in JS). Appended to
+// <body> so no ancestor overflow can clip it.
+function makeTip(extraClass) {
+    const el = document.createElement('div')
+    el.className = 'knob-tip ' + extraClass
+    el.setAttribute('role', 'tooltip')
+    el.hidden = true
+    document.body.appendChild(el)
+    return el
+}
+
 function render() {
     const stations = NAV.map(([label, href], i) =>
         `<a class="station" data-index="${i}" href="${href}">${label}</a>`).join('')
@@ -85,18 +101,19 @@ function initDesktopKnob() {
     let lastDeg = angleFromStation(target, NAV.length)
     // Initial orientation: no spin-on-load.
     setNeedle(target, false)
-    const onMove = e => {
-        if (!dragging) return
+    // Resolve the dial angle under a pointer event, applying the dead-zone hard
+    // stop. The 90° wedge past FAQ (MAX_ANGLE..360, the dial's bottom-left) is the
+    // dead zone: when the pointer strays in there, hold whichever end the knob is
+    // already nearest instead of snapping across it (HOME<->FAQ). Inside the range
+    // it tracks the pointer 1:1.
+    const degAt = e => {
         const r = knob.getBoundingClientRect()
         const raw = angleFromPointer(r.left + r.width / 2, r.top + r.height / 2, e.clientX, e.clientY)
-        // The 90° wedge past FAQ (MAX_ANGLE..360, the dial's bottom-left) is the
-        // dead zone. Treat it as a hard stop: when the pointer strays in there,
-        // hold the knob at whichever end it's already nearest instead of letting
-        // it snap across the dead zone (HOME<->FAQ). Inside the range it tracks
-        // the finger 1:1.
-        const deg = raw <= MAX_ANGLE
-            ? raw
-            : lastDeg >= MAX_ANGLE / 2 ? MAX_ANGLE : 0
+        return raw <= MAX_ANGLE ? raw : lastDeg >= MAX_ANGLE / 2 ? MAX_ANGLE : 0
+    }
+    const onMove = e => {
+        if (!dragging) return
+        const deg = degAt(e)
         lastDeg = deg
         target = stationFromAngle(deg, NAV.length)
         // Knob follows the finger continuously; the needle snaps to the nearest
@@ -105,10 +122,16 @@ function initDesktopKnob() {
         positionNeedle(target)
     }
     knob.addEventListener('pointerdown', e => {
-        if (window.matchMedia('(max-width: 700px)').matches) return
+        if (isPhone()) return
         dragging = true
-        // Resume the hard-stop logic from the knob's current resting angle.
-        lastDeg = angleFromStation(target, NAV.length)
+        // Tune to wherever on the dial the knob was grabbed, so a plain click (no
+        // drag) selects that station — matching the per-angle hover tooltip. The
+        // knob turns absolutely to the pointer angle anyway, so this is no jump.
+        const deg = degAt(e)
+        lastDeg = deg
+        target = stationFromAngle(deg, NAV.length)
+        rotateKnob(deg, false)
+        positionNeedle(target)
         knob.setPointerCapture(e.pointerId)
     })
     knob.addEventListener('pointermove', onMove)
@@ -119,6 +142,51 @@ function initDesktopKnob() {
         setNeedle(target, true)
         go(NAV[target][1])
     })
+
+    // Hover tooltip — names the station the knob would tune to at the pointer, so
+    // each clickable wedge advertises its destination. Follows the cursor.
+    const hoverTip = makeTip('knob-tip--hover')
+    knob.addEventListener('pointermove', e => {
+        if (isPhone() || dragging) return
+        hoverTip.textContent = NAV[stationFromAngle(degAt(e), NAV.length)][0]
+        hoverTip.style.left = e.clientX + 'px'
+        hoverTip.style.top = e.clientY + 'px'
+        hoverTip.hidden = false
+    })
+    const hideHover = () => { hoverTip.hidden = true }
+    knob.addEventListener('pointerleave', hideHover)
+    knob.addEventListener('pointerdown', hideHover)
+}
+
+// First-visit onboarding bubble under the knob: "Spin me!". Shows once (ever) on
+// desktop, then closes on the first interaction of any kind — including scroll.
+function initSpinTip() {
+    if (isPhone() || localStorage.getItem(SPIN_TIP_SEEN)) return
+    const knob = document.getElementById('knob')
+    if (!knob) return
+    const tip = makeTip('knob-tip--spin')
+    tip.textContent = 'Spin me!'
+    const place = () => {
+        const r = knob.getBoundingClientRect()
+        tip.style.left = r.left + r.width / 2 + 'px'
+        tip.style.top = r.top - 12 + 'px'
+    }
+    place()
+    tip.hidden = false
+    localStorage.setItem(SPIN_TIP_SEEN, '1')   // first visit only
+
+    const ac = new AbortController()
+    const opts = { signal: ac.signal }
+    const dismiss = () => { tip.hidden = true; ac.abort() }
+    // Capture-phase scroll catches nested scrollers too; the rest cover click,
+    // wheel, keyboard, touch, and engaging the knob itself.
+    window.addEventListener('scroll', dismiss, { signal: ac.signal, passive: true, capture: true })
+    for (const t of ['wheel', 'pointerdown', 'keydown', 'touchstart']) {
+        window.addEventListener(t, dismiss, opts)
+    }
+    knob.addEventListener('pointerenter', dismiss, opts)
+    // Keep it pinned to the knob if the layout reflows while it's still up.
+    window.addEventListener('resize', place, opts)
 }
 
 function initMobileKnob() {
@@ -135,7 +203,7 @@ function initMobileKnob() {
 }
 
 window.addEventListener('resize', () => positionNeedle(currentIndex()))
-document.fonts.ready.then(() => positionNeedle(currentIndex()))
+document.fonts.ready.then(() => { positionNeedle(currentIndex()); initSpinTip() })
 
 initDesktopKnob()
 initMobileKnob()
