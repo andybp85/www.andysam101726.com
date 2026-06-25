@@ -1,0 +1,140 @@
+@import "/styles/root.css";
+
+/* Home is a big framed hero photo with the wedding details overlaid. */
+main {
+    max-width: none;
+    padding: 0 0 2vh;
+    width: min(94vw, 66rem);
+
+    @media (max-width: 700px) { width: 96vw; }
+}
+
+.hero {
+    border: clamp(8px, 1.4vw, 16px) solid #f0e6d2;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.55);
+    /* Size container for the overlaid details: 1cqw = 1% of the image width, so
+       the text can hold a constant fraction of the photo as it scales. */
+    container-type: inline-size;
+    /* Clip the details' white panel to the photo so it can't bleed past the
+       right edge onto the frame at narrower desktop widths. */
+    overflow: hidden;
+    position: relative;
+
+    picture { display: block; }
+
+    img {
+        aspect-ratio: 1600 / 1067;
+        display: block;
+        height: auto;
+        width: 100%;
+
+        @media (max-width: 700px) { aspect-ratio: 900 / 1350; }
+    }
+}
+
+/* Overlaid details — desktop: stacked on the right, vertically centred. */
+.details {
+    align-items: center;
+    color: var(--brass);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    /* Own stacking context so the blur panel sits above the photo but below the
+       text, and its z-index can't escape behind the hero image. */
+    isolation: isolate;
+    padding: 0.7rem 1.1rem;
+    position: absolute;
+    right: 1%;
+    text-align: center;
+    top: 50%;
+    transform: translateY(-50%);
+
+    /* Feathered translucent-white panel — lifts the gold off the busy photo for
+       legibility. Masked with a soft radial so it fades out at the edges
+       instead of drawing a hard rectangle. */
+    &::before {
+        background: rgba(255, 255, 255, 0.62);
+        content: "";
+        /* Extend past the text so the feathered edge falls in the margin, not
+           across the letters. */
+        inset: -1.1rem -2rem;
+        -webkit-mask-image: radial-gradient(ellipse closest-side at 50% 50%, #000 80%, transparent 100%);
+        mask-image: radial-gradient(ellipse closest-side at 50% 50%, #000 80%, transparent 100%);
+        pointer-events: none;
+        position: absolute;
+        z-index: -1;
+    }
+
+    .date {
+        /* Thicker stroke + layered shadow so the gold reads over the photo */
+        -webkit-text-stroke: 0.4px rgba(67, 38, 16, 0.6);
+        /* % of the image width (cqw) keeps the date the same fraction of the
+           photo from 700px up; the clamp is the fallback where container units
+           aren't supported. The image (and so the text) caps at the 66rem main. */
+        font-size: clamp(1.85rem, 4vw, 3.25rem);
+        font-size: 5.05cqw;
+        font-weight: 700;
+        line-height: 1.1;
+        margin: 0;
+        text-shadow: 0 0 3px rgba(0, 0, 0, 0.7), 0 3px 7px rgba(0, 0, 0, 0.75);
+
+        /* Min kept low enough that "October 17, 2026" stays on one line down to
+           320px — a second line would make the card tall enough to reach the
+           couple below. */
+        @media (max-width: 700px) { font-size: clamp(1.9rem, 8.6vw, 3.7rem); }
+    }
+
+    .place {
+        font-size: clamp(1.2rem, 2.7vw, 2.05rem);
+        font-size: 3.2cqw;
+        font-weight: 700;
+        line-height: 1.3;
+        margin: 0 0 0.5rem;
+        text-shadow: 0 0 3px rgba(0, 0, 0, 0.7), 0 2px 5px rgba(0, 0, 0, 0.75);
+
+        @media (max-width: 700px) { font-size: clamp(1.2rem, 5.2vw, 1.95rem); }
+    }
+
+    /* Mobile: compact details card near the top of the portrait hero. Wrap to
+       content (was inset:0) so the blurred panel covers only the text, not the
+       whole photo. */
+    @media (max-width: 700px) {
+        gap: 0.25rem;
+        justify-content: flex-start;
+        left: 50%;
+        max-width: 94%;
+        padding: 0.7rem 1.2rem;
+        right: auto;
+        top: 1%;
+        transform: translateX(-50%);
+        width: max-content;
+
+        /* The couple's heads sit ~38% down the portrait; drop the place's extra
+           bottom margin so the card stays short enough for the button to clear. */
+        .place { margin-bottom: 0; }
+
+        /* Keep the (now larger) white panel's vertical reach tight so its solid
+           core still clears the couple below; horizontal stays within the photo. */
+        &::before { inset: -0.55rem -1.6rem; }
+
+        .rsvp-btn.big { font-size: clamp(1.2rem, 5vw, 1.6rem); }
+    }
+}
+
+.rsvp-btn {
+    background: linear-gradient(180deg, var(--brass), var(--brass-dark));
+    border: 2px solid var(--brass-dark);
+    border-radius: 0.4rem;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.55);
+    color: var(--ink);
+    display: inline-block;
+    font-family: nickerbocker, serif;
+    padding: 0.4em 2em;
+    text-decoration: none;
+
+    &.big {
+        font-size: clamp(1.2rem, 2.2vw, 1.65rem);
+        font-size: 2.57cqw;
+        padding: 0.45em 2.4em;
+    }
+}

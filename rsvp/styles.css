@@ -1,0 +1,171 @@
+@import "/styles/root.css";
+
+/* ── RSVP page overrides (parchment/ink, deco-card handles the frame) ── */
+
+/* All RSVP text — including titles — is Contralto (matches rsvp_page_1.svg). */
+#step-name, #step-pick, #step-party, #step-thanks { font-family: contralto, serif; }
+
+.rsvp-title {
+    color: var(--ink);
+    font-family: contralto, serif;
+    font-size: clamp(2.5rem, 1.5rem + 5vw, 5rem);
+    font-weight: bold;
+    line-height: 1.1;
+    margin: 0 0 0.6em;
+    text-align: center;
+}
+
+/* Gray, non-bold placeholder for the last-name field (rsvp_page_1.svg). */
+#last {
+    /* Wider last-name field */
+    width: min(90%, 24rem);
+
+    &::placeholder {
+        color: rgba(35, 31, 32, 0.45);
+        font-weight: normal;
+    }
+}
+
+.deadline {
+    color: var(--ink);
+    font-style: italic;
+}
+
+.error {
+    color: #b22222;
+    min-height: 1.2em;
+}
+
+/* ── Step 1: name form ── */
+#name-form {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+}
+
+/* ── Step 2: per-member blocks ── (left-aligned roster) */
+.member {
+    border: none;
+    margin: 1.2rem 0;
+    padding: 0;
+    text-align: left;
+
+    /* Attending/not-attending choices */
+    label {
+        align-items: center;
+        color: var(--ink);
+        cursor: pointer;
+        display: inline-flex;
+        font-family: contralto, serif;
+        font-size: 1em;
+        gap: 0.35em;
+    }
+}
+
+.member-name {
+    color: var(--ink);
+    display: block;
+    font-family: contralto, serif;
+    font-size: clamp(1.4rem, 1rem + 2vw, 2.2rem);
+    margin-bottom: 0.4rem;
+}
+
+/* attending / not attending — side-by-side, indented under the name. */
+.attend {
+    display: flex;
+    gap: 1.2rem;
+    margin-inline-start: 1.5rem;
+}
+
+/* Below ~510px the pair would wrap with each line centring on its own; stack it
+   into a left-aligned column so the boxes line up under the name. */
+@media (max-width: 510px) {
+    .attend {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 0.2em;
+    }
+}
+
+/* Square deco toggle — the attending radios and the guest "not attending" box */
+.member input[type="radio"],
+.member input[type="checkbox"] {
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+    border: 2px solid var(--ink);
+    cursor: pointer;
+    flex-shrink: 0;
+    height: 0.85em;
+    position: relative;
+    width: 0.85em;
+
+    &:checked::after {
+        background: var(--ink);
+        content: "";
+        display: block;
+        height: 55%;
+        left: 50%;
+        position: absolute;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 55%;
+    }
+
+    /* Keyboard focus ring for the custom (appearance:none) boxes */
+    &:focus-visible {
+        outline: 2px solid #8a6d2f;
+        outline-offset: 2px;
+    }
+}
+
+/* Underline text fields — the guest-name input and party-picker buttons share
+   the bare bottom-rule look. */
+.guest-name,
+.party-pick {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--ink);
+    color: var(--ink);
+    font-family: contralto, serif;
+    text-align: center;
+}
+
+/* Scoped under .member to beat `.deco-card input` (which left-aligns to center). */
+.member .guest-name {
+    display: block;
+    font-size: var(--body-font-size);
+    margin: 0 0 0.5rem;
+    padding: 0.2em 0;
+    text-align: left;
+
+    &::placeholder {
+        color: #6b4c3b;
+        text-align: left;
+    }
+}
+
+/* ── Step 2 picker (multi-party disambiguation) ── */
+#party-list {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    margin-top: 1rem;
+}
+
+.party-pick {
+    cursor: pointer;
+    font-size: 1em;
+    max-width: 24rem;
+    padding: 0.3em 1em;
+    transition: opacity 0.15s;
+    width: 100%;
+
+    &:hover,
+    &:focus-visible {
+        opacity: 0.65;
+        outline: none;
+    }
+}

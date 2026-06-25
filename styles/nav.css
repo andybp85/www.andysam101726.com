@@ -1,0 +1,560 @@
+/* ── Radio dial nav ──────────────────────────────────────────────── */
+
+/* Full-width so the dial can be centered on the page with the knob off to the left */
+#site-nav { display: block; width: 100%; }
+
+#radio {
+    align-items: center;
+    display: grid;
+    gap: 1rem;
+    /* equal side tracks keep the dial (centre track) centred on the page;
+       the knob lives in the left track, the right track is empty ballast */
+    grid-template-columns: 1fr auto 1fr;
+    margin: 1vh 0 2vh;
+
+    /* Mobile: the knob tucks into the title's left gutter (no separate nav band),
+       so page content rises right under the title. #radio is taken out of flow
+       (absolute, anchored to body) and #radio anchors the drawer below the knob.
+       #radio carries view-transition-name (root.css), so it's already a stacking
+       context — which means the absolutely-positioned drawer's own z-index can't
+       lift it above page content. The high z-index here lifts the whole nav (and
+       the drawer it anchors) above main, so the open drawer floats OVER content. */
+    @media (max-width: 700px) {
+        align-items: flex-start;
+        display: flex;
+        flex-direction: column;
+        left: 0;
+        margin: 0;
+        position: absolute;
+        /* Vertically centre the knob on the title's middle: title top (its 1.5vh
+           margin) + half the two-line block (~1.39 x font) - half the knob. Floor
+           at 0.4rem so a small title on narrow screens can't push it off-screen. */
+        top: max(0.4rem, calc(1.5vh + 1.39 * var(--title-fs) - var(--menu-w) * 0.4));
+        z-index: 5;
+    }
+}
+
+/* ── Mobile overlay drawer ───────────────────────────────────────────
+   The menu sits off-screen left and slides in OVER the page content — the
+   content stays put. Clip the overflow so the parked, off-screen drawer
+   never widens the page. */
+html {
+    @media (max-width: 700px) { overflow-x: hidden; }
+}
+
+body {
+    @media (max-width: 700px) {
+        /* Narrow vertical dial — snug around the longest word (SCHEDULE).
+           ~125px at 600px, gentle slope so it scales smoothly. */
+        --menu-w: clamp(7.69rem, 5.29rem + 6.75vw, 9.49rem);
+        /* Mobile title size, shared with #radio so the knob can centre on the
+           title's middle. Default (bare auth gate, no knob): big, screen-centred. */
+        --title-fs: clamp(2.2rem, -0.3rem + 12.5vw, 5rem);
+        overflow-x: hidden;
+        /* Positioning context for the out-of-flow knob/nav in the title gutter. */
+        position: relative;
+    }
+}
+
+/* Nav pages (the whole two-line title range, <=700px): the knob sits in the
+   title's left gutter. A purely screen-centred title would have to be small to
+   clear the corner knob, so shift it slightly right of centre instead — span the
+   title full-width and pad its left by ~half the knob, which lets it grow while
+   still clearing the knob. --title-fs is sized to hold ~8-14px knob clearance
+   across the range; the knob re-centres on the title's middle automatically,
+   since #radio's top is derived from --title-fs. :has scopes this off the bare
+   auth gate (no knob), where the title stays fully centred at the larger size. */
+body:has(#site-nav) {
+    @media (max-width: 700px) { --title-fs: clamp(1.8rem, -1.75rem + 17.8vw, 5rem); }
+}
+body:has(#site-nav) h1 {
+    @media (max-width: 700px) {
+        align-self: stretch;
+        padding-left: calc(var(--menu-w) * 0.5);
+    }
+}
+
+/* Tuning knob — round brass knob, left of the plaque.
+   Layered so the knurled body + brown arrow ROTATE while the glare
+   (fixed lighting) and MENU label stay put — like a real knob. */
+#knob {
+    --knob-size: clamp(5.5rem, 9vw, 7.5rem);
+    align-items: center;
+    background: transparent;
+    border: none;
+    border-radius: 50%;
+    /* Layered contact + ambient shadow so the knob sits on the plaque. */
+    box-shadow:
+        0 1px 2px rgba(0, 0, 0, 0.5),
+        0 5px 10px rgba(0, 0, 0, 0.45),
+        0 11px 22px rgba(0, 0, 0, 0.3);
+    cursor: grab;
+    display: flex;
+    flex-shrink: 0;
+    height: var(--knob-size);
+    justify-content: center;
+    /* hug the right end of the left track so the knob sits just left of the
+       page-centred dial (column-gap provides the spacing) */
+    justify-self: end;
+    padding: 0;
+    position: relative;
+    /* Own the touch gesture: dragging/tapping the knob must not scroll the page
+       (Firefox/touch would otherwise pan instead of turning or toggling). */
+    touch-action: none;
+    width: var(--knob-size);
+
+    &:active { cursor: grabbing; }
+
+    &:focus-visible {
+        outline: 3px solid var(--brass);
+        outline-offset: 3px;
+    }
+
+    /* Fixed glare — rim light, shaded side, edge occlusion. Stays in place while
+       the body turns; edge-only, so its transparent centre never veils the MENU
+       label. */
+    &::after {
+        background:
+            /* crisp bright rim catching the top edge */
+            radial-gradient(ellipse 80% 50% at 50% -6%, rgba(255, 248, 214, 0.5) 0%, rgba(255, 248, 214, 0.4) 22%, transparent 30%),
+            /* shaded side opposite the light (fixed, so it never spins) */
+            radial-gradient(circle at 73% 79%, rgba(0, 0, 0, 0.5) 0%, transparent 50%),
+            /* occlusion pooling at the bottom edge */
+            radial-gradient(ellipse 72% 58% at 50% 112%, rgba(0, 0, 0, 0.48), transparent 52%);
+        border-radius: 50%;
+        content: '';
+        inset: 0;
+        pointer-events: none;
+        position: absolute;
+    }
+
+    @media (max-width: 700px) {
+        /* Knob is 80% of the drawer width — small enough to tuck beside the title;
+           left edges still align with the drawer below it. */
+        --knob-size: calc(var(--menu-w) * 0.8);
+        cursor: pointer;
+        justify-self: auto;
+        margin-left: 0.4rem;
+        position: relative;
+        z-index: 6;
+    }
+}
+
+/* Rotating layer: knurled brass edge + domed face + brown arrow */
+.knob-spin {
+    background:
+        radial-gradient(circle at 50% 50%, #c9992f 0 56%, rgba(0, 0, 0, 0.3) 56% 59%, transparent 59%),
+        repeating-conic-gradient(from -2deg, #6a4a23 0deg 5deg, #d2a64d 5deg 10deg);
+    border-radius: 50%;
+    /* rotation-invariant depth only; directional light lives on the fixed glare */
+    box-shadow:
+        inset 0 0 0 3px #8a5e23,
+        inset 0 0 6px rgba(0, 0, 0, 0.35);
+    inset: 0;
+    position: absolute;
+    transform-origin: 50% 50%;
+
+    /* Domed brass face on top of the knurled ring */
+    &::before {
+        /* centered dome (rotation-invariant); the fixed glare adds the lit side */
+        background: radial-gradient(circle at 50% 50%, #eec06a 0%, #c08836 58%, #7d531f 100%);
+        border-radius: 50%;
+        box-shadow:
+            inset 0 0 0 2px #6a4a23,
+            inset 0 0 8px rgba(0, 0, 0, 0.38);
+        content: '';
+        inset: 15%;
+        position: absolute;
+    }
+}
+
+/* Brown indicator arrow — exact shape/proportions from knob_menu_notch.svg
+   (103.73 × 40.77 in a 511 knob ≈ 20% long). Points up at HOME, rotates
+   with the body. The -90° turns the SVG's right-facing arrow to point up. */
+.knob-arrow {
+    filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.4));
+    left: 50%;
+    line-height: 0;
+    position: absolute;
+    top: 23%;
+    transform: translate(-50%, -50%) rotate(-90deg);
+    transform-origin: center;
+    width: 20%;
+
+    svg { display: block; height: auto; width: 100%; }
+    path { fill: #5e421c; }
+
+    /* Drop the indicator arrow on mobile; the knob is just the MENU toggle */
+    @media (max-width: 700px) { display: none; }
+}
+
+/* MENU label on knob — hidden by default (desktop) */
+.knob-label {
+    color: var(--ink);
+    display: none;
+    font-family: nickerbocker, serif;
+    font-size: clamp(0.7rem, 2.6vw, 1rem);
+    letter-spacing: 0.06em;
+    line-height: 1;
+    pointer-events: none;
+    position: relative;
+    text-shadow: 0 1px 1px rgba(255, 240, 210, 0.6);
+    white-space: nowrap;
+    z-index: 1;
+
+    /* Big MENU label filling most of the knob face */
+    @media (max-width: 700px) {
+        display: inline-block;
+        font-size: clamp(1.7rem, 1.1rem + 2.6vw, 2.3rem);
+    }
+}
+
+/* ── Knob tooltips (desktop only) ──────────────────────────────────
+   Cream face + beveled brass frame matching the dial, rounded corners.
+   Free-floating: position:fixed, placed in JS (radio-nav.js), appended to
+   <body>. Hidden on mobile, where the knob is just the MENU toggle. */
+.knob-tip {
+    /* cream fill (padding-box) inside the beveled brass frame (border-box) */
+    background:
+        linear-gradient(var(--dial-cream), var(--dial-cream)) padding-box,
+        var(--brass-frame) border-box;
+    border: 2px solid transparent;
+    border-radius: 0.55rem;
+    /* crisp dark edge + soft drop so the chip reads raised, like the plaque */
+    box-shadow:
+        0 0 0 1px #4e371b,
+        0 3px 9px rgba(35, 31, 32, 0.5);
+    color: var(--dial-ink);
+    font-family: nickerbocker, serif;
+    font-size: 0.95rem;
+    letter-spacing: 0.04em;
+    line-height: 1;
+    padding: 0.4rem 0.6rem;
+    pointer-events: none;
+    position: fixed;
+    text-shadow: 0 1px 1px rgba(255, 240, 210, 0.5);
+    white-space: nowrap;
+    z-index: 50;
+
+    @media (max-width: 700px) { display: none !important; }
+}
+
+/* Hover hint — JS pins left/top to the cursor; sit it down-right of the tip. */
+.knob-tip--hover { transform: translate(0.9rem, 1rem); }
+
+/* "Spin me!" bubble — JS centres left on the knob, top just above it (the
+   element is lifted fully above via translateY(-100%)). The down-arrow points
+   back at the knob. */
+.knob-tip--spin {
+    font-size: 1.05rem;
+    transform: translate(-50%, -100%);
+
+    &::before {
+        border: 7px solid transparent;
+        border-top-color: var(--dial-cream);
+        content: '';
+        filter: drop-shadow(0 1px 0 #4e371b);
+        left: 50%;
+        /* lift it a hair to overlap the bubble's brass edge */
+        margin-top: -1px;
+        position: absolute;
+        top: 100%;
+        transform: translateX(-50%);
+    }
+}
+
+/* Cream dial face — horizontal rounded rectangle with a beveled brass
+   gradient frame (cream fill via padding-box, gradient via border-box). */
+#dial {
+    align-items: center;
+    background:
+        linear-gradient(var(--dial-cream), var(--dial-cream)) padding-box,
+        var(--brass-frame) border-box;
+    border: clamp(5px, 0.8vw, 9px) solid transparent;
+    border-radius: clamp(0.6rem, 1.4vw, 1.1rem);
+    /* Same 3D rim treatment as the mobile drawer (pulled from the design SVG):
+       #4e371b strokes on both edges of the brass, the recess offset down-right so
+       it sits on the lit top-left, and the drop shadow falling to the right and
+       bottom so the plaque's depth shows only on those sides. */
+    box-shadow:
+        inset 0 0 0 1.5px #4e371b,
+        inset 3px 3px 8px rgba(35, 31, 32, 0.45),
+        0 0 0 1.5px #4e371b,
+        4px 5px 13px rgba(35, 31, 32, 0.6);
+    display: flex;
+    flex-direction: column;
+    min-width: clamp(14rem, 50vw, 36rem);
+    padding: 0.4rem clamp(1rem, 2.5vw, 2rem);
+    position: relative;
+
+    /* Center frequency line — thick ink line */
+    &::before {
+        background-color: var(--dial-ink);
+        box-shadow: 0 2px 2px rgba(35, 31, 32, 0.4);
+        content: '';
+        height: clamp(2px, 0.55vw, 4px);
+        left: clamp(0.8rem, 2vw, 1.6rem);
+        position: absolute;
+        right: clamp(0.8rem, 2vw, 1.6rem);
+        top: 50%;
+        transform: translateY(-50%);
+        /* above the red needle, below the station text/ticks */
+        z-index: 1;
+    }
+
+    /* Hide horizontal dial on mobile; the knob stays put as the MENU toggle */
+    @media (max-width: 700px) { display: none; }
+}
+
+/* Station container — flex row, all in a single line, the positioning anchor
+   for above/below alternation. Geometry is em-based off the station font so the
+   text, ticks and row height all scale together at every width (the center line
+   sits at 50%, i.e. exactly one half-height from top). */
+#stations {
+    align-items: stretch;
+    display: flex;
+    /* big on wide screens, scales down toward the 700px breakpoint so the row
+       never crowds before the dial gives way to the mobile menu */
+    font-size: clamp(1.45rem, 0.1rem + 3vw, 2.7rem);
+    gap: clamp(0.6rem, 2.5vw, 2rem);
+    /* Two stacked half-rows (text above the line + text below it) */
+    height: 2.4em;
+    line-height: 1.1;
+    position: relative;
+    /* above the center line and the red needle */
+    z-index: 2;
+}
+
+/* Individual station links — font inherited from #stations so 1em tracks it */
+.station {
+    color: var(--dial-ink);
+    display: flex;
+    font-family: nickerbocker, serif;
+    justify-content: center;
+    letter-spacing: 0.06em;
+    position: relative;
+    text-decoration: none;
+    text-shadow: 0 2px 4px rgba(35, 31, 32, 0.7);
+    white-space: nowrap;
+
+    /* Tick mark — short vertical bar centred on the line at each station's x.
+       Anchored to the line (top:50%), so it always lands on it regardless of width. */
+    &::before {
+        background-color: var(--dial-ink);
+        content: '';
+        height: 0.5em;
+        left: 50%;
+        position: absolute;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: clamp(2px, 0.12em, 5px);
+    }
+
+    /* ── Alternating above / below the center line ─────────────────── */
+    /* Odd stations (1, 3, 5 = HOME, SCHEDULE, FAQ) go ABOVE the line */
+    /* Even stations (2, 4 = RSVP, TRAVEL) go BELOW the line */
+    &:nth-child(odd) { align-items: flex-start; }   /* text in the top half */
+    &:nth-child(even) { align-items: flex-end; }    /* text in the bottom half */
+
+    /* Desktop dial only: all-caps have no descenders, so flex-end parks
+       RSVP/TRAVEL tight under the line; nudge the text down a hair so the gap to
+       the tick above matches the top row's. The tick is counter-translated to
+       stay on the line. Scoped to #stations so it never reaches the mobile drawer. */
+    #stations &:nth-child(even) {
+        transform: translateY(0.12em);
+
+        &::before { transform: translate(-50%, -50%) translateY(-0.12em); }
+    }
+
+    /* Keyboard focus ring for station links (dial + mobile drawer) */
+    &:focus-visible {
+        border-radius: 2px;
+        outline: 2px solid var(--brass-dark);
+        outline-offset: 2px;
+    }
+
+    /* Active station highlight */
+    &.active {
+        color: var(--dial-ink);
+        font-weight: bold;
+    }
+}
+
+/* Red tuning indicator — thick vertical line over the current station. */
+#needle {
+    background-color: #be1e2d;
+    border-radius: 1px;
+    height: 84%;
+    /* Default position: station 0 (HOME); JS repositions on load/resize. */
+    left: 10%;
+    pointer-events: none;
+    position: absolute;
+    top: 8%;
+    transform: translateX(-50%);
+    transition: left 0.3s ease;
+    width: clamp(2px, 0.3vw, 4px);
+    /* behind the center line and the station text/ticks */
+    z-index: 0;
+}
+
+/* Mobile station menu — present only on mobile (laid out off-screen there).
+   Vertical station selector — cream face + beveled brass frame, matching the
+   dial. Anchored just below the knob (top:100% of #radio) so it never collides
+   with it regardless of viewport height; slides in from the left. */
+#station-menu {
+    display: none;
+
+    @media (max-width: 700px) {
+        --frame-w: clamp(8px, 4px + 1vw, 12px);
+        --st-gap: clamp(2.6rem, 1.375rem + 5.5vw, 4.3rem);
+        align-items: stretch;
+        /* Frame pulled exactly from the design SVG (full_page_updated_with_knob_mobile):
+           the brass gradient is its linear-gradient-2 — identical to --brass-frame —
+           angled bottom-left→top-right (its userSpace direction, bright toward the
+           bottom). Cream fill via padding-box, brass ring via border-box. */
+        background:
+            linear-gradient(var(--dial-cream), var(--dial-cream)) padding-box,
+            linear-gradient(45deg,
+                #f9dcaa 0%, #b78951 13%, #9e703b 25%, #7d5b29 37%, #6a4a23 47%,
+                #8f6333 61%, #ad7b47 71%, #deba86 84%, #916534 93%, #745426 100%) border-box;
+        border: var(--frame-w) solid transparent;
+        border-radius: 1.2rem;
+        /* Depth on the right + bottom (the design does this with a drop shadow): an
+           outer #4e371b stroke on every edge, a thin solid side-face for a crisp 3D
+           edge, then a deep soft shadow falling down-right so the plaque reads raised
+           with visible thickness. Its inner half (recess on top/left) is on ::after. */
+        box-shadow:
+            0 0 0 1px #4e371b,
+            2px 2px 0 0 #3a2a16,
+            5px 7px 14px rgba(16, 11, 7, 0.7);
+        display: flex;
+        flex-direction: column;
+        gap: var(--st-gap);
+        left: 0;
+        margin: 1.4rem 0 0 0.4rem;
+        /* Small end padding so HOME/FAQ sit near the top/bottom edges (per design). */
+        padding: clamp(0.9rem, 0.675rem + 1.2vw, 1.5rem) 0;
+        position: absolute;
+        top: 100%;
+        /* Slid off-screen left when closed; eased into view when open.
+           visibility:hidden keeps the closed drawer out of the tab order and
+           a11y tree (it's only translated, not display:none), then defers the
+           hide until the slide-out finishes. */
+        transform: translateX(-115%);
+        transition:
+            transform 0.38s cubic-bezier(0.4, 0, 0.2, 1),
+            visibility 0s linear 0.38s;
+        visibility: hidden;
+        width: var(--menu-w);
+        z-index: 5;
+
+        body.menu-open & {
+            transform: translateX(0);
+            transition: transform 0.38s cubic-bezier(0.4, 0, 0.2, 1), visibility 0s;
+            visibility: visible;
+        }
+
+        /* Vertical center line — full height; the cream word-bands mask it so each
+           word sits in a gap in the line (matching the mockup). */
+        &::before {
+            background-color: var(--dial-ink);
+            bottom: 0.35rem;
+            box-shadow: 1px 0 2px rgba(35, 31, 32, 0.4);
+            content: '';
+            left: 50%;
+            position: absolute;
+            top: 0.35rem;
+            transform: translateX(-50%);
+            width: clamp(2px, 0.4vw, 3px);
+            z-index: 0;
+        }
+
+        /* Inner drop shadow — a continuous soft recess around the cream face's
+           inner edge so it reads as set back below the brass frame (3D), per the
+           design. Sits above the station bands (z-index over them) so the
+           full-width cream word-blocks can't break it into segments the way the
+           old hard inset rim was. Radius tracks the padding-box inner corner. */
+        &::after {
+            border-radius: calc(1.2rem - var(--frame-w));
+            /* Inner half of the design's drop-shadow-2: the ring's #4e371b inner
+               stroke, plus the same offset shadow falling inward — so the cream
+               recess sits on the top/left (the lit side), mirroring the down-right
+               depth on the outside. Above the cream bands so they can't break it. */
+            box-shadow:
+                inset 0 0 0 1px #4e371b,
+                inset 3px 4px 9px rgba(35, 31, 32, 0.62);
+            content: '';
+            inset: 0;
+            pointer-events: none;
+            position: absolute;
+            z-index: 3;
+        }
+
+        /* Stations stacked along the line. The cream background (same as the dial
+           face) masks the line behind each word, leaving the line visible only in
+           the gaps between them. */
+        .station {
+            background-color: var(--dial-cream);
+            color: var(--dial-ink);
+            display: block;
+            font-family: nickerbocker, serif;
+            /* ~26% of the cream's inner width, so SCHEDULE fills it with a little
+               breathing room at the sides; nowrap keeps it on one line at every size. */
+            font-size: clamp(1.4rem, 0.95rem + 1.9vw, 1.9rem);
+            letter-spacing: 0.03em;
+            line-height: 1;
+            padding: 0.12rem 0;
+            position: relative;
+            text-align: center;
+            text-decoration: none;
+            text-shadow: 0 2px 3px rgba(35, 31, 32, 0.65);
+            white-space: nowrap;
+            width: 100%;
+            z-index: 1;
+
+            /* Tick mark — short horizontal bar centred in the gap above each station
+               (so ticks fall between the words, on the line, not under the text). */
+            &::after {
+                background-color: var(--dial-ink);
+                content: '';
+                height: clamp(2px, 0.5vw, 3.5px);
+                left: 50%;
+                position: absolute;
+                top: calc(var(--st-gap) / -2);
+                transform: translate(-50%, -50%);
+                width: clamp(8px, 1.8vw, 13px);
+                z-index: 1;
+            }
+
+            /* No tick above the first station — the line runs to the top edge instead */
+            &:first-child::after { display: none; }
+
+            /* Drop the vertical (desktop) tick in the drawer */
+            &::before { display: none; }
+
+            &.active { font-weight: bold; }
+
+            /* Active station — a wide, short red right-pointing triangle from the
+               left edge toward the word (~27% of the width, per design). Sits behind
+               the text (z-index -1, above the cream) with no shadow, matching the
+               design's flat red indicator. */
+            &.active::before {
+                /* clear the tick's ink fill this pseudo otherwise inherits — without
+                   it the dark background shows through the transparent borders. */
+                background: none;
+                border-bottom: 0.34rem solid transparent;
+                border-left: 1.7rem solid #be1e2d;
+                border-top: 0.34rem solid transparent;
+                content: '';
+                display: block;
+                height: 0;
+                left: 0.1rem;
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+                width: 0;
+                z-index: -1;
+            }
+        }
+    }
+}

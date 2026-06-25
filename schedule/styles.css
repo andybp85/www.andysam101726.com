@@ -1,0 +1,26 @@
+@import "/styles/root.css";
+
+main section {
+    margin: 2.5vh 0;
+
+    .times {
+        text-align: left;
+
+        span {
+            display: block;
+            margin-top: 0.5em;
+            text-indent: 1em hanging;
+
+            &:first-child { margin-top: 0; }
+        }
+    }
+}
+
+h2 {
+    /* Bigger than the body so day/title reads distinct from the details */
+    font-size: clamp(1.8rem, 1.1rem + 2.5vw, 2.7rem);
+    font-weight: normal;
+    line-height: 1.2;
+}
+
+.tbd { font-style: italic; }

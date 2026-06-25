@@ -1,53 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <meta name="author" content="Andy & Sam">
-  <meta name="description" content="Andy & Sam's digital wedding invitation site">
-  <meta name="theme-color" content="black">
-  <meta name="robots" content="nofollow, noindex">
-  <title>Andy & Sam's Wedding</title>
-  <link rel="stylesheet" href="/styles.css">
-  <link rel="icon" type="image/png" href="/images/favicon-96x96.png" sizes="96x96">
-  <link rel="icon" type="image/svg+xml" href="/images/favicon.svg">
-  <link rel="shortcut icon" href="/images/favicon.ico">
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
-  <meta name="apple-mobile-web-app-title" content="Andy & Sam">
-  <link rel="manifest" href="/site.webmanifest">
-  <script>
-    if (localStorage.getItem('token') && localStorage.getItem('redirect'))
-      window.location = localStorage.getItem('redirect')
-  </script>
+    <meta charset="UTF-8">
+    <meta name="darkreader-lock"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Andy & Sam">
+    <meta name="description" content="Andy & Sam's digital wedding invitation site">
+    <meta name="theme-color" content="#2a1a14">
+    <meta name="robots" content="nofollow, noindex">
+    <title>Andy & Sam's Wedding</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="icon" type="image/png" href="/images/favicon-96x96.png" sizes="96x96">
+    <link rel="icon" type="image/svg+xml" href="/images/favicon.svg">
+    <link rel="shortcut icon" href="/images/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+    <meta name="apple-mobile-web-app-title" content="Andy & Sam">
+    <link rel="manifest" href="/site.webmanifest">
+    <script>
+        if (localStorage.getItem('token') && localStorage.getItem('redirect'))
+            window.location = localStorage.getItem('redirect')
+    </script>
 </head>
 <body>
-<main>
-  <h1>Andy & Sam's Wedding</h1>
-
-  <form name="login">
-    <label for="password">Enter either the bride or groom's last name:</label>
-    <input id="password"
-           name="password"
-           title="Password"
-           type="password"
-           placeholder="Password"
-           required
-    >
-    <div id="error-msg"></div>
-    <input type="hidden" name="VERB" value="POST">
-    <div class="container">
-      <button name="submit-button" type="submit"></button>
-    </div>
-  </form>
+<h1>Andy &amp; Sam's<br class="title-break"> Wedding</h1>
+<main class="deco-card">
+    <form name="login">
+        <label for="password">Please enter the last name of the bride or groom.</label>
+        <input id="password"
+               name="password"
+               title="Password"
+               type="password"
+               required
+        >
+        <div id="error-msg" role="alert"></div>
+        <input type="hidden" name="VERB" value="POST">
+        <button name="submit-button" type="submit">submit</button>
+    </form>
 
 </main>
-<script src="/index.js"></script>
+<script type="module" src="/index.js"></script>
+<script src="/site.js"></script>
 <script>
-  if (localStorage.getItem('error-msg')) {
-    document.getElementById('error-msg').innerText = localStorage.getItem('error-msg')
-    localStorage.clear()
-  }
+    if (localStorage.getItem('error-msg')) {
+        document.getElementById('error-msg').innerText = localStorage.getItem('error-msg')
+        localStorage.clear()
+    }
 </script>
 </body>
 </html>

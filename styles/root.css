@@ -1,79 +1,117 @@
 @import "modern-normalize.css";
-@import "decomanghold-regular.css";
-@import "dream_orphansregular.css";
+@import "lucian-schoenschrift.css";
+@import "nickerbocker.css";
+@import "contralto.css";
+@import "nav.css";
+@import "card.css";
+
+/* App-like cross-fade between pages; degrades to instant nav where unsupported (e.g. Firefox) */
+@media (prefers-reduced-motion: no-preference) {
+    @view-transition { navigation: auto; }
+}
+
+/* Persist the radio chrome across same-origin navigations: the title and the
+   dial/knob morph in place while only the page content cross-fades. Naming is
+   inert when @view-transition is off (reduced-motion / unsupported browsers). */
+h1 { view-transition-name: site-title; }
+#radio { view-transition-name: site-radio; }
 
 :root {
+    --body-font-size: clamp(1.4rem, 0.158rem + 4.21vw, 2.3rem);
     --body-text-color: #e2c06e;
-    --body-font-size: clamp(1rem, 0.158rem + 4.21vw, 2rem);
+    --brass: #e2c06e;
+    --brass-dark: #8a6d2f;
+    /* Beveled brass frame + cream face shared by the dial and the mobile menu */
+    --brass-frame: linear-gradient(135deg,
+        #ffe9b8 0%, #b58340 13%, #946530 25%, #6c4b20 37%, #4f3814 47%,
+        #875a28 61%, #b5824b 71%, #f0cd8d 84%, #835520 93%, #5b3f17 100%);
+    --dial-cream: #ffdc8d;
+    /* Deep ink for the dial face — ticks, frequency line, station text */
+    --dial-ink: #231f20;
+    --ink: #2a1a14;
     --placeholder-color: #f6e7c8;
 }
 
 html {
+    background-color: var(--ink);
     height: 100%;
-    background-color: black;
 }
 
 body {
-    font-family: dream_orphansregular, serif;
-    background-image: url("../images/bg-tile.jpg");
-    display: flex;
-    justify-content: center;
     align-items: center;
-    min-height: 100%;
-    line-height: 1.5;
+    background:
+        linear-gradient(to bottom, transparent 0%, transparent 25%, #190D0A 100%) center / cover fixed,
+        image-set(
+            url("/images/wood-desktop.avif") type("image/avif"),
+            url("/images/wood-desktop.webp") type("image/webp")
+        ) center / cover fixed;
     color: var(--body-text-color);
+    display: flex;
+    flex-direction: column;
+    font-family: contralto, serif;
     font-size: var(--body-font-size);
-}
+    line-height: 1.5;
+    min-height: 100%;
 
-main {
-    border: 4px solid var(--body-text-color);
-    border-radius: 1vh;
-    background-color: black;
-    padding: 0 4vw 1vh;
-    width: 70vw;
-    max-width: 57rem;
-    text-align: center;
-    position: relative;
-    --dec-size: clamp(calc(var(--body-font-size) * 2), -15.864rem + 30.8vw, 6rem);
-}
-
-main:before {
-    content: url("/images/corner-sunburst.svg");
-    position: absolute;
-    transform: scale(-1, 1);
-    top: 0;
-    left: 0;
-    width: var(--dec-size);
-}
-
-main:after {
-    content: url("/images/corner-sunburst.svg");
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: var(--dec-size);
+    @media (max-width: 700px) {
+        background-image:
+            linear-gradient(to bottom, transparent 0%, transparent 35%, #000 100%),
+            image-set(
+                url("/images/wood-mobile.avif") type("image/avif"),
+                url("/images/wood-mobile.webp") type("image/webp")
+            );
+    }
 }
 
 h1 {
-    --h1-font-size: clamp(2rem, -0.1rem + 10.05vw, 4.5rem);
-    font-family: decomang_holdregular, serif;
-    font-weight: lighter;
+    --h1-font-size: clamp(2.75rem, 0.5rem + 9vw, 7rem);
+    /* Shorthand first — it resets background-clip, so the clip longhands follow it.
+       Tile the gradient per line-height (size 100% 1.3em) so a wrapped title
+       (mobile) gives every line the same top→bottom sheen, instead of one
+       vertical gradient split across both lines (which darkened "Wedding"). */
+    background: linear-gradient(180deg, var(--brass) 0%, var(--brass-dark) 100%) 0 0 / 100% 1.3em;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    filter: drop-shadow(#301934 0.05em 0.05em 0.05em);
+    font-family: lucian_schoenschrift, serif;
     font-size: var(--h1-font-size);
-    line-height: calc(var(--h1-font-size) * 1.1);
-    margin: 1vh 0 0;
+    font-weight: lighter;
+    line-height: 1.3;
+    /* Extra top room so the script's tall swashes aren't clipped by background-clip:text */
+    margin: 1.5vh 0 0.5vh;
+    padding: 0.18em 0.3em 0;
+    text-align: center;
+
+    /* On mobile the title stays screen-centred; its size (--title-fs, defined in
+       nav.css) is capped so it clears the gutter knob on every width. */
+    @media (max-width: 700px) { --h1-font-size: var(--title-fs, clamp(2.2rem, -0.3rem + 12.5vw, 5rem)); }
+}
+
+/* Title line-break shown only on mobile (Andy & Sam's / Wedding) */
+.title-break {
+    display: none;
+
+    @media (max-width: 700px) { display: block; }
+}
+
+main {
+    max-width: 57rem;
+    padding: 0 3vw 1vh;
+    position: relative;
+    text-align: center;
+    width: 70vw;
 }
 
 button[type="submit"] {
     --button-width: clamp(7rem, 1.94rem + 25.3vw, 14rem);
+    background: transparent url("/images/whole-submit-button.svg") no-repeat;
     border: none;
-    background-color: transparent;
+    cursor: pointer;
+    height: calc(var(--button-width) / 3.333);
+    margin-bottom: var(--body-font-size);
     position: relative;
     width: var(--button-width);
-    height: calc(var(--button-width) / 3.333);
-    background-repeat: no-repeat;
-    background-image: url("/images/whole-submit-button.svg");
-    cursor: pointer;
-    margin-bottom: var(--body-font-size);
 }
 
 #error-msg {
@@ -93,29 +131,45 @@ button[type="submit"] {
     width: 1px;
 }
 
-@-moz-document url-prefix() {
-    form > fieldset > legend {
-        margin: 0 auto;
-    }
-}
-
-/* rotating submit button */
-.container {
-    perspective: 800px;
+/* Native, interaction-timed validation: only flags a field after the user has
+   touched it or attempted submit, never on load. */
+input:user-invalid {
+    border-color: #e0574a;
+    outline: 1px solid #e0574a;
 }
 
 .submitting {
     animation: submitting-rotate-3d 1s linear infinite;
-    transform-style: preserve-3d;
     transform-origin: center;
+    transform-style: preserve-3d;
     will-change: transform;
 }
 
 @keyframes submitting-rotate-3d {
-    from {
-        transform: rotateX(0deg);
+    from { transform: rotateX(0deg); }
+    to { transform: rotateX(360deg); }
+}
+
+:link.body-color,
+:link.body-color:visited,
+:link.body-color:hover {
+    color: var(--body-text-color);
+    text-decoration: none;
+}
+
+/* Links on the card-less (gold-on-wood) pages — readable brass, not default blue */
+.no-card a {
+    color: var(--brass);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+
+    &:hover,
+    &:focus-visible {
+        color: #f3d896;
     }
-    to {
-        transform: rotateX(360deg);
-    }
+}
+
+hr {
+    color: var(--body-text-color);
+    margin: 4vh 0;
 }

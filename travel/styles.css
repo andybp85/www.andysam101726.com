@@ -1,0 +1,20 @@
+@import "/styles/root.css";
+
+/* No card: gold-on-wood like the schedule page, but left-aligned. */
+main { text-align: left; }
+
+h2 {
+    font-weight: normal;
+    line-height: 1.2;
+    margin: 2vh 0;
+}
+
+ol,
+ul {
+    margin: 0;
+    padding-inline: 2em 0;
+}
+
+ul { padding-inline-start: 1.1em; }
+
+li { margin: 0.4rem 0; }

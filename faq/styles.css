@@ -1,0 +1,75 @@
+@import "/styles/root.css";
+
+/* Left-aligned gold-on-wood Q&A, collapsible (closed by default) */
+main { text-align: left; }
+
+.faq {
+    border-bottom: 1px solid rgba(226, 192, 110, 0.35);
+
+    &:first-of-type { border-top: 1px solid rgba(226, 192, 110, 0.35); }
+}
+
+/* Question = the clickable summary. Native marker removed; we draw our own
+   chevron that rotates open. */
+summary {
+    align-items: flex-start;
+    cursor: pointer;
+    display: flex;
+    font-size: clamp(1.6rem, 1.1rem + 2.2vw, 2.5rem);
+    font-weight: bold;
+    gap: 0.6em;
+    justify-content: space-between;
+    line-height: 1.15;
+    list-style: none;                 /* Firefox disclosure marker */
+    padding: 1.1rem 0;
+
+    &::-webkit-details-marker { display: none; }   /* WebKit/Blink marker */
+
+    &:focus-visible {
+        border-radius: 2px;
+        outline: 2px solid var(--brass);
+        outline-offset: 4px;
+    }
+
+    /* Chevron: a right-pointing ">" when closed, rotates to "v" (down) when open.
+       Built from two borders so it inherits the brass text color. */
+    &::after {
+        align-self: flex-start;
+        border-bottom: 0.13em solid currentColor;
+        border-right: 0.13em solid currentColor;
+        box-sizing: border-box;
+        content: '';
+        flex: none;
+        height: 0.6em;
+        /* drop to roughly the cap height of the first line */
+        margin-top: 0.3em;
+        transform: rotate(-45deg);
+        transition: transform 0.2s ease;
+        width: 0.6em;
+
+        @media (prefers-reduced-motion: reduce) { transition: none; }
+    }
+
+    details[open] &::after {
+        margin-top: 0.15em;
+        transform: rotate(45deg);
+    }
+}
+
+/* Answer: smaller than the body default */
+.answer {
+    font-size: var(--body-font-size);
+    line-height: 1.45;
+    margin: 0;
+    padding: 0 0 1.2rem;
+}
+
+#honeyfund-button {
+    background: var(--brass);
+    border-radius: 26px;
+    display: block;
+    margin-top: 3vh;
+    min-width: 170px;
+    padding: 1% 1% 1% 3%;
+    width: 30%;
+}

@@ -1,0 +1,74 @@
+/* Art-deco parchment card — shared by the auth gate and the RSVP page. */
+.deco-card {
+    background-color: #f0e6d2;
+    /* Big frame on the sides, slim top/bottom so the card isn't mostly empty
+       cream vertically (keeps the prominent deco border, drops the padding).
+       Responsive so the side frame doesn't eat the viewport down at 320px. */
+    border: clamp(30px, 12vw, 100px) solid transparent;
+    border-image: url("/images/deco-frame.svg") 230 stretch;
+    color: var(--ink);
+    font-family: contralto, serif;
+    margin: 2vh auto;
+    /* Small inner gutter (replaces main's 10vw padding) so text clears the frame
+       without re-introducing the old empty space. */
+    padding: 0 clamp(0.5rem, 3vw, 2rem);
+    /* Cancel root main's position: relative. */
+    position: static;
+    text-align: center;
+    /* Cap to the viewport (border-box) so the framed card never overflows at
+       320px; border + padding are included in this width. */
+    width: min(50rem, 92vw);
+
+    input {
+        background: transparent;
+        border: none;
+        border-bottom: 1px solid var(--ink);
+        color: var(--ink);
+        font-family: contralto, serif;
+        font-size: var(--body-font-size);
+        text-align: center;
+
+        &::placeholder {
+            color: #6b4c3b;
+            text-align: center;
+        }
+
+        &:focus-visible { outline: none; }
+    }
+
+    /* Links placed inside the card */
+    a {
+        color: #7d5b29;
+        text-decoration: underline;
+        text-underline-offset: 2px;
+
+        &:hover,
+        &:focus-visible { color: #4e371b; }
+
+        &:focus-visible { outline: none; }
+    }
+
+    /* Art-deco "button" — framed by double rules top & bottom, not fully outlined */
+    button[type="submit"] {
+        background: none;
+        border: none;
+        color: var(--ink);
+        cursor: pointer;
+        font-family: contralto, serif;
+        font-size: 1.25em;
+        height: auto;
+        letter-spacing: 0.08em;
+        margin: 0.5rem auto 0;
+        padding: 0.3em 1.6em 0.35em;
+        transition: background 0.15s ease, letter-spacing 0.15s ease;
+        width: auto;
+
+        &:hover,
+        &:focus-visible {
+            background: rgba(138, 109, 47, 0.14);
+            letter-spacing: 0.12em;
+        }
+
+        &:focus-visible { outline: none; }
+    }
+}
