@@ -96,7 +96,7 @@ $('name-form').addEventListener('submit', async e => {
     }
 })
 
-$('party-form').addEventListener('submit', e => {
+$('party-form').addEventListener('submit', async e => {
     e.preventDefault()
     $('submit-error').textContent = ''
     const responses = []
@@ -118,22 +118,23 @@ $('party-form').addEventListener('submit', e => {
         responses.push({...parseGuest(name), attending: name !== '' && !declined, isGuest: true})
     }
 
-    // optimistic: confirm immediately, write in background
-    $('step-party').hidden = true
-    $('step-thanks').hidden = false
-
-    postForm({
-        VERB: 'PUT',
-        token: localStorage.getItem('token'),
-        group: matchedGroup.id,
-        responses: JSON.stringify(responses),
-    })
-        .then(ensureOk)
-        .catch(ex => {
-            $('step-thanks').hidden = true
-            $('step-party').hidden = false
-            $('submit-error').textContent =
-                'Something went wrong saving your RSVP. Please try submitting again.'
-            console.error(ex)
-        })
+    // synchronous: write first, only confirm once the save succeeds
+    const btn = e.target.querySelector('button[type="submit"]')
+    btn.disabled = true
+    try {
+        await postForm({
+            VERB: 'PUT',
+            token: localStorage.getItem('token'),
+            group: matchedGroup.id,
+            responses: JSON.stringify(responses),
+        }).then(ensureOk)
+        $('step-party').hidden = true
+        $('step-thanks').hidden = false
+    } catch (ex) {
+        $('submit-error').textContent =
+            'Something went wrong saving your RSVP. Please try submitting again.'
+        console.error(ex)
+    } finally {
+        btn.disabled = false
+    }
 })
