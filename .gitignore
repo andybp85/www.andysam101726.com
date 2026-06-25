@@ -1,2 +1,6 @@
 .DS_Store
 .idea/
+.memsearch/
+.firecrawl/
+new_design/
+deploy.sh
