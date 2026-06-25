@@ -17,8 +17,13 @@
     <meta name="apple-mobile-web-app-title" content="Andy & Sam">
     <link rel="manifest" href="/site.webmanifest">
     <script>
-        if (localStorage.getItem('token') && localStorage.getItem('redirect'))
-            window.location = localStorage.getItem('redirect')
+        const redirect = localStorage.getItem('redirect')
+        // Stale login from the old site (e.g. a savethedate redirect): clear it and
+        // keep the visitor on the gate instead of bouncing them to a dead page.
+        if (redirect && redirect.includes('savethedate'))
+            localStorage.clear()
+        else if (localStorage.getItem('token') && redirect)
+            window.location = redirect
     </script>
 </head>
 <body>
