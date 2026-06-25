@@ -121,6 +121,7 @@ $('party-form').addEventListener('submit', async e => {
     // synchronous: write first, only confirm once the save succeeds
     const btn = e.target.querySelector('button[type="submit"]')
     btn.disabled = true
+    btn.classList.add('submitting')
     try {
         await postForm({
             VERB: 'PUT',
@@ -136,5 +137,6 @@ $('party-form').addEventListener('submit', async e => {
         console.error(ex)
     } finally {
         btn.disabled = false
+        btn.classList.remove('submitting')
     }
 })
