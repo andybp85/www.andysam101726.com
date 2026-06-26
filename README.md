@@ -109,10 +109,22 @@ npm test          # or: node --test 'tests/**/*.test.js'
 ```
 
 The minimal `package.json` exists only to mark the `.js` sources as ES modules
-for Node and to hold the `test` script — it carries no dependencies and is not
-deployed (it sits outside `deploy.sh`'s file list). DOM-driven modules
-(`index.js`, `rsvp/index.js`, `radio-nav.js`) are better exercised in a real
-browser with Playwright than unit-tested.
+for Node and to hold the test scripts — it carries no dependencies and is not
+deployed (it sits outside `deploy.sh`'s file list).
+
+The DOM-driven flows — the auth gate, the RSVP party picker, and the radio-knob
+nav — are covered by **browser tests** in `tests/browser/` (the Apps Script
+calls are stubbed via route interception):
+
+```bash
+npm run test:browser
+```
+
+Prereq: Playwright installed **globally** (`npm i -g @playwright/test`) — it is
+not a project dependency. The `pretest:browser` step `npm link`s the global
+package into a gitignored `node_modules/` so the ESM `import '@playwright/test'`
+resolves; nothing is added to `package.json`. Playwright serves the site on its
+own port (8201), so it never collides with a manually-run dev server.
 
 ## Working in this repo
 
