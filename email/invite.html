@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="x-apple-disable-message-reformatting">
+    <title>You're Invited &mdash; Andy &amp; Sam's Wedding</title>
+</head>
+<!-- Wedding invite email. Fully inline-styled, table-based: survives Gmail/Outlook
+     sanitizers. The framed deco card is a baked PNG (clients drop @font-face and
+     SVG border-image, so the script title + frame can't be live HTML). The RSVP
+     button is a real link so it works even with images blocked. Host the image at
+     the absolute URL below (deploy images/email/invite-hero.png to main first). -->
+<body style="margin:0;padding:0;background-color:#2a1a14;">
+    <!-- Inbox preview text (hidden in the body). -->
+    <div style="display:none;max-height:0;overflow:hidden;mso-hide:all;opacity:0;color:#2a1a14;font-size:1px;line-height:1px;">
+        You're invited to Andy &amp; Sam's wedding &mdash; October 17, 2026, The Madison Hotel, Morristown NJ. Tap to view your invitation and RSVP.
+    </div>
+
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#2a1a14" style="background-color:#2a1a14;">
+        <tr>
+            <td align="center" style="padding:24px 12px;">
+                <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="width:600px;max-width:600px;">
+                    <!-- Framed deco card (baked image); whole card links to the gate. -->
+                    <tr>
+                        <td align="center" style="padding:0;">
+                            <a href="https://www.andysamwedding.com/" style="text-decoration:none;">
+                                <img src="https://www.andysamwedding.com/images/email/invite-hero.png"
+                                     width="600"
+                                     alt="Together with their families, Andy &amp; Sam request the pleasure of your company at the celebration of their wedding. October 17, 2026 — The Madison Hotel, Morristown, NJ."
+                                     style="display:block;width:100%;max-width:600px;height:auto;border:0;outline:none;text-decoration:none;">
+                            </a>
+                        </td>
+                    </tr>
+                    <!-- Live intro line (also carries the message when images are off). -->
+                    <tr>
+                        <td align="center" style="padding:26px 16px 6px;font-family:Georgia,'Times New Roman',serif;font-size:18px;line-height:1.5;color:#f0e6d2;">
+                            You're invited! Tap below to view your invitation and let us know if you can make it.
+                        </td>
+                    </tr>
+                    <!-- Bulletproof button (solid brass fill; square in Outlook, fine). -->
+                    <tr>
+                        <td align="center" style="padding:18px 16px 10px;">
+                            <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                                <tr>
+                                    <td align="center" bgcolor="#c9a253" style="background-color:#c9a253;border-radius:6px;">
+                                        <a href="https://www.andysamwedding.com/"
+                                           style="display:inline-block;padding:15px 38px;font-family:Georgia,'Times New Roman',serif;font-size:18px;font-weight:bold;letter-spacing:0.04em;color:#2a1a14;text-decoration:none;border-radius:6px;">
+                                            Open Your Invitation
+                                        </a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <!-- Plaintext fallback link. -->
+                    <tr>
+                        <td align="center" style="padding:6px 16px 30px;font-family:Georgia,'Times New Roman',serif;font-size:14px;line-height:1.5;color:#b9a88c;">
+                            or visit <a href="https://www.andysamwedding.com/" style="color:#e2c06e;text-decoration:underline;">www.andysamwedding.com</a>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
