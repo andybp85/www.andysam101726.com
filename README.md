@@ -81,6 +81,8 @@ styles/                            Shared CSS (root tokens, normalize, fonts, na
 fonts/  images/                    Assets
 tools/gen-guests.mjs               Guest-list CSV → guests.gs generator
 scaling.txt                        clamp() fluid-type cheatsheet
+tests/                             Unit tests (node:test) for the pure modules
+package.json                       Dev-only: marks .js as ESM + `npm test` (no deps)
 CNAME  robots.txt  site.webmanifest GitHub Pages / PWA config
 ```
 
@@ -95,6 +97,22 @@ python3 -m http.server 8000
 
 Then visit <http://localhost:8000>. Clear site data in DevTools between test
 runs to reset `localStorage` state.
+
+## Testing
+
+Unit tests cover the pure logic — `rsvp/party.js`, `radio-math.js`, and
+`api.js` — with Node's built-in test runner (`node:test`). No dependencies, no
+install:
+
+```bash
+npm test          # or: node --test 'tests/**/*.test.js'
+```
+
+The minimal `package.json` exists only to mark the `.js` sources as ES modules
+for Node and to hold the `test` script — it carries no dependencies and is not
+deployed (it sits outside `deploy.sh`'s file list). DOM-driven modules
+(`index.js`, `rsvp/index.js`, `radio-nav.js`) are better exercised in a real
+browser with Playwright than unit-tested.
 
 ## Working in this repo
 
