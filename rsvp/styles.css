@@ -60,6 +60,7 @@
         font-family: contralto, serif;
         font-size: 1em;
         gap: 0.35em;
+        position: relative;   /* anchor the visually-hidden input locally */
     }
 }
 
@@ -88,36 +89,47 @@
     }
 }
 
-/* Square deco toggle — the attending radios and the guest "not attending" box */
+/* Square deco toggle — attending radios + the guest "not attending" box.
+   Bulletproof across browsers: rather than restyle the native control with
+   appearance:none (which older iOS Safari ignores, leaving native circles), the
+   input is visually hidden — but kept inside the label, so taps and the keyboard
+   still toggle it — and the box is drawn on the label text's <span>. */
 .member input[type="radio"],
 .member input[type="checkbox"] {
-    -webkit-appearance: none;
-    appearance: none;
-    background: transparent;
-    border: 2px solid var(--ink);
-    cursor: pointer;
-    flex-shrink: 0;
-    height: 0.85em;
-    position: relative;
-    width: 0.85em;
+    height: 1px;
+    margin: 0;
+    opacity: 0;
+    pointer-events: none;
+    position: absolute;
+    width: 1px;
+}
 
-    &:checked::after {
-        background: var(--ink);
+.member label > span {
+    align-items: center;
+    display: inline-flex;
+    gap: 0.35em;
+
+    /* the box itself */
+    &::before {
+        background-clip: content-box;       /* the fill shows only inside the padding */
+        background-color: transparent;
+        border: 2px solid var(--ink);
+        box-sizing: border-box;
         content: "";
-        display: block;
-        height: 55%;
-        left: 50%;
-        position: absolute;
-        top: 50%;
-        transform: translate(-50%, -50%);
-        width: 55%;
+        flex-shrink: 0;
+        height: 0.85em;
+        padding: 0.15em;
+        width: 0.85em;
     }
+}
 
-    /* Keyboard focus ring for the custom (appearance:none) boxes */
-    &:focus-visible {
-        outline: 2px solid #8a6d2f;
-        outline-offset: 2px;
-    }
+/* checked → fill the inner square */
+.member :checked + span::before { background-color: var(--ink); }
+
+/* keyboard focus ring on the custom box */
+.member input:focus-visible + span::before {
+    outline: 2px solid #8a6d2f;
+    outline-offset: 2px;
 }
 
 /* Underline text fields — the guest-name input and party-picker buttons share

@@ -24,13 +24,13 @@ async function getGuests() {
 const nameLabel = text => `<span class="member-name">${text}</span>`
 // Named member: pick attending / not attending.
 const attendChoice = i => `<div class="attend">
-            <label><input type="radio" name="att-${i}" value="yes" checked> attending</label>
-            <label><input type="radio" name="att-${i}" value="no"> not attending</label>
+            <label><input type="radio" name="att-${i}" value="yes" checked><span>attending</span></label>
+            <label><input type="radio" name="att-${i}" value="no"><span>not attending</span></label>
         </div>`
 // Open +1: a name (filling it in means attending) OR a "not attending" box — one is required.
 const guestField = i => `<input class="guest-name" data-i="${i}" placeholder="name" aria-label="Guest ${i + 1} name">
         <div class="attend">
-            <label><input type="checkbox" class="guest-decline" data-i="${i}"> not attending</label>
+            <label><input type="checkbox" class="guest-decline" data-i="${i}"><span>not attending</span></label>
         </div>`
 
 const memberRow = (m, i) => `<fieldset class="member" data-i="${i}">
