@@ -17,7 +17,7 @@ h1 { view-transition-name: site-title; }
 #radio { view-transition-name: site-radio; }
 
 :root {
-    --body-font-size: clamp(1.4rem, 0.158rem + 4.21vw, 2.3rem);
+    --body-font-size: clamp(1.4rem, 0.1143rem + 4.2857vw, 2.3rem);
     --body-text-color: #e2c06e;
     --brass: #e2c06e;
     --brass-dark: #8a6d2f;
