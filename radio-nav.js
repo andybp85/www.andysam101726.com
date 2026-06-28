@@ -59,7 +59,11 @@ function markCurrent() {
 
 // Position the needle over the active station in the desktop dial.
 // Reads the bounding rects after layout; no-ops if #dial is hidden (mobile).
-function positionNeedle(i) {
+// `animate` eases the slide (true while the user is tuning the knob); off snaps
+// instantly — so on load, font swap, and resize the needle is already resting on
+// its station, the way a real dial is when you switch the radio on, instead of
+// sweeping in from the default position.
+function positionNeedle(i, animate = false) {
     const needle = document.getElementById('needle')
     const dial = document.getElementById('dial')
     if (!needle || !dial) return
@@ -73,6 +77,7 @@ function positionNeedle(i) {
     // the red line lands exactly on the active station's tick.
     const borderLeft = parseFloat(getComputedStyle(dial).borderLeftWidth) || 0
     const relCenter = (stRect.left + stRect.width / 2) - dialRect.left - borderLeft
+    needle.style.transition = animate ? '' : 'none'   // '' restores the CSS ease
     needle.style.left = relCenter + 'px'
 }
 
@@ -95,7 +100,7 @@ function rotateKnob(deg, animate) {
 
 function setNeedle(i, animate = true) {
     rotateKnob(angleFromStation(i, NAV.length), animate)
-    positionNeedle(i)
+    positionNeedle(i, animate)
 }
 
 function initDesktopKnob() {
@@ -124,7 +129,7 @@ function initDesktopKnob() {
         // Knob follows the finger continuously; the needle snaps to the nearest
         // station (its own CSS-eased `left`).
         rotateKnob(deg, false)
-        positionNeedle(target)
+        positionNeedle(target, true)
     }
     knob.addEventListener('pointerdown', e => {
         if (isPhone()) return
@@ -136,7 +141,7 @@ function initDesktopKnob() {
         lastDeg = deg
         target = stationFromAngle(deg, NAV.length)
         rotateKnob(deg, false)
-        positionNeedle(target)
+        positionNeedle(target, true)
         knob.setPointerCapture(e.pointerId)
     })
     knob.addEventListener('pointermove', onMove)

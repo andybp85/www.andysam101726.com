@@ -391,6 +391,9 @@ body:has(#site-nav) h1 {
     position: absolute;
     top: 8%;
     transform: translateX(-50%);
+    /* The slide ease for tuning the dial. radio-nav.js suppresses it (transition:
+       none) for load/resize/font-swap placement so the needle starts on-station
+       rather than sweeping in. */
     transition: left 0.3s ease;
     width: clamp(2px, 0.3vw, 4px);
     /* behind the center line and the station text/ticks */
