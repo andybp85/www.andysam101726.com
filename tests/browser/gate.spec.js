@@ -3,8 +3,8 @@ import { test, expect } from '@playwright/test'
 // The Apps Script backend is stubbed via route interception — nothing leaves the
 // machine. A single success payload satisfies both the login POST (token,
 // redirect) and the guest prefetch (guests).
-const ok = { status: 'success', token: 'test-token', redirect: '/home/', guests: {} }
-const json = body => route => route.fulfill({ contentType: 'application/json', body: JSON.stringify(body) })
+const ok = { guests: {}, redirect: '/home/', status: 'success', token: 'test-token' }
+const json = body => route => route.fulfill({ body: JSON.stringify(body), contentType: 'application/json' })
 
 test('successful login stores the token and redirects home', async ({ page }) => {
     await page.route('**/exec', json(ok))
@@ -16,7 +16,7 @@ test('successful login stores the token and redirects home', async ({ page }) =>
 })
 
 test('rejected login shows the error message and stays on the gate', async ({ page }) => {
-    await page.route('**/exec', json({ status: 'error', message: 'We could not find that name.' }))
+    await page.route('**/exec', json({ message: 'We could not find that name.', status: 'error' }))
     await page.goto('/')
     await page.fill('#password', 'Nope')
     await page.click('button[name="submit-button"]')

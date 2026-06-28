@@ -3,7 +3,7 @@ import { postForm, ensureOk } from '/api.js'
 
 const $ = id => document.getElementById(id)
 
-let matchedGroup = null  // { id, members:[{first,last,slot}] }
+let matchedGroup  // { id, members:[{first,last,slot}] } once a party is chosen
 
 async function getGuests() {
     const cached = sessionStorage.getItem('guests')
@@ -14,7 +14,7 @@ async function getGuests() {
             sessionStorage.removeItem('guests')
         }
     }
-    const r = await postForm({VERB: 'GUESTS', token: localStorage.getItem('token')})
+    const r = await postForm({token: localStorage.getItem('token'), VERB: 'GUESTS'})
     if (r.status !== 'success') throw new Error('Could not load the guest list. Please try again.')
     sessionStorage.setItem('guests', JSON.stringify(r.guests))
     return r.guests
@@ -104,7 +104,7 @@ $('party-form').addEventListener('submit', async e => {
         const fs = document.querySelector(`.member[data-i="${i}"]`)
         if (!m.slot) {
             const attending = fs.querySelector(`input[name="att-${i}"]:checked`).value === 'yes'
-            responses.push({first: m.first, last: m.last, attending, isGuest: false})
+            responses.push({attending, first: m.first, isGuest: false, last: m.last})
             continue
         }
         // Open +1: enter a name (they're attending) or check "not attending" — one is required.
@@ -124,10 +124,10 @@ $('party-form').addEventListener('submit', async e => {
     btn.classList.add('submitting')
     try {
         await postForm({
-            VERB: 'PUT',
-            token: localStorage.getItem('token'),
             group: matchedGroup.id,
             responses: JSON.stringify(responses),
+            token: localStorage.getItem('token'),
+            VERB: 'PUT',
         }).then(ensureOk)
         $('step-party').hidden = true
         $('step-thanks').hidden = false

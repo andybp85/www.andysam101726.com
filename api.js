@@ -10,7 +10,7 @@ export async function postForm(fields) {
     const body = fields instanceof FormData
         ? fields
         : Object.entries(fields).reduce((fd, [k, v]) => (fd.append(k, v), fd), new FormData())
-    const res = await fetch(API, {method: 'POST', body})
+    const res = await fetch(API, {body, method: 'POST'})
     return res.json()
 }
 

@@ -39,7 +39,7 @@ test('dragging the knob to a station tunes there and navigates', async ({ page }
 })
 
 test('on mobile the knob toggles the station menu', async ({ page }) => {
-    await page.setViewportSize({ width: 390, height: 844 })
+    await page.setViewportSize({ height: 844, width: 390 })
     await page.goto('/home/')
     const knob = page.locator('#knob')
     await expect(knob).toHaveAttribute('aria-expanded', 'false')

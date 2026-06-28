@@ -1,16 +1,16 @@
 import { angleFromStation, stationFromAngle, angleFromPointer } from './radio-math.js'
 
 const NAV = [
-    ['HOME', '/home/'],
-    ['RSVP', '/rsvp/'],
-    ['SCHEDULE', '/schedule/'],
-    ['TRAVEL', '/travel/'],
-    ['FAQ', '/faq/'],
+    {href: '/home/', label: 'HOME'},
+    {href: '/rsvp/', label: 'RSVP'},
+    {href: '/schedule/', label: 'SCHEDULE'},
+    {href: '/travel/', label: 'TRAVEL'},
+    {href: '/faq/', label: 'FAQ'},
 ]
 
 function currentIndex() {
     const here = location.pathname
-    const i = NAV.findIndex(([, href]) => here === href || here === href.slice(0, -1))
+    const i = NAV.findIndex(({href}) => here === href || here === href.slice(0, -1))
     return i < 0 ? 0 : i
 }
 
@@ -31,7 +31,7 @@ function makeTip(extraClass) {
 }
 
 function render() {
-    const stations = NAV.map(([label, href], i) =>
+    const stations = NAV.map(({href, label}, i) =>
         `<a class="station" data-index="${i}" href="${href}">${label}</a>`).join('')
     document.getElementById('site-nav').innerHTML = `
         <div id="radio">
@@ -145,7 +145,7 @@ function initDesktopKnob() {
         dragging = false
         // Ease the knob onto the exact station angle, then navigate.
         setNeedle(target, true)
-        go(NAV[target][1])
+        go(NAV[target].href)
     })
 
     // Hover tooltip — names the station the knob would tune to at the pointer, so
@@ -153,7 +153,7 @@ function initDesktopKnob() {
     const hoverTip = makeTip('knob-tip--hover')
     knob.addEventListener('pointermove', e => {
         if (isPhone() || dragging) return
-        hoverTip.textContent = NAV[stationFromAngle(degAt(e), NAV.length)][0]
+        hoverTip.textContent = NAV[stationFromAngle(degAt(e), NAV.length)].label
         hoverTip.style.left = e.clientX + 'px'
         hoverTip.style.top = e.clientY + 'px'
         hoverTip.hidden = false
@@ -185,7 +185,7 @@ function initSpinTip() {
     const dismiss = () => { tip.hidden = true; ac.abort() }
     // Capture-phase scroll catches nested scrollers too; the rest cover click,
     // wheel, keyboard, touch, and engaging the knob itself.
-    window.addEventListener('scroll', dismiss, { signal: ac.signal, passive: true, capture: true })
+    window.addEventListener('scroll', dismiss, { capture: true, passive: true, signal: ac.signal })
     for (const t of ['wheel', 'pointerdown', 'keydown', 'touchstart']) window.addEventListener(t, dismiss, opts)
     knob.addEventListener('pointerenter', dismiss, opts)
     // Keep it pinned to the knob if the layout reflows while it's still up.

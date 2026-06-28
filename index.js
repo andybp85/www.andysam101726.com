@@ -24,7 +24,7 @@ loginForm.addEventListener('submit', e => {
 
 async function prefetchGuests(token) {
     try {
-        const r = await postForm({VERB: 'GUESTS', token})
+        const r = await postForm({token, VERB: 'GUESTS'})
         if (r.status === 'success')
             sessionStorage.setItem('guests', JSON.stringify(r.guests))
     } catch (err) {

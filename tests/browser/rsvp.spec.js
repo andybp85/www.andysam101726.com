@@ -8,13 +8,13 @@ const GUESTS = {
     '2': [{ first: 'Pat', last: 'Harber', slot: false }],
     '3': [{ first: 'Sam', last: 'Stanish', slot: false }],
 }
-const reply = { status: 'success', guests: GUESTS }
+const reply = { guests: GUESTS, status: 'success' }
 
 test.beforeEach(async ({ context, page }) => {
     // The page's inline guard redirects to / without a token; set one first.
     await context.addInitScript(() => localStorage.setItem('token', 'test-token'))
     await page.route('**/exec', route =>
-        route.fulfill({ contentType: 'application/json', body: JSON.stringify(reply) }))
+        route.fulfill({ body: JSON.stringify(reply), contentType: 'application/json' }))
 })
 
 test('a shared last name shows the party picker, then the party form', async ({ page }) => {

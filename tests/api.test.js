@@ -8,7 +8,7 @@ test('ensureOk passes a successful response straight through', () => {
 })
 
 test('ensureOk throws the response message on non-success', () => {
-    assert.throws(() => ensureOk({ status: 'error', message: 'bad name' }), /bad name/)
+    assert.throws(() => ensureOk({ message: 'bad name', status: 'error' }), /bad name/)
 })
 
 // postForm builds a FormData and POSTs it to the single API endpoint. Stub the
@@ -17,12 +17,12 @@ test('postForm appends a plain object as FormData and POSTs to the API', async (
     const calls = []
     const realFetch = globalThis.fetch
     globalThis.fetch = async (url, opts) => {
-        calls.push({ url, opts })
-        return { json: async () => ({ status: 'success', echoed: true }) }
+        calls.push({ opts, url })
+        return { json: async () => ({ echoed: true, status: 'success' }) }
     }
     try {
-        const out = await postForm({ VERB: 'POST', password: 'Surname' })
-        assert.deepEqual(out, { status: 'success', echoed: true })
+        const out = await postForm({ password: 'Surname', VERB: 'POST' })
+        assert.deepEqual(out, { echoed: true, status: 'success' })
 
         assert.equal(calls.length, 1)
         assert.equal(calls[0].url, API)

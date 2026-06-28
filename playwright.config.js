@@ -8,20 +8,20 @@ import { defineConfig, devices } from '@playwright/test'
 // Playwright serves the repo over its own HTTP server on a dedicated port — it
 // never touches a manually-run dev server on another port.
 export default defineConfig({
-    testDir: './tests/browser',
     fullyParallel: true,
+    projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
     reporter: 'list',
+    testDir: './tests/browser',
     use: {
         baseURL: 'http://127.0.0.1:8201',
         trace: 'on-first-retry',
     },
-    projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
     webServer: {
         command: 'python3 -m http.server 8201',
-        url: 'http://127.0.0.1:8201',
         reuseExistingServer: true,
-        stdout: 'ignore',
         stderr: 'ignore',
+        stdout: 'ignore',
         timeout: 30_000,
+        url: 'http://127.0.0.1:8201',
     },
 })
