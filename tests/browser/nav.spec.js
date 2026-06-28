@@ -12,6 +12,28 @@ test('renders every station with the right href and marks the current one active
     await expect(page.locator('#stations .station[href="/home/"]')).toHaveClass(/active/)
 })
 
+test('the needle rests on the active station at load without sliding in', async ({ page }) => {
+    // Regression: the needle used to animate `left` from its default (HOME) to the
+    // active station on every load, sweeping in from the left. On /schedule/ it must
+    // start on the SCHEDULE tick with no transition running.
+    await page.goto('/schedule/')
+    const needle = page.locator('#needle')
+    const tickX = await page.locator('#stations .station[data-index="2"]').evaluate(el => {
+        const r = el.getBoundingClientRect()
+        return r.left + r.width / 2
+    })
+    const at = async () => needle.evaluate(n => ({
+        x: n.getBoundingClientRect().left,
+        dur: getComputedStyle(n).transitionDuration,
+    }))
+    const t0 = await at()
+    expect(Math.abs(t0.x - tickX)).toBeLessThanOrEqual(6)   // already on SCHEDULE
+    expect(t0.dur).toBe('0s')                               // not transitioning
+    await page.waitForTimeout(350)
+    const t1 = await at()
+    expect(Math.abs(t1.x - t0.x)).toBeLessThanOrEqual(1)    // never slid
+})
+
 test('dragging the knob to a station tunes there and navigates', async ({ page }) => {
     await page.goto('/home/')
     const knob = page.locator('#knob')
