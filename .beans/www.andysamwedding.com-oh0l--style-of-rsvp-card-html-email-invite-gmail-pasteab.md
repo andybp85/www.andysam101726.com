@@ -5,7 +5,7 @@ status: in-progress
 type: feature
 priority: normal
 created_at: 2026-06-26T01:04:54Z
-updated_at: 2026-06-26T09:23:56Z
+updated_at: 2026-07-01T00:51:26Z
 parent: www.andysamwedding.com-wbpd
 ---
 
@@ -19,4 +19,4 @@ Build an HTML email inviting guests to the invite/gate page, styled like the RSV
 ## Before sending
 - [x] Deploy so the absolute image URL is live: images/email/invite-hero.png -> https://www.andysamwedding.com/images/email/invite-hero.png (deployed).
 - [ ] Pick send method (DevTools paste is the WORST — Gmail re-sanitizes on send). Better: open invite.html in browser, select-all/copy, paste into compose, test to self. Best for the guest list: send via the existing Apps Script MailApp.sendEmail({bcc, htmlBody}).
-- [ ] Confirm/tweak wording.
+- [x] Confirm/tweak wording.
