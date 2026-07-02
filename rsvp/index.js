@@ -21,6 +21,8 @@ async function getGuests() {
 }
 
 // ── Pure view helpers: member data → markup string ──
+// Names come from the API (via sessionStorage) — escape before innerHTML.
+const esc = s => s.replace(/[&<>"']/g, c => `&#${c.charCodeAt(0)};`)
 const nameLabel = text => `<span class="member-name">${text}</span>`
 // Named member: pick attending / not attending.
 const attendChoice = i => `<div class="attend">
@@ -34,7 +36,7 @@ const guestField = i => `<input class="guest-name" data-i="${i}" placeholder="na
         </div>`
 
 const memberRow = (m, i) => `<fieldset class="member" data-i="${i}">
-        ${m.slot ? nameLabel('Guest') : nameLabel(`${m.first} ${m.last}`)}
+        ${m.slot ? nameLabel('Guest') : nameLabel(esc(`${m.first} ${m.last}`))}
         ${m.slot ? guestField(i) : attendChoice(i)}
     </fieldset>`
 

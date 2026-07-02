@@ -7,6 +7,7 @@ const GUESTS = {
     '1': [{ first: 'Andy', last: 'Harber', slot: false }],
     '2': [{ first: 'Pat', last: 'Harber', slot: false }],
     '3': [{ first: 'Sam', last: 'Stanish', slot: false }],
+    '4': [{ first: '<img src=x onerror=alert(1)>', last: 'Mallory', slot: false }],
 }
 const reply = { guests: GUESTS, status: 'success' }
 
@@ -41,4 +42,14 @@ test('a unique last name skips the picker; submitting shows the thank-you step',
     await page.click('#party-form button[type="submit"]')
     await expect(page.locator('#step-thanks')).toBeVisible()
     await expect(page.locator('#step-party')).toBeHidden()
+})
+
+test('markup in an API guest name renders as text, not HTML', async ({ page }) => {
+    await page.goto('/rsvp/')
+    await page.fill('#last', 'Mallory')
+    await page.click('#name-form button[type="submit"]')
+
+    await expect(page.locator('#members .member-name'))
+        .toHaveText('<img src=x onerror=alert(1)> Mallory')
+    await expect(page.locator('#members img')).toHaveCount(0)
 })
