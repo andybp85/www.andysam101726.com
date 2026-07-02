@@ -50,13 +50,13 @@ const memberRow = (m, i) => `<fieldset class="member" data-i="${i}">
     </fieldset>`
 
 function renderParty(group, prior) {
-    $('already-rsvpd').hidden = !prior
+    $('already-rsvpd').hidden = !prior?.length
     $('members').innerHTML = group.members.map(memberRow).join('')
     // Saved answers, mapped positionally onto the fresh rows (undefined → defaults).
     const plan = prefillPlan(group.members, prior)
     for (const [i, p] of (plan ?? []).entries()) {
         const fs = $('members').querySelector(`.member[data-i="${i}"]`)
-        if (p.attending === undefined) {
+        if (group.members[i].slot) {
             fs.querySelector('.guest-name').value = p.name
             fs.querySelector('.guest-decline').checked = p.declined
         } else
@@ -156,7 +156,7 @@ $('party-form').addEventListener('submit', async e => {
             const data = JSON.parse(sessionStorage.getItem('guestData'))
             data.responses[matchedGroup.id] = responses
             sessionStorage.setItem('guestData', JSON.stringify(data))
-        } catch (e) {
+        } catch {
             sessionStorage.removeItem('guestData')
         }
         guestDataPromise = undefined   // drop the memo; next lookup re-reads storage

@@ -8,9 +8,14 @@ const GUESTS = {
     '2': [{ first: 'Pat', last: 'Harber', slot: false }],
     '3': [{ first: 'Sam', last: 'Stanish', slot: false }],
     '4': [{ first: '<img src=x onerror=alert(1)>', last: 'Mallory', slot: false }],
+    '5': [{ first: 'Gina', last: 'Lettera', slot: false }, { first: '', last: '', slot: true }],
 }
 const RESPONSES = {
     '2': [{ attending: false, first: 'Pat', isGuest: false, last: 'Harber' }],
+    '5': [
+        { attending: true, first: 'Gina', isGuest: false, last: 'Lettera' },
+        { attending: true, first: 'Jeff', isGuest: true, last: 'Coursey' },
+    ],
 }
 const reply = { guests: GUESTS, responses: RESPONSES, status: 'success' }
 
@@ -74,4 +79,28 @@ test('a party without a prior RSVP gets the default form and no banner', async (
 
     await expect(page.locator('#already-rsvpd')).toBeHidden()
     await expect(page.locator('input[name="att-0"][value="yes"]')).toBeChecked()
+})
+
+test('a saved +1 guest prefills the name field', async ({ page }) => {
+    await page.goto('/rsvp/')
+    await page.fill('#last', 'Lettera')
+    await page.click('#name-form button[type="submit"]')
+
+    await expect(page.locator('#already-rsvpd')).toBeVisible()
+    await expect(page.locator('input[name="att-0"][value="yes"]')).toBeChecked()
+    await expect(page.locator('.guest-name')).toHaveValue('Jeff Coursey')
+    await expect(page.locator('.guest-decline')).not.toBeChecked()
+})
+
+test('a resubmit writes the new answers through to the session cache', async ({ page }) => {
+    await page.goto('/rsvp/')
+    await page.fill('#last', 'Stanish')
+    await page.click('#name-form button[type="submit"]')
+    await page.check('input[name="att-0"][value="no"]', { force: true })
+    await page.click('#party-form button[type="submit"]')
+    await expect(page.locator('#step-thanks')).toBeVisible()
+
+    const cached = await page.evaluate(() =>
+        JSON.parse(sessionStorage.getItem('guestData')).responses['3'])
+    expect(cached).toEqual([{ attending: false, first: 'Sam', isGuest: false, last: 'Stanish' }])
 })

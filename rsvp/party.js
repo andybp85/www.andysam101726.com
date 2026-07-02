@@ -17,10 +17,10 @@ export function labelForParty(members) {
 // mismatch) — the caller falls back to the default form.
 export function prefillPlan(members, prior) {
     if (!prior || prior.length !== members.length) return undefined
-    return members.map((m, i) => m.slot
-        ? {
-            declined: !prior[i].attending,
-            name: prior[i].attending ? `${prior[i].first} ${prior[i].last}`.trim() : '',
-        }
-        : { attending: prior[i].attending })
+    return members.map((m, i) => {
+        const {attending, first, last} = prior[i]
+        return m.slot
+            ? {declined: !attending, name: attending ? `${first} ${last}`.trim() : ''}
+            : {attending}
+    })
 }
