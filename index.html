@@ -11,7 +11,6 @@
     <title>Andy & Sam's Wedding</title>
     <link rel="stylesheet" href="/styles.css">
     <link rel="icon" type="image/png" href="/images/favicon-96x96.png" sizes="96x96">
-    <link rel="icon" type="image/svg+xml" href="/images/favicon.svg">
     <link rel="shortcut icon" href="/images/favicon.ico">
     <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
     <meta name="apple-mobile-web-app-title" content="Andy & Sam">
@@ -20,14 +19,17 @@
         const redirect = localStorage.getItem('redirect')
         // Stale login from the old site (e.g. a savethedate redirect): clear it and
         // keep the visitor on the gate instead of bouncing them to a dead page.
-        if (redirect && redirect.includes('savethedate'))
-            localStorage.clear()
-        else if (localStorage.getItem('token') && redirect)
+        // Remove only the login keys — clear() would also wipe unrelated state
+        // (e.g. the knob-tip-seen flag).
+        if (redirect && redirect.includes('savethedate')) {
+            localStorage.removeItem('token')
+            localStorage.removeItem('redirect')
+        } else if (localStorage.getItem('token') && redirect)
             window.location = redirect
     </script>
 </head>
 <body>
-<h1>Andy &amp; Sam's<br class="title-break"> Wedding</h1>
+<h1><span>Andy &amp; Sam's<br class="title-break"> Wedding</span></h1>
 <main class="deco-card">
     <form name="login">
         <label for="password">Please enter the last name of the bride or groom.</label>
@@ -45,11 +47,5 @@
 </main>
 <script type="module" src="/index.js"></script>
 <script src="/site.js"></script>
-<script>
-    if (localStorage.getItem('error-msg')) {
-        document.getElementById('error-msg').innerText = localStorage.getItem('error-msg')
-        localStorage.clear()
-    }
-</script>
 </body>
 </html>

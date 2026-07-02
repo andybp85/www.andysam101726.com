@@ -65,20 +65,11 @@ body {
 
 h1 {
     --h1-font-size: clamp(2.75rem, 0.5rem + 9vw, 7rem);
-    /* Shorthand first — it resets background-clip, so the clip longhands follow it.
-       Tile the gradient per line-height (size 100% 1.3em) so a wrapped title
-       (mobile) gives every line the same top→bottom sheen, instead of one
-       vertical gradient split across both lines (which darkened "Wedding"). */
-    background: linear-gradient(180deg, var(--brass) 0%, var(--brass-dark) 100%) 0 0 / 100% 1.3em;
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
     filter: drop-shadow(#301934 0.05em 0.05em 0.05em);
     font-family: lucian_schoenschrift, serif;
     font-size: var(--h1-font-size);
     font-weight: lighter;
     line-height: 1.3;
-    /* Extra top room so the script's tall swashes aren't clipped by background-clip:text */
     margin: 1.5vh 0 0.5vh;
     padding: 0.18em 0.3em 0;
     text-align: center;
@@ -88,11 +79,23 @@ h1 {
     @media (max-width: 700px) { --h1-font-size: var(--title-fs, clamp(2.2rem, -0.3rem + 12.5vw, 5rem)); }
 }
 
-/* The title links home (gated pages). Inherit the transparent fill so the h1's
-   brass gradient still shows through the glyphs (background-clip:text), and drop
-   the default link underline/color. */
-h1 a {
-    color: inherit;
+/* Brass sheen on the title glyphs — on the title inline (home link on gated
+   pages, plain span on the gate), with each wrapped line getting its own copy of
+   the gradient (box-decoration-break: clone). On the inline it tracks where the
+   glyphs actually sit in the line box, which differs between macOS (hhea) and
+   Windows (usWin) font metrics — a fixed 1.3em tile on the h1 put the tile seam
+   inside Windows descenders, so letter bottoms reset to the bright end. Vertical
+   padding on an inline shifts no layout; it only widens the painted/clip area so
+   the script's tall swashes (top) and deep descenders (bottom) stay inside the
+   gradient on both platforms' metrics. */
+h1 :is(a, span) {
+    background: linear-gradient(180deg, var(--brass) 0%, var(--brass-dark) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+    color: transparent;
+    padding: 0.3em 0 0.05em;
     text-decoration: none;
 }
 

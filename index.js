@@ -9,10 +9,11 @@ loginForm.addEventListener('submit', e => {
 
     postForm(new FormData(e.target))
         .then(ensureOk)
-        .then(async r => {
+        .then(r => {
             localStorage.setItem('token', r.token)
             localStorage.setItem('redirect', r.redirect)
-            await prefetchGuests(r.token)
+            // No guest prefetch here: it doubled login latency, and the rsvp
+            // page warms its own cache on load.
             window.location = r.redirect
         })
         .catch(e => {
@@ -21,13 +22,3 @@ loginForm.addEventListener('submit', e => {
         })
         .finally(() => submitButton.classList.remove('submitting'))
 })
-
-async function prefetchGuests(token) {
-    try {
-        const r = await postForm({token, VERB: 'GUESTS'})
-        if (r.status === 'success')
-            sessionStorage.setItem('guests', JSON.stringify(r.guests))
-    } catch (err) {
-        console.warn('guest prefetch failed; rsvp page will fetch on demand', err)
-    }
-}

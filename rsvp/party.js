@@ -8,3 +8,19 @@ export function partiesByLastName(guests, last) {
 export function labelForParty(members) {
     return members.filter(m => !m.slot).map(m => m.first).join(' & ')
 }
+
+// Prefill plan for a party's form from its latest saved responses: one entry
+// per member — {attending} for named members, {declined, name} for open +1
+// slots. PUT writes rows in member order, so the mapping is positional (which
+// survives guest-list name corrections). Returns undefined when there is
+// nothing to prefill or the party changed shape since the RSVP (count
+// mismatch) — the caller falls back to the default form.
+export function prefillPlan(members, prior) {
+    if (!prior || prior.length !== members.length) return undefined
+    return members.map((m, i) => {
+        const {attending, first, last} = prior[i]
+        return m.slot
+            ? {declined: !attending, name: attending ? `${first} ${last}`.trim() : ''}
+            : {attending}
+    })
+}

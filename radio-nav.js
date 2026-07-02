@@ -89,12 +89,15 @@ function go(href) { if (href !== location.pathname) location.href = href }
 // knob never spins past the dial into the dead zone.
 const MAX_ANGLE = angleFromStation(NAV.length - 1, NAV.length)
 
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)')
+
 // Rotate only the knurled body + arrow; the glare overlay stays fixed.
 // `animate` eases the turn (snapping to a station); off = follow the finger 1:1.
 function rotateKnob(deg, animate) {
     const spin = document.querySelector('.knob-spin')
     if (!spin) return
-    spin.style.transition = animate ? 'transform 0.22s cubic-bezier(0.22, 1, 0.36, 1)' : 'none'
+    spin.style.transition = animate && !reduceMotion.matches
+        ? 'transform 0.22s cubic-bezier(0.22, 1, 0.36, 1)' : 'none'
     spin.style.transform = `rotate(${deg}deg)`
 }
 
@@ -152,6 +155,35 @@ function initDesktopKnob() {
         setNeedle(target, true)
         go(NAV[target].href)
     })
+    // A cancelled pointer (interrupted gesture, capture loss) must not leave the
+    // drag armed — disarm and settle back on the current page's station, without
+    // navigating. After a normal pointerup, dragging is already false → no-op.
+    const cancelDrag = () => {
+        if (!dragging) return
+        dragging = false
+        target = currentIndex()
+        lastDeg = angleFromStation(target, NAV.length)
+        setNeedle(target, true)
+    }
+    knob.addEventListener('pointercancel', cancelDrag)
+    knob.addEventListener('lostpointercapture', cancelDrag)
+
+    // Keyboard tuning, so the dial isn't pointer-only: arrows step one station,
+    // Enter/Space visits the tuned station. Mobile keeps the default click
+    // behavior (menu toggle) instead.
+    knob.addEventListener('keydown', e => {
+        if (isPhone()) return
+        const step = {ArrowDown: 1, ArrowLeft: -1, ArrowRight: 1, ArrowUp: -1}[e.key]
+        if (step) {
+            e.preventDefault()
+            target = Math.max(0, Math.min(NAV.length - 1, target + step))
+            lastDeg = angleFromStation(target, NAV.length)
+            setNeedle(target, true)
+        } else if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault()
+            go(NAV[target].href)
+        }
+    })
 
     // Hover tooltip — names the station the knob would tune to at the pointer, so
     // each clickable wedge advertises its destination. Follows the cursor.
@@ -202,7 +234,7 @@ function initMobileKnob() {
     const menu = document.getElementById('station-menu')
     if (!knob || !menu) return
     knob.addEventListener('click', () => {
-        if (window.matchMedia('(max-width: 700px)').matches) {
+        if (isPhone()) {
             // Toggle the overlay drawer (slides in over the page content)
             const open = document.body.classList.toggle('menu-open')
             knob.setAttribute('aria-expanded', String(open))
