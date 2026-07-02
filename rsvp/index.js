@@ -5,7 +5,7 @@ const $ = id => document.getElementById(id)
 
 let matchedGroup  // { id, members:[{first,last,slot}] } once a party is chosen
 
-async function getGuests() {
+async function fetchGuests() {
     const cached = sessionStorage.getItem('guests')
     if (cached) {
         try {
@@ -19,6 +19,14 @@ async function getGuests() {
     sessionStorage.setItem('guests', JSON.stringify(r.guests))
     return r.guests
 }
+
+// Memoized so the on-load warm-up below and the submit handler share one fetch.
+let guestsPromise
+const getGuests = () => guestsPromise ??= fetchGuests()
+
+// Warm the cache while the visitor types their name; on failure, reset so the
+// submit handler retries and surfaces the error.
+getGuests().catch(() => guestsPromise = undefined)
 
 // ── Pure view helpers: member data → markup string ──
 // Names come from the API (via sessionStorage) — escape before innerHTML.
