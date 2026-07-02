@@ -1,6 +1,6 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { partiesByLastName, labelForParty } from '../rsvp/party.js'
+import { partiesByLastName, labelForParty, prefillPlan } from '../rsvp/party.js'
 
 // `guests` is the GUESTS response shape: an object keyed by group id, each value
 // an array of members { first, last, slot }. `slot` members are open +1 seats and
@@ -44,4 +44,30 @@ test('labelForParty joins real members by " & " and drops slots', () => {
     assert.equal(labelForParty(guests.g1), 'Andy & Sam')
     assert.equal(labelForParty(guests.g3), 'Lee')          // slot "Guest" excluded
     assert.equal(labelForParty(guests.g2), 'Pat')
+})
+
+const named = { first: 'Ann', last: 'Lee', slot: false }
+const slot = { first: '', last: '', slot: true }
+
+test('prefillPlan maps named members to their saved attending answer', () => {
+    const plan = prefillPlan([named, named], [
+        { attending: true, first: 'Ann', isGuest: false, last: 'Lee' },
+        { attending: false, first: 'Bob', isGuest: false, last: 'Lee' },
+    ])
+    assert.deepEqual(plan, [{ attending: true }, { attending: false }])
+})
+
+test('prefillPlan fills an attending guest slot with the saved name', () => {
+    const plan = prefillPlan([slot], [{ attending: true, first: 'Jo', isGuest: true, last: 'March' }])
+    assert.deepEqual(plan, [{ declined: false, name: 'Jo March' }])
+})
+
+test('prefillPlan marks a declined guest slot and leaves the name empty', () => {
+    const plan = prefillPlan([slot], [{ attending: false, first: 'Guest', isGuest: true, last: '' }])
+    assert.deepEqual(plan, [{ declined: true, name: '' }])
+})
+
+test('prefillPlan returns undefined without prior responses or on count mismatch', () => {
+    assert.equal(prefillPlan([named], undefined), undefined)
+    assert.equal(prefillPlan([named, slot], [{ attending: true, first: 'A', isGuest: false, last: 'B' }]), undefined)
 })
