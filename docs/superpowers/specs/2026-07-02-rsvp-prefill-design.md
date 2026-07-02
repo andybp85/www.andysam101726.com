@@ -60,7 +60,7 @@ prefills the new answers.
 **Party step** — when the matched party has prior responses:
 
 - A banner (hidden `<p>` in `#step-party`, shown via JS) reads:
-  > It looks like you've already RSVP'd! If anything's changed, update your
+  > It looks like you already responded! If anything has changed, update your
   > response below and resubmit by September 26th, 2026.
 - The form prefills **positionally**: `PUT` writes rows in member order, so
   row *i* belongs to member *i*. This survives guest-list name corrections
