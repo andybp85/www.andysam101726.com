@@ -89,12 +89,15 @@ function go(href) { if (href !== location.pathname) location.href = href }
 // knob never spins past the dial into the dead zone.
 const MAX_ANGLE = angleFromStation(NAV.length - 1, NAV.length)
 
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)')
+
 // Rotate only the knurled body + arrow; the glare overlay stays fixed.
 // `animate` eases the turn (snapping to a station); off = follow the finger 1:1.
 function rotateKnob(deg, animate) {
     const spin = document.querySelector('.knob-spin')
     if (!spin) return
-    spin.style.transition = animate ? 'transform 0.22s cubic-bezier(0.22, 1, 0.36, 1)' : 'none'
+    spin.style.transition = animate && !reduceMotion.matches
+        ? 'transform 0.22s cubic-bezier(0.22, 1, 0.36, 1)' : 'none'
     spin.style.transform = `rotate(${deg}deg)`
 }
 
@@ -231,7 +234,7 @@ function initMobileKnob() {
     const menu = document.getElementById('station-menu')
     if (!knob || !menu) return
     knob.addEventListener('click', () => {
-        if (window.matchMedia('(max-width: 700px)').matches) {
+        if (isPhone()) {
             // Toggle the overlay drawer (slides in over the page content)
             const open = document.body.classList.toggle('menu-open')
             knob.setAttribute('aria-expanded', String(open))
