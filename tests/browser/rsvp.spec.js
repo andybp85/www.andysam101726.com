@@ -9,7 +9,10 @@ const GUESTS = {
     '3': [{ first: 'Sam', last: 'Stanish', slot: false }],
     '4': [{ first: '<img src=x onerror=alert(1)>', last: 'Mallory', slot: false }],
 }
-const reply = { guests: GUESTS, status: 'success' }
+const RESPONSES = {
+    '2': [{ attending: false, first: 'Pat', isGuest: false, last: 'Harber' }],
+}
+const reply = { guests: GUESTS, responses: RESPONSES, status: 'success' }
 
 test.beforeEach(async ({ context, page }) => {
     // The page's inline guard redirects to / without a token; set one first.
@@ -52,4 +55,23 @@ test('markup in an API guest name renders as text, not HTML', async ({ page }) =
     await expect(page.locator('#members .member-name'))
         .toHaveText('<img src=x onerror=alert(1)> Mallory')
     await expect(page.locator('#members img')).toHaveCount(0)
+})
+
+test('a party that already RSVP\'d sees the banner and their saved answers', async ({ page }) => {
+    await page.goto('/rsvp/')
+    await page.fill('#last', 'Harber')
+    await page.click('#name-form button[type="submit"]')
+    await page.locator('#step-pick .party-pick').nth(1).click()   // Pat, group '2'
+
+    await expect(page.locator('#already-rsvpd')).toBeVisible()
+    await expect(page.locator('input[name="att-0"][value="no"]')).toBeChecked()
+})
+
+test('a party without a prior RSVP gets the default form and no banner', async ({ page }) => {
+    await page.goto('/rsvp/')
+    await page.fill('#last', 'Stanish')
+    await page.click('#name-form button[type="submit"]')
+
+    await expect(page.locator('#already-rsvpd')).toBeHidden()
+    await expect(page.locator('input[name="att-0"][value="yes"]')).toBeChecked()
 })

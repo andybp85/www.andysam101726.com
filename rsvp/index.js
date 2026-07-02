@@ -1,32 +1,33 @@
-import { partiesByLastName, labelForParty } from './party.js'
+import { partiesByLastName, labelForParty, prefillPlan } from './party.js'
 import { postForm, ensureOk } from '/api.js'
 
 const $ = id => document.getElementById(id)
 
 let matchedGroup  // { id, members:[{first,last,slot}] } once a party is chosen
 
-async function fetchGuests() {
-    const cached = sessionStorage.getItem('guests')
+async function fetchGuestData() {
+    const cached = sessionStorage.getItem('guestData')
     if (cached) {
         try {
             return JSON.parse(cached)
         } catch (e) {
-            sessionStorage.removeItem('guests')
+            sessionStorage.removeItem('guestData')
         }
     }
     const r = await postForm({token: localStorage.getItem('token'), VERB: 'GUESTS'})
     if (r.status !== 'success') throw new Error('Could not load the guest list. Please try again.')
-    sessionStorage.setItem('guests', JSON.stringify(r.guests))
-    return r.guests
+    const data = {guests: r.guests, responses: r.responses ?? {}}
+    sessionStorage.setItem('guestData', JSON.stringify(data))
+    return data
 }
 
 // Memoized so the on-load warm-up below and the submit handler share one fetch.
-let guestsPromise
-const getGuests = () => guestsPromise ??= fetchGuests()
+let guestDataPromise
+const getGuestData = () => guestDataPromise ??= fetchGuestData()
 
 // Warm the cache while the visitor types their name; on failure, reset so the
 // submit handler retries and surfaces the error.
-getGuests().catch(() => guestsPromise = undefined)
+getGuestData().catch(() => guestDataPromise = undefined)
 
 // ── Pure view helpers: member data → markup string ──
 // Names come from the API (via sessionStorage) — escape before innerHTML.
@@ -48,8 +49,19 @@ const memberRow = (m, i) => `<fieldset class="member" data-i="${i}">
         ${m.slot ? guestField(i) : attendChoice(i)}
     </fieldset>`
 
-function renderParty(group) {
+function renderParty(group, prior) {
+    $('already-rsvpd').hidden = !prior
     $('members').innerHTML = group.members.map(memberRow).join('')
+    // Saved answers, mapped positionally onto the fresh rows (undefined → defaults).
+    const plan = prefillPlan(group.members, prior)
+    for (const [i, p] of (plan ?? []).entries()) {
+        const fs = $('members').querySelector(`.member[data-i="${i}"]`)
+        if (p.attending === undefined) {
+            fs.querySelector('.guest-name').value = p.name
+            fs.querySelector('.guest-decline').checked = p.declined
+        } else
+            fs.querySelector(`input[name="att-${i}"][value="${p.attending ? 'yes' : 'no'}"]`).checked = true
+    }
     // Guest slots: a name and "not attending" are alternatives — keep them in sync.
     for (const fs of $('members').querySelectorAll('.member')) {
         const name = fs.querySelector('.guest-name')
@@ -71,7 +83,7 @@ $('name-form').addEventListener('submit', async e => {
     const err = $('name-error')
     err.textContent = ''
     try {
-        const guests = await getGuests()
+        const {guests, responses} = await getGuestData()
         const parties = partiesByLastName(guests, e.target.last.value)
         if (parties.length === 0) {
             err.textContent = "We couldn't find that name. Please check the spelling, or contact us."
@@ -79,7 +91,7 @@ $('name-form').addEventListener('submit', async e => {
         }
         if (parties.length === 1) {
             matchedGroup = parties[0]
-            renderParty(matchedGroup)
+            renderParty(matchedGroup, responses[matchedGroup.id])
             $('step-name').hidden = true
             $('step-party').hidden = false
         } else {
@@ -92,7 +104,7 @@ $('name-form').addEventListener('submit', async e => {
                 btn.textContent = labelForParty(p.members)
                 btn.addEventListener('click', () => {
                     matchedGroup = p
-                    renderParty(matchedGroup)
+                    renderParty(p, responses[p.id])
                     $('step-pick').hidden = true
                     $('step-party').hidden = false
                 })
@@ -139,6 +151,15 @@ $('party-form').addEventListener('submit', async e => {
             token: localStorage.getItem('token'),
             VERB: 'PUT',
         }).then(ensureOk)
+        // Write-through so a reload this session prefills the just-saved answers.
+        try {
+            const data = JSON.parse(sessionStorage.getItem('guestData'))
+            data.responses[matchedGroup.id] = responses
+            sessionStorage.setItem('guestData', JSON.stringify(data))
+        } catch (e) {
+            sessionStorage.removeItem('guestData')
+        }
+        guestDataPromise = undefined   // drop the memo; next lookup re-reads storage
         $('step-party').hidden = true
         $('step-thanks').hidden = false
     } catch (ex) {
