@@ -60,6 +60,15 @@ test('dragging the knob to a station tunes there and navigates', async ({ page }
     expect(new URL(page.url()).pathname).toBe('/schedule/')
 })
 
+test('keyboard tuning: an arrow steps the dial, Enter visits the station', async ({ page }) => {
+    await page.goto('/home/')
+    await page.locator('#knob').focus()
+    await page.keyboard.press('ArrowRight')       // HOME → RSVP
+    await page.keyboard.press('Enter')
+    await page.waitForURL('**/rsvp/**')
+    expect(new URL(page.url()).pathname).toBe('/rsvp/')
+})
+
 test('on mobile the knob toggles the station menu', async ({ page }) => {
     await page.setViewportSize({ height: 844, width: 390 })
     await page.goto('/home/')

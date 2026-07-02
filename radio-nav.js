@@ -152,6 +152,35 @@ function initDesktopKnob() {
         setNeedle(target, true)
         go(NAV[target].href)
     })
+    // A cancelled pointer (interrupted gesture, capture loss) must not leave the
+    // drag armed — disarm and settle back on the current page's station, without
+    // navigating. After a normal pointerup, dragging is already false → no-op.
+    const cancelDrag = () => {
+        if (!dragging) return
+        dragging = false
+        target = currentIndex()
+        lastDeg = angleFromStation(target, NAV.length)
+        setNeedle(target, true)
+    }
+    knob.addEventListener('pointercancel', cancelDrag)
+    knob.addEventListener('lostpointercapture', cancelDrag)
+
+    // Keyboard tuning, so the dial isn't pointer-only: arrows step one station,
+    // Enter/Space visits the tuned station. Mobile keeps the default click
+    // behavior (menu toggle) instead.
+    knob.addEventListener('keydown', e => {
+        if (isPhone()) return
+        const step = {ArrowDown: 1, ArrowLeft: -1, ArrowRight: 1, ArrowUp: -1}[e.key]
+        if (step) {
+            e.preventDefault()
+            target = Math.max(0, Math.min(NAV.length - 1, target + step))
+            lastDeg = angleFromStation(target, NAV.length)
+            setNeedle(target, true)
+        } else if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault()
+            go(NAV[target].href)
+        }
+    })
 
     // Hover tooltip — names the station the knob would tune to at the pointer, so
     // each clickable wedge advertises its destination. Follows the cursor.
